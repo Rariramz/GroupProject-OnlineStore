@@ -1,11 +1,7 @@
-import React from 'react';
+import React from "react";
 
 const Authorization = () => {
-    return (
-        <>
-            AUTHORIZATION
-        </>
-    );
+  return <>AUTHORIZATION</>;
 };
 
 export default Authorization;

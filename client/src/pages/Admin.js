@@ -1,11 +1,7 @@
-import React from 'react';
+import React from "react";
 
 const Admin = () => {
-    return (
-        <>
-            ADMIN
-        </>
-    );
+  return <>ADMIN</>;
 };
 
 export default Admin;

@@ -1,11 +1,7 @@
-import React from 'react';
+import React from "react";
 
 const ItemPage = () => {
-    return (
-        <>
-            ITEM PAGE  
-        </>
-    );
+  return <>ITEM PAGE</>;
 };
 
 export default ItemPage;
