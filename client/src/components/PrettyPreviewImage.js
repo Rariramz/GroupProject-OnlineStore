@@ -1,9 +1,9 @@
 import React from "react";
 import { styled } from "@mui/system";
 import backgroundImage from "../images/homeBackgoundImage.png";
-import { Paper, Grid, Button, Typography } from "@mui/material";
+import { Box, Paper, Grid, Button, Typography } from "@mui/material";
 
-const BackgroundedDiv = styled(Paper)(({ theme }) => ({
+const BackgroundedDiv = styled(Box)(({ theme }) => ({
   width: "100%",
   height: "100vh",
   backgroundImage: `Url(${backgroundImage})`,
