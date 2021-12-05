@@ -4,7 +4,7 @@ import PageNotFound from "../pages/PageNotFound";
 import { authRoutes, publicRoutes } from "../routes";
 
 const AppRouter = () => {
-  const isAuthorized = false;
+  const isAuthorized = true;
 
   return (
     <Routes>
