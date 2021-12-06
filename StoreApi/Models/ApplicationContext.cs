@@ -2,7 +2,7 @@
 
 namespace StoreApi.Models
 {
-    public class ApplicationContext: DbContext
+    public class ApplicationContext : DbContext
     {
         public DbSet<User> Users {  get; set; }
         public DbSet<Item> Items {  get; set; }

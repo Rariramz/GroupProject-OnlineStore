@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WEB_953501_MALETS.Data;
 
 namespace StoreApi
 {
@@ -49,7 +50,7 @@ namespace StoreApi
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ApplicationContext context)
         {
             app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             
@@ -63,6 +64,8 @@ namespace StoreApi
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            DbInitializer.Seed(context).Wait();
 
             app.UseAuthorization();
 
