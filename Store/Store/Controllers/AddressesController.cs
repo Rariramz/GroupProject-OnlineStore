@@ -5,54 +5,54 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Store.Entities;
 using Store.Data;
+using Store.Entities;
 
 namespace Store.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ItemsController : ControllerBase
+    public class AddressesController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
 
-        public ItemsController(ApplicationDbContext context)
+        public AddressesController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: api/Items
+        // GET: api/Addresses
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Item>>> GetItems()
+        public async Task<ActionResult<IEnumerable<Address>>> GetAddresses()
         {
-            return await _context.Items.ToListAsync();
+            return await _context.Addresses.ToListAsync();
         }
 
-        // GET: api/Items/5
+        // GET: api/Addresses/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Item>> GetItem(int id)
+        public async Task<ActionResult<Address>> GetAddress(int id)
         {
-            var item = await _context.Items.FindAsync(id);
+            var address = await _context.Addresses.FindAsync(id);
 
-            if (item == null)
+            if (address == null)
             {
                 return NotFound();
             }
 
-            return item;
+            return address;
         }
 
-        // PUT: api/Items/5
+        // PUT: api/Addresses/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutItem(int id, Item item)
+        public async Task<IActionResult> PutAddress(int id, Address address)
         {
-            if (id != item.ID)
+            if (id != address.ID)
             {
                 return BadRequest();
             }
 
-            _context.Entry(item).State = EntityState.Modified;
+            _context.Entry(address).State = EntityState.Modified;
 
             try
             {
@@ -60,7 +60,7 @@ namespace Store.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ItemExists(id))
+                if (!AddressExists(id))
                 {
                     return NotFound();
                 }
@@ -73,36 +73,36 @@ namespace Store.Controllers
             return NoContent();
         }
 
-        // POST: api/Items
+        // POST: api/Addresses
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Item>> PostItem(Item item)
+        public async Task<ActionResult<Address>> PostAddress(Address address)
         {
-            _context.Items.Add(item);
+            _context.Addresses.Add(address);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetItem", new { id = item.ID }, item);
+            return CreatedAtAction("GetAddress", new { id = address.ID }, address);
         }
 
-        // DELETE: api/Items/5
+        // DELETE: api/Addresses/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteItem(int id)
+        public async Task<IActionResult> DeleteAddress(int id)
         {
-            var item = await _context.Items.FindAsync(id);
-            if (item == null)
+            var address = await _context.Addresses.FindAsync(id);
+            if (address == null)
             {
                 return NotFound();
             }
 
-            _context.Items.Remove(item);
+            _context.Addresses.Remove(address);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool ItemExists(int id)
+        private bool AddressExists(int id)
         {
-            return _context.Items.Any(e => e.ID == id);
+            return _context.Addresses.Any(e => e.ID == id);
         }
     }
 }

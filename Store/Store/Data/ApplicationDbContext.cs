@@ -1,8 +1,9 @@
 ﻿using Duende.IdentityServer.EntityFramework.Options;
 using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using Store.Models;
+using Store.Entities;
 
 namespace Store.Data
 {
