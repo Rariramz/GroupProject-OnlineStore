@@ -8,7 +8,7 @@ namespace Store.Models
     public class UserAddress
     {
         public int ID { get; set; }
-        public int AdressID { get; set; }
+        public int AddressID { get; set; }
         public int UserID { get; set; }
 
         public User? User { get; set; }
