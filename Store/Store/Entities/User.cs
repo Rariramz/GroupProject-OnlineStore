@@ -4,8 +4,10 @@ namespace Store.Entities
 {
     public class User : IdentityUser
     {
-        public string? EmailConfirmationCode { get; set; }
-        public int Discount { get; set; }
+        public string FirstName { get; set; } = "";
+        public string LastName { get; set; } = "";
+        public string EmailConfirmationCode { get; set; } = "";
+        public int Discount { get; set; } = 0;
 
         public ICollection<Order>? Orders { get; set; }
         public ICollection<UserAddress>? UserAddresses { get; set; }

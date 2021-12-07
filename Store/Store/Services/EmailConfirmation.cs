@@ -8,13 +8,15 @@ namespace Store.Services
     {
         public string CredentialEmail { get; set; }
         public string CredentialPassword { get; set; }
+        public string Url { get; set; }
 
         public NetworkCredential networkCredential { get; set; }
-        public EmailConfirmation(string credentialEmail, string credentialPassword)
+        public EmailConfirmation(string credentialEmail, string credentialPassword, string url)
         {
             CredentialEmail = credentialEmail;
             CredentialPassword = credentialPassword;
             networkCredential = new NetworkCredential(credentialEmail, credentialPassword);
+            Url = url;
         }
 
         public string BeginConfirmation(string email)
@@ -27,7 +29,7 @@ namespace Store.Services
             StringBuilder body = new StringBuilder();
             body.Append("<h2>Подтверждение email для Online Store.");
             body.Append("<br/>");
-            body.AppendLine($"<a href=\"https://localhost:44380/Account/Confirm?email={email}&code={code}\">Нажмите, чтобы подтвердить email</a>");
+            body.AppendLine($"<a href=\"{Url}/Account/Confirm?email={email}&code={code}\">Нажмите, чтобы подтвердить email</a>"); ; ;
             message.Body = body.ToString();
             message.IsBodyHtml = true;
 

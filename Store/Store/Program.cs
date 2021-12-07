@@ -25,6 +25,11 @@ builder.Services.AddAuthentication()
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
+builder.Services.AddTransient(s => new EmailConfirmation(builder.Configuration.GetSection("EmailConfirmation")["Username"],
+    builder.Configuration.GetSection("EmailConfirmation")["Password"],
+    builder.Configuration.GetSection("Url").Value));
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -59,6 +64,7 @@ app.MapControllerRoute(
     pattern: "{controller}/{action=Index}/{id?}");
 app.MapRazorPages();
 
-app.MapFallbackToFile("index.html"); ;
+app.MapFallbackToFile("index.html");
 
 app.Run();
+

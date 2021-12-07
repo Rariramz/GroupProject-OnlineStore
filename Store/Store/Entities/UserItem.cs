@@ -8,7 +8,7 @@ namespace Store.Entities
     public class UserItem
     {
         public int ID { get; set; }
-        public int UserID { get; set; }
+        public string UserID { get; set; } = "";
         public int ItemID { get; set; }
         public int OrderID { get; set; }
         public int Count { get; set; }
