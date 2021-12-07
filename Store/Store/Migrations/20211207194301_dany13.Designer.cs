@@ -12,8 +12,8 @@ using Store.Data;
 namespace Store.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20211207180058_Initial")]
-    partial class Initial
+    [Migration("20211207194301_dany13")]
+    partial class dany13
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -317,6 +317,30 @@ namespace Store.Migrations
                     b.ToTable("Addresses");
                 });
 
+            modelBuilder.Entity("Store.Entities.Category", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("ParentID")
+                        .HasColumnType("integer");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("ParentID");
+
+                    b.ToTable("Categories");
+                });
+
             modelBuilder.Entity("Store.Entities.Item", b =>
                 {
                     b.Property<int>("ID")
@@ -324,6 +348,9 @@ namespace Store.Migrations
                         .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
+
+                    b.Property<int>("CategoryID")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Description")
                         .HasColumnType("text");
@@ -338,6 +365,8 @@ namespace Store.Migrations
                         .HasColumnType("numeric");
 
                     b.HasKey("ID");
+
+                    b.HasIndex("CategoryID");
 
                     b.ToTable("Items");
                 });
@@ -567,6 +596,26 @@ namespace Store.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Store.Entities.Category", b =>
+                {
+                    b.HasOne("Store.Entities.Category", "Parent")
+                        .WithMany("ChildCategories")
+                        .HasForeignKey("ParentID");
+
+                    b.Navigation("Parent");
+                });
+
+            modelBuilder.Entity("Store.Entities.Item", b =>
+                {
+                    b.HasOne("Store.Entities.Category", "Category")
+                        .WithMany("ChildItems")
+                        .HasForeignKey("CategoryID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+                });
+
             modelBuilder.Entity("Store.Entities.Order", b =>
                 {
                     b.HasOne("Store.Entities.Address", "Address")
@@ -630,6 +679,13 @@ namespace Store.Migrations
                     b.Navigation("Order");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Store.Entities.Category", b =>
+                {
+                    b.Navigation("ChildCategories");
+
+                    b.Navigation("ChildItems");
                 });
 
             modelBuilder.Entity("Store.Entities.Order", b =>
