@@ -6,9 +6,13 @@ const Authorization = () => {
   const [password, setPassword] = useState("");
 
   const sendData = () => {
-    let res = await fetch("api/login", {
+    fetch("api/Account/Login", {
       method: "POST",
-      body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password }),
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
     })
       .then((res) => res.json())
       .then((result) => {
@@ -17,17 +21,9 @@ const Authorization = () => {
   };
   return (
     <>
-      AUTHORIZATION
-      <TextField
-        label="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <TextField
-        label="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
+          AUTHORIZATION
+          <TextField label="email" value={email} onChange={e => setEmail(e.target.value)} />
+          <TextField label="password" value={password} onChange={e => setPassword(e.target.value)} />
       <Button variant="outlined" onClick={sendData}>
         <Typography variant="h1" color="initial">
           Send Info

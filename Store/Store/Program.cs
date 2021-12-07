@@ -14,8 +14,16 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddIdentity<User, IdentityRole>(opt =>
+    {
+        opt.Password.RequireUppercase = false;
+        opt.Password.RequireLowercase = false;
+        opt.Password.RequireDigit = false;
+        opt.Password.RequireDigit = false;
+        opt.Password.RequireNonAlphanumeric = false;
+        opt.Password.RequiredLength = 1;
+    })
+    .AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
 
 builder.Services.AddIdentityServer()
     .AddApiAuthorization<User, ApplicationDbContext>();
@@ -24,7 +32,6 @@ builder.Services.AddAuthentication()
     .AddIdentityServerJwt();
 
 builder.Services.AddControllersWithViews();
-builder.Services.AddRazorPages();
 
 builder.Services.AddScoped<IDbInitializer, DbInitializer>();
 
@@ -64,8 +71,7 @@ using (var serviceScope = app.Services.CreateScope())
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller}/{action=Index}/{id?}");
-app.MapRazorPages();
+    pattern: "api/{controller}/{action=Index}");
 
 app.MapFallbackToFile("index.html");
 
