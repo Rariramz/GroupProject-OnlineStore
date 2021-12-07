@@ -1,6 +1,4 @@
-﻿using Store.Entities;
-
-namespace Store.Models
+﻿namespace Store.Models
 {
     public class UserData
     {
