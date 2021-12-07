@@ -1,4 +1,4 @@
-﻿namespace Store.Models
+﻿namespace Store.Entities
 {
     public class Item
     {

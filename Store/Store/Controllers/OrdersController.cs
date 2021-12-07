@@ -5,54 +5,54 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Store.Entities;
 using Store.Data;
+using Store.Entities;
 
 namespace Store.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ItemsController : ControllerBase
+    public class OrdersController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
 
-        public ItemsController(ApplicationDbContext context)
+        public OrdersController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: api/Items
+        // GET: api/Orders
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Item>>> GetItems()
+        public async Task<ActionResult<IEnumerable<Order>>> GetOrders()
         {
-            return await _context.Items.ToListAsync();
+            return await _context.Orders.ToListAsync();
         }
 
-        // GET: api/Items/5
+        // GET: api/Orders/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Item>> GetItem(int id)
+        public async Task<ActionResult<Order>> GetOrder(int id)
         {
-            var item = await _context.Items.FindAsync(id);
+            var order = await _context.Orders.FindAsync(id);
 
-            if (item == null)
+            if (order == null)
             {
                 return NotFound();
             }
 
-            return item;
+            return order;
         }
 
-        // PUT: api/Items/5
+        // PUT: api/Orders/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutItem(int id, Item item)
+        public async Task<IActionResult> PutOrder(int id, Order order)
         {
-            if (id != item.ID)
+            if (id != order.ID)
             {
                 return BadRequest();
             }
 
-            _context.Entry(item).State = EntityState.Modified;
+            _context.Entry(order).State = EntityState.Modified;
 
             try
             {
@@ -60,7 +60,7 @@ namespace Store.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ItemExists(id))
+                if (!OrderExists(id))
                 {
                     return NotFound();
                 }
@@ -73,36 +73,36 @@ namespace Store.Controllers
             return NoContent();
         }
 
-        // POST: api/Items
+        // POST: api/Orders
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Item>> PostItem(Item item)
+        public async Task<ActionResult<Order>> PostOrder(Order order)
         {
-            _context.Items.Add(item);
+            _context.Orders.Add(order);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetItem", new { id = item.ID }, item);
+            return CreatedAtAction("GetOrder", new { id = order.ID }, order);
         }
 
-        // DELETE: api/Items/5
+        // DELETE: api/Orders/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteItem(int id)
+        public async Task<IActionResult> DeleteOrder(int id)
         {
-            var item = await _context.Items.FindAsync(id);
-            if (item == null)
+            var order = await _context.Orders.FindAsync(id);
+            if (order == null)
             {
                 return NotFound();
             }
 
-            _context.Items.Remove(item);
+            _context.Orders.Remove(order);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool ItemExists(int id)
+        private bool OrderExists(int id)
         {
-            return _context.Items.Any(e => e.ID == id);
+            return _context.Orders.Any(e => e.ID == id);
         }
     }
 }
