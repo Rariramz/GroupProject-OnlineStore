@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Store.Data;
-using Store.Models;
+using Store.Entities;
 using Microsoft.AspNetCore.Identity;
 
 namespace Store.Controllers
