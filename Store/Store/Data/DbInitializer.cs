@@ -8,19 +8,22 @@ namespace Store.Data
 {
     public class DbInitializer : IDbInitializer
     {
-        private readonly ApplicationDbContext context;
-        public DbInitializer(ApplicationDbContext context)
+        private readonly ApplicationDbContext _context;
+        private readonly UserManager<User> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        public DbInitializer(ApplicationDbContext context, UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
         {
-            this.context = context;
+            _context = context;
+            _userManager = userManager;
+            _roleManager = roleManager;
         }
 
         public async Task Seed()
-
         {
             // создать БД, если она еще не создана
-            context.Database.EnsureCreated();
+            _context.Database.EnsureCreated();
             // проверка наличия ролей
-            if (!context.Roles.Any())
+            if (!_context.Roles.Any())
             {
                 var roleAdmin = new IdentityRole
                 {
@@ -35,35 +38,40 @@ namespace Store.Data
                 };
                 // создать роль admin
 
-                context.Roles.Add(roleAdmin);
-                context.Roles.Add(roleUser);
-                await context.SaveChangesAsync();
+                await _roleManager.CreateAsync(roleAdmin);
+                await _roleManager.CreateAsync(roleUser);
+                await _context.SaveChangesAsync();
             }
 
 
 
             // проверка наличия пользователей
-            if (!context.Users.Any())
+            if (!_context.Users.Any())
             {
                 // создать пользователя user@mail.ru
                 var user = new User
                 {
-                    UserName = "user",
+                    UserName = "user@mail.ru",
                     Email = "user@mail.ru",
                 };
                 var admin = new User
                 {
-                    UserName = "admin",
+                    UserName = "admin@mail.ru",
                     Email = "admin@mail.ru",
                 };
 
-                context.Users.Add(user);
-                context.Users.Add(admin);
+                user.EmailConfirmed = true;
+                admin.EmailConfirmed = true;
 
-                await context.SaveChangesAsync();
+                await _userManager.CreateAsync(user, "123");
+                await _userManager.AddToRoleAsync(user, "user");
+                await _userManager.CreateAsync(admin, "123");
+                await _userManager.AddToRoleAsync(admin, "admin");
+
+                await _context.SaveChangesAsync();
             }
 
-            if (!context.Categories.Any())
+            if (!_context.Categories.Any())
             {
                 Category rootCategory = new Category
                 {
@@ -73,11 +81,11 @@ namespace Store.Data
                 };
 
 
-                context.Categories.Add(rootCategory);
+                _context.Categories.Add(rootCategory);
 
-                await context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
 
-                context.Items.AddRange(
+                _context.Items.AddRange(
                     new List<Item>
                     {
                         new Item
@@ -102,7 +110,7 @@ namespace Store.Data
                             CategoryID = rootCategory.ID
                         },
                     });
-                await context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
             }
 
         }
