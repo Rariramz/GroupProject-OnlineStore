@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
 using Store.Data;
 using Store.Models;
+using Store.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +25,8 @@ builder.Services.AddAuthentication()
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+
+builder.Services.AddTransient(s => new EmailConfirmation(builder.Configuration.GetSection("EmailConfirmation")["Username"], builder.Configuration.GetSection("EmailConfirmation")["Password"]));
 
 var app = builder.Build();
 
