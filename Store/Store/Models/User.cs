@@ -6,5 +6,8 @@ namespace Store.Models
     {
         public string? EmailConfirmationCode { get; set; }
         public int Discount { get; set; }
+
+        public ICollection<Order>? Orders { get; set; }
+        public ICollection<UserAddress>? UserAddresses { get; set; }
     }
 }

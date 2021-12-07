@@ -7,7 +7,7 @@ namespace Store.Models
 {
     public class Address
     {
-        public int Id { get; set; }
-        public string AddressString { get; set; }
+        public int ID { get; set; }
+        public string? AddressString { get; set; }
     }
 }

@@ -47,7 +47,7 @@ namespace Store.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutItem(int id, Item item)
         {
-            if (id != item.Id)
+            if (id != item.ID)
             {
                 return BadRequest();
             }
@@ -81,7 +81,7 @@ namespace Store.Controllers
             _context.Items.Add(item);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetItem", new { id = item.Id }, item);
+            return CreatedAtAction("GetItem", new { id = item.ID }, item);
         }
 
         // DELETE: api/Items/5
@@ -102,7 +102,7 @@ namespace Store.Controllers
 
         private bool ItemExists(int id)
         {
-            return _context.Items.Any(e => e.Id == id);
+            return _context.Items.Any(e => e.ID == id);
         }
     }
 }
