@@ -18,8 +18,16 @@ const Authorization = () => {
   return (
     <>
       AUTHORIZATION
-      <TextField label="email" value={email} onChange={setEmail} />
-      <TextField label="password" value={password} onChange={setPassword} />
+      <TextField
+        label="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+      <TextField
+        label="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
       <Button variant="outlined" onClick={sendData}>
         <Typography variant="h1" color="initial">
           Send Info
