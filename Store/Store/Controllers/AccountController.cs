@@ -10,7 +10,7 @@ namespace Store.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    //[Authorize(Roles = "admin, user")]
+    [Authorize(Roles = "admin, user")]
     public class AccountController : Controller
     {
         private ApplicationDbContext _context;
@@ -29,7 +29,6 @@ namespace Store.Controllers
         [HttpGet]
         public async Task<IActionResult> Info()
         {
-            return Content("");
             User user = await _userManager.GetUserAsync(User);
 
             UserData userData = new UserData()
@@ -53,10 +52,11 @@ namespace Store.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> Login(string email, string password)
+        public async Task<IActionResult> Login([FromBody]LoginModel loginModel)
         {
-            
-            LoginResult loginResult = new LoginResult();
+            string email = loginModel.Email;
+            string password = loginModel.Password;
+            LoginResult loginResult = new LoginResult() { Success = true };
 
             if (string.IsNullOrEmpty(email))
             {
@@ -108,12 +108,6 @@ namespace Store.Controllers
             }
 
             return Json(loginResult);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Hi()
-        {
-            return Content("Hello!");
         }
     }
 }

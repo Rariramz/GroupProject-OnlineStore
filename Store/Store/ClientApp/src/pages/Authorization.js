@@ -8,7 +8,11 @@ const Authorization = () => {
   const sendData = () => {
     fetch("api/Account/Login", {
       method: "POST",
-      body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password }),
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
     })
       .then((res) => res.json())
       .then((result) => {
