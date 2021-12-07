@@ -40,6 +40,8 @@ namespace Store.Data
                 await context.SaveChangesAsync();
             }
 
+
+
             // проверка наличия пользователей
             if (!context.Users.Any())
             {
@@ -61,8 +63,20 @@ namespace Store.Data
                 await context.SaveChangesAsync();
             }
 
-            if (!context.Items.Any())
+            if (!context.Categories.Any())
             {
+                Category rootCategory = new Category
+                {
+                    Name = "Свечи обычные",
+                    Description = "Свечи обычные описание",
+                    ParentID = null 
+                };
+
+
+                context.Categories.Add(rootCategory);
+
+                await context.SaveChangesAsync();
+
                 context.Items.AddRange(
                     new List<Item>
                     {
@@ -71,18 +85,21 @@ namespace Store.Data
                             Name = "Свеча длинная",
                             Description = "Очень красивая длинная свеча, пригодится для долгих праздников",
                             Image = "long_candle.jpg",
+                            CategoryID = rootCategory.ID
                         },
                         new Item
                         {
                             Name = "Свеча толстая",
                             Description = "Очень красивая толстая свеча",
                             Image = "fat_candle.jpg",
+                            CategoryID = rootCategory.ID
                         },
                         new Item
                         {
                             Name = "Свеча фигурная",
                             Description = "Свеча в виде фигуры",
                             Image = "figure_candle.jpg",
+                            CategoryID = rootCategory.ID
                         },
                     });
                 await context.SaveChangesAsync();
