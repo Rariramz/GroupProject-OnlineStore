@@ -83,10 +83,23 @@ namespace Store.Data
                     ParentID = null 
                 };
 
-
+                
 
                 _context.Categories.Add(rootCategory);
 
+
+                await _context.SaveChangesAsync();
+
+                Category subCategory = new Category
+                {
+                    Name = "Свечи обычные но не совсем",
+                    Description = "Свечи не совсем обычные описание",
+                    Image = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\Все_свечи.jpg"),
+                    InsideImage = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\все_свечи_широкая.jpg"),
+                    ParentID = rootCategory.ID
+                };
+
+                _context.Categories.Add(subCategory);
                 await _context.SaveChangesAsync();
 
                 _context.Items.AddRange(
@@ -97,21 +110,21 @@ namespace Store.Data
                             Name = "Свеча длинная",
                             Description = "Очень красивая длинная свеча, пригодится для долгих праздников",
                             Image = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\свеча_длинная.jpg"),
-                            CategoryID = rootCategory.ID
+                            CategoryID = subCategory.ID
                         },
                         new Item
                         {
                             Name = "Свеча толстая",
                             Description = "Очень красивая толстая свеча",
                             Image = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\свеча_толстая.jpg"),
-                            CategoryID = rootCategory.ID
+                            CategoryID = subCategory.ID
                         },
                         new Item
                         {
                             Name = "Свеча фигурная",
                             Description = "Свеча в виде фигуры",
                             Image = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\свеча_в_виде_фигуры.jpg"),
-                            CategoryID = rootCategory.ID
+                            CategoryID = subCategory.ID
                         },
                     });
                 await _context.SaveChangesAsync();

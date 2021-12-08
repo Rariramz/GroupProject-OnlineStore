@@ -1,11 +1,11 @@
 ﻿namespace Store.Models
 {
-    public class ItemModel
+    public class CategoryModel
     {
         public string Name { get; set; } = "";
         public string Description { get; set; } = "";
-        public float Price { get; set; }
+        public int ParentID { get; set; }
         public IFormFile? Image { get; set; }
-        public int CategoryID { get; set; }
+        public IFormFile? InsideImage { get; set; }
     }
 }
