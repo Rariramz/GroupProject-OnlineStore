@@ -30,14 +30,19 @@ namespace Store.Controllers
             _emailConfirmation = emailConfirmation;
         }
 
-
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> Info()
         {
             User user = await _userManager.GetUserAsync(User);
+            if(user == null)
+            {
+                return Json(new UserData() { Success = false });
+            }
 
             UserData userData = new UserData()
             {
+                Success = true,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Email = user.Email,
@@ -45,16 +50,23 @@ namespace Store.Controllers
             };
 
             List<UserAddress> addressesRelations = _context.UserAddresses.Where(address => address.UserID == user.Id).ToList();
-            List<Address> addresses = new List<Address>();
+            List<AddressData> addresses = new List<AddressData>();
 
             foreach (UserAddress relation in addressesRelations)
             {
                 Address address = _context.Addresses.FirstOrDefault(address => address.ID == relation.AddressID);
-                addresses.Add(address);
+                addresses.Add(new AddressData() { AddressString = address.AddressString});
             }
 
             userData.Addresses = addresses;
             return Json(userData);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return Redirect("/");
         }
 
         [HttpPost]
@@ -220,6 +232,7 @@ namespace Store.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> Confirm(string email, string code)
         {
             User user = await _userManager.FindByEmailAsync(email);
