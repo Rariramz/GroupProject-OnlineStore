@@ -41,11 +41,11 @@ export const publicRoutes = [
     component: <CategoryPage />,
   },
   {
-    path: LOGIN_ROUTE + "/",
+    path: LOGIN_ROUTE,
     component: <CategoryPage />,
   },
   {
-    path: REGISTRATION_ROUTE + "/",
+    path: REGISTRATION_ROUTE,
     component: <CategoryPage />,
   },
 ];
