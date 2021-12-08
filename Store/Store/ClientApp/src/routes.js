@@ -1,5 +1,4 @@
 import Admin from "./pages/Admin";
-import Authorization from "./pages/Authorization";
 import Cart from "./pages/Cart";
 import Home from "./pages/Home";
 import ItemPage from "./pages/ItemPage";
@@ -47,13 +46,5 @@ export const publicRoutes = [
   {
     path: CATEGORY_ROUTE + "/:name",
     component: <CategoryPage />,
-  },
-  {
-    path: LOGIN_ROUTE,
-    component: <Authorization />,
-  },
-  {
-    path: REGISTRATION_ROUTE,
-    component: <Authorization />,
   },
 ];
