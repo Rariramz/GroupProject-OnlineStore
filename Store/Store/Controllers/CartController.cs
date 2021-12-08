@@ -40,7 +40,7 @@ namespace Store.Controllers
 
         [HttpGet]
         [Authorize(Roles = "admin")]
-        public async Task<ActionResult<UserItem>> GetAddress(int id)
+        public async Task<ActionResult<UserItem>> GetUserItem(int id)
         {
             var userItem = await _context.UserItems.FindAsync(id);
 
