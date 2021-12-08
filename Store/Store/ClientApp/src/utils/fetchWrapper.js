@@ -1,7 +1,10 @@
 import { ResetTvRounded } from "@mui/icons-material";
 
-const get = async (url, callback) => {
+export const get = async (url, callback) => {
   fetchWrapper("GET", url, callback);
+};
+export const post = async (url, callback, obj) => {
+  fetchWrapper("POST", url, callback, obj);
 };
 
 const fetchWrapper = async (method, url, callback, obj) => {
@@ -18,10 +21,8 @@ const fetchWrapper = async (method, url, callback, obj) => {
     if (res.ok) {
       const json = await res.json();
       callback(json);
-    } else return res.status;
+    }
   } catch (e) {
     console.error(e);
   }
 };
-
-export default fetchWrapper;
