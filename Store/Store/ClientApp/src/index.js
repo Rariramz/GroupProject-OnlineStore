@@ -1,18 +1,24 @@
-import React from "react";
+import React, { createContext } from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App";
+import UserStore from "./store/UserStore";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 import reportWebVitals from "./reportWebVitals";
 
 const baseUrl = document.getElementsByTagName("base")[0].getAttribute("href");
 const rootElement = document.getElementById("root");
+export const Context = createContext(null);
 
 ReactDOM.render(
-  <BrowserRouter basename={baseUrl}>
-    <App />
-  </BrowserRouter>,
-  rootElement
+    <BrowserRouter basename={baseUrl}>
+        <Context.Provider
+            value={{ user: new UserStore() }}
+        >
+            <App />
+        </Context.Provider>
+    </BrowserRouter>,
+    rootElement
 );
 
 // If you want your app to work offline and load faster, you can change

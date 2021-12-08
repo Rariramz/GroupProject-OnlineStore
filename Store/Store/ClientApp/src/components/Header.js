@@ -7,6 +7,7 @@ import logo from "../images/svg/logo.svg";
 import cart from "../images/svg/Cart.svg";
 import profile from "../images/svg/Profile.svg";
 import { Link } from "react-router-dom";
+import { LOGIN_ROUTE } from "../utils/consts";
 
 const HeaderDiv = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -35,7 +36,7 @@ const Header = () => {
       </HeaderDiv>
 
       <HeaderDiv width="7vw">
-        <Link to="/login">
+         <Link to={LOGIN_ROUTE}>
           <img class="profile" src={profile} alt="profile" />
         </Link>
         <Link to="cart">
