@@ -19,16 +19,15 @@ namespace Store.Controllers
         private UserManager<User> _userManager;
         private SignInManager<User> _signInManager;
         private EmailConfirmation _emailConfirmation;
-        private RoleManager<IdentityRole> _roleManager;
 
 
-        public AccountController(ApplicationDbContext context, UserManager<User> userManager, SignInManager<User> signInManager, Services.EmailConfirmation emailConfirmation, RoleManager<IdentityRole> roleManager)
+
+        public AccountController(ApplicationDbContext context, UserManager<User> userManager, SignInManager<User> signInManager, EmailConfirmation emailConfirmation)
         {
             _context = context;
             _userManager = userManager;
             _signInManager = signInManager;
             _emailConfirmation = emailConfirmation;
-            _roleManager = roleManager;
         }
 
 
@@ -60,7 +59,7 @@ namespace Store.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> Login([FromBody]LoginModel loginModel)
+        public async Task<IActionResult> Login([FromForm]LoginModel loginModel)
         {
             string email = loginModel.Email;
             string password = loginModel.Password;
@@ -120,7 +119,7 @@ namespace Store.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public async Task<ActionResult> Register([FromBody]RegistrationModel registrationModel)
+        public async Task<ActionResult> Register([FromForm]RegistrationModel registrationModel)
         {
             string nameRussianRegex = @"^[а-яА-Я ,.'-]+$";
             string nameEnglishRegex = @"^[a-zA-Z ,.'-]+$";

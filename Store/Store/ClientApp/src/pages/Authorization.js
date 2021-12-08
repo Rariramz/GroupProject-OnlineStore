@@ -5,14 +5,13 @@ const Authorization = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const sendData = () => {
+    const sendData = () => {
+        let formData = new FormData();
+        formData.append("email", email);
+        formData.append("password", password);
     fetch("api/Account/Login", {
-      method: "POST",
-        body: JSON.stringify({ email, password }),
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
+        method: "POST",
+        body: formData,
     })
       .then((res) => res.json())
       .then((result) => {

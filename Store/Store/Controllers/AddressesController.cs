@@ -20,13 +20,11 @@ namespace Store.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<User> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public AddressesController(ApplicationDbContext context, UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
+        public AddressesController(ApplicationDbContext context, UserManager<User> userManager)
         {
             _context = context;
             _userManager = userManager;
-            _roleManager = roleManager;
         }
 
 
@@ -92,7 +90,7 @@ namespace Store.Controllers
 
         [HttpPost]
         [Authorize(Roles = "admin, user")]
-        public async Task<IActionResult> CreateAddressForUser(AddressModel addressModel)
+        public async Task<IActionResult> CreateAddressForUser([FromForm]AddressModel addressModel)
         {
             User requestUser = await _userManager.FindByEmailAsync(User.Identity.Name);
             User targetUser = await _userManager.FindByIdAsync(addressModel.UserID);
