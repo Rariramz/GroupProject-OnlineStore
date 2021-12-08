@@ -1,5 +1,6 @@
 import Admin from "./pages/Admin";
-import Authorization from "./pages/Authorization";
+import Registration from "./pages/Registration";
+import Login from "./pages/Login";
 import Cart from "./pages/Cart";
 import Home from "./pages/Home";
 import ItemPage from "./pages/ItemPage";
@@ -37,10 +38,10 @@ export const publicRoutes = [
   },
   {
     path: LOGIN_ROUTE,
-    component: <Authorization />,
+    component: <Login />,
   },
   {
     path: REGISTRATION_ROUTE,
-    component: <Authorization />,
+    component: <Registration />,
   },
 ];
