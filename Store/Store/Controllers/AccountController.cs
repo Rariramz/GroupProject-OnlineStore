@@ -50,9 +50,11 @@ namespace Store.Controllers
 
             foreach (UserAddress relation in addressesRelations)
             {
-                addresses.Add(relation.Address);
+                Address address = _context.Addresses.FirstOrDefault(address => address.ID == relation.AddressID);
+                addresses.Add(address);
             }
 
+            userData.Addresses = addresses;
             return Json(userData);
         }
 

@@ -8,6 +8,6 @@ namespace Store.Entities
     public class Address
     {
         public int ID { get; set; }
-        public string? AddressString { get; set; }
+        public string AddressString { get; set; } = "";
     }
 }
