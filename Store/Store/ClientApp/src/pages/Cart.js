@@ -1,7 +1,7 @@
 import React from "react";
 
 const Cart = () => {
-  return <>CART</>;
+  return <></>;
 };
 
 export default Cart;

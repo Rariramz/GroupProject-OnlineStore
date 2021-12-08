@@ -18,7 +18,7 @@ const TransparentPaper = styled(Paper)(({ theme }) => ({
   boxSizing: "border-box",
 
   background: "rgba(247, 248, 250, 0.8)",
-  backdropFilter: "blur(24px)",
+  backdropFilter: "blur(0px)",
   borderRadius: 10,
 }));
 
