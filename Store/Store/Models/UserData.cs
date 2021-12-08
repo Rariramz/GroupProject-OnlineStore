@@ -4,6 +4,7 @@ namespace Store.Models
 {
     public class UserData
     {
+        public bool Success { get; set; }
         public string FirstName { get; set; } = "";
         public string LastName { get; set; } = "";
         public string Email { get; set; } = "";

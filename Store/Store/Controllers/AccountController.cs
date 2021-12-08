@@ -30,14 +30,19 @@ namespace Store.Controllers
             _emailConfirmation = emailConfirmation;
         }
 
-
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> Info()
         {
             User user = await _userManager.GetUserAsync(User);
+            if(user == null)
+            {
+                return Json(new UserData() { Success = false });
+            }
 
             UserData userData = new UserData()
             {
+                Success = true,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Email = user.Email,
@@ -55,6 +60,13 @@ namespace Store.Controllers
 
             userData.Addresses = addresses;
             return Json(userData);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return Redirect("/");
         }
 
         [HttpPost]
@@ -220,6 +232,7 @@ namespace Store.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> Confirm(string email, string code)
         {
             User user = await _userManager.FindByEmailAsync(email);
