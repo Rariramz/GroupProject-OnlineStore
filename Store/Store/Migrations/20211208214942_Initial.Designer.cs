@@ -12,8 +12,8 @@ using Store.Data;
 namespace Store.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20211208170654_dany14")]
-    partial class dany14
+    [Migration("20211208214942_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -325,8 +325,11 @@ namespace Store.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
-                    b.Property<string>("Image")
-                        .HasColumnType("text");
+                    b.Property<int>("ImageID")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("InsideImageID")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Name")
                         .HasColumnType("text");
@@ -339,6 +342,23 @@ namespace Store.Migrations
                     b.HasIndex("ParentID");
 
                     b.ToTable("Categories");
+                });
+
+            modelBuilder.Entity("Store.Entities.Image", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
+
+                    b.Property<string>("ImageData")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Images");
                 });
 
             modelBuilder.Entity("Store.Entities.Item", b =>
@@ -355,8 +375,8 @@ namespace Store.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
-                    b.Property<string>("Image")
-                        .HasColumnType("text");
+                    b.Property<int>("ImageID")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Name")
                         .HasColumnType("text");

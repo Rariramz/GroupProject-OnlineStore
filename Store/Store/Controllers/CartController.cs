@@ -132,18 +132,18 @@ namespace Store.Controllers
             return Json(itemRelations);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetTotal()
-        {
-            User user = await _userManager.GetUserAsync(User);
+        //[HttpGet]
+        //public async Task<IActionResult> GetTotal()
+        //{
+        //    User user = await _userManager.GetUserAsync(User);
             
-            decimal? total = decimal.Zero;
-            total = (decimal?)(from cartItems in _context.UserItems
-                               where cartItems.UserID == user.Id
-                               select cartItems.Count *
-                               cartItems.Item.GetDiscountPrice(user.Discount)).Sum();
-            return Json(total ?? decimal.Zero);
-        }
+        //    decimal? total = decimal.Zero;
+        //    total = (decimal?)(from cartItems in _context.UserItems
+        //                       where cartItems.UserID == user.Id
+        //                       select cartItems.Count *
+        //                       cartItems.Item.GetDiscountPrice(user.Discount)).Sum();
+        //    return Json(total ?? decimal.Zero);
+        //}
 
 
     }
