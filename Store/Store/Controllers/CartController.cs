@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Store.Data;
 using Store.Entities;
+using System.Data.SqlClient;
 using Store.Models;
 
 namespace Store.Controllers
@@ -33,14 +34,25 @@ namespace Store.Controllers
 
         [HttpGet]
         [Authorize (Roles="admin")]
-        public async Task<ActionResult<IEnumerable<UserItem>>> GetUserItems()
+        public async Task<ActionResult<IEnumerable<UserItemData>>> GetUserItems()
         {
-            return await _context.UserItems.ToListAsync();
+            List<UserItemData> ans = new List<UserItemData>();
+            foreach (var userItem in _context.UserItems)
+            {
+                ans.Add(new UserItemData
+                {
+                    UserID = userItem.UserID,
+                    OrderID = userItem.OrderID,
+                    ItemID = userItem.ID,
+                    Count = userItem.Count,
+                });
+            }
+            return ans;
         }
 
         [HttpGet]
         [Authorize(Roles = "admin")]
-        public async Task<ActionResult<UserItem>> GetAddress(int id)
+        public async Task<ActionResult<UserItemData>> GetUserItem(int id)
         {
             var userItem = await _context.UserItems.FindAsync(id);
 
@@ -49,7 +61,13 @@ namespace Store.Controllers
                 return NotFound();
             }
 
-            return userItem;
+            return new UserItemData
+            {
+                UserID = userItem.UserID,
+                OrderID = userItem.OrderID,
+                ItemID = userItem.ID,
+                Count = userItem.Count,
+            };
         }
 
         [HttpPost]
@@ -132,18 +150,20 @@ namespace Store.Controllers
             return Json(itemRelations);
         }
 
-        //[HttpGet]
-        //public async Task<IActionResult> GetTotal()
-        //{
-        //    User user = await _userManager.GetUserAsync(User);
+        [HttpGet]
+        public async Task<IActionResult> GetTotal()
+        {
+            User user = await _userManager.GetUserAsync(User);
             
-        //    decimal? total = decimal.Zero;
-        //    total = (decimal?)(from cartItems in _context.UserItems
-        //                       where cartItems.UserID == user.Id
-        //                       select cartItems.Count *
-        //                       cartItems.Item.GetDiscountPrice(user.Discount)).Sum();
-        //    return Json(total ?? decimal.Zero);
-        //}
+            decimal? total = decimal.Zero;
+            total = (decimal?)(from cartItems in _context.UserItems
+                               where cartItems.UserID == user.Id
+                               join item in _context.Items on cartItems.ItemID equals item.ID
+                   
+                               select cartItems.Count 
+                               *item.GetDiscountPrice(user.Discount)).Sum();
+            return Json(total ?? decimal.Zero);
+        }
 
 
     }

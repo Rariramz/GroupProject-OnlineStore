@@ -1,8 +1,8 @@
 import Admin from "./pages/Admin";
-import Authorization from "./pages/Authorization";
 import Cart from "./pages/Cart";
 import Home from "./pages/Home";
 import ItemPage from "./pages/ItemPage";
+import CategoryPage from "./pages/CategoryPage";
 import {
   ADMIN_ROUTE,
   CART_ROUTE,
@@ -10,6 +10,7 @@ import {
   ITEM_ROUTE,
   LOGIN_ROUTE,
   REGISTRATION_ROUTE,
+  CATEGORY_ROUTE,
 } from "./utils/consts";
 
 export const authRoutes = [
@@ -36,11 +37,15 @@ export const publicRoutes = [
     component: <ItemPage />,
   },
   {
+    path: CATEGORY_ROUTE + "/:name",
+    component: <CategoryPage />,
+  },
+  {
     path: LOGIN_ROUTE,
-    component: <Authorization />,
+    component: <CategoryPage />,
   },
   {
     path: REGISTRATION_ROUTE,
-    component: <Authorization />,
+    component: <CategoryPage />,
   },
 ];

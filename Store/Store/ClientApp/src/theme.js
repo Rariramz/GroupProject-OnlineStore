@@ -35,6 +35,9 @@ const theme = createTheme({
     body2: {
       fontSize: 16,
     },
+    subtitle2: {
+      fontSize: 13,
+    },
   },
   components: {
     MuiButton: {
@@ -44,6 +47,25 @@ const theme = createTheme({
       },
       styleOverrides: {
         contained: { fontcolor: "#fff" },
+      },
+    },
+    MuiCard: {
+      styleOverrides: {
+        root: {
+          borderRadius: 10,
+        },
+      },
+    },
+    MuiChip: {
+      styleOverrides: {
+        labelMedium: {
+          fontSize: 41,
+          color: "#849a8e",
+        },
+        sizeMedium: {
+          height: 60,
+          borderRadius: 30,
+        },
       },
     },
   },

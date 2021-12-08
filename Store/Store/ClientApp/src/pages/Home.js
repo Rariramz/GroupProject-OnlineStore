@@ -1,27 +1,65 @@
 import { Box, Typography, Grid, Container } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import { Link } from "react-router-dom";
 import { styled } from "@mui/material/styles";
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 
 import ItemCard from "../components/ItemCard";
 import PrettyPreviewImage from "../components/PrettyPreviewImage";
 import CandleInfo from "../components/CandleInfo";
+import CategoryCard from "../components/CategoryCard";
+import fetchWrapper, { post } from "../utils/fetchWrapper";
 
 const Content = styled(Box)(({ theme }) => ({
   padding: theme.spacing(0, 32),
   margin: theme.spacing(18, 0),
 }));
 
-const ProductsGridContainer = styled(Grid)(({ theme }) => ({
+const ItemGridContainer = styled(Grid)(({ theme }) => ({
   width: 1200,
   marginTop: theme.spacing(4),
 }));
 
 const Home = () => {
   const productsRef = useRef(null);
+  const [categories, setCategories] = useState(["2", "2", "2"]);
+  const [popularProducts, PopularProducts] = useState([
+    "2",
+    "2",
+    "2",
+    "2",
+    "2",
+    "2",
+    "2",
+    "2",
+  ]);
 
   const scrollToProducts = () => {
     productsRef.current.scrollIntoView({ behavior: "smooth" });
+  };
+  useEffect(() => {
+    post("api/Account/Register", func, {
+      firstname: "as2d",
+      lastname: "asdww",
+      email: "as1df@mail.ru",
+      password: "12344312",
+      passwordConfirm: "12344312",
+    });
+  }, []);
+
+  const func = (res) => {
+    if (res.success) {
+      console.log("HOORAY");
+    } else {
+      console.log(res.errorCodes);
+    }
+  };
+
+  const renderProductCategoryCard = () => {
+    return (
+      <Link to={`category/${0}`} style={{ textDecoration: "none" }}>
+        <CategoryCard />
+      </Link>
+    );
   };
 
   return (
@@ -49,41 +87,49 @@ const Home = () => {
           >
             <Grid item>
               <Typography variant="h1" color="initial">
-                Products
+                Candles
               </Typography>
             </Grid>
             <Grid item>
               <Typography variant="body1" color="textSecondary">
-                Order it for you or for your beholved ones
+                You will find any candle your heart could wish for!
               </Typography>
             </Grid>
-
-            <ProductsGridContainer item container spacing={4}>
-              <Grid item xs={3}>
-                <ItemCard />
-              </Grid>
-              <Grid item xs={3}>
-                <ItemCard />
-              </Grid>
-              <Grid item xs={3}>
-                <ItemCard />
-              </Grid>
-              <Grid item xs={3}>
-                <ItemCard />
-              </Grid>
-              <Grid item xs={3}>
-                <ItemCard />
-              </Grid>
-              <Grid item xs={3}>
-                <ItemCard />
-              </Grid>
-              <Grid item xs={3}>
-                <ItemCard />
-              </Grid>
-              <Grid item xs={3}>
-                <ItemCard />
-              </Grid>
-            </ProductsGridContainer>
+            <ItemGridContainer item container spacing={4}>
+              {categories.map((item) => (
+                <Grid item xs={4}>
+                  {renderProductCategoryCard(item)}
+                </Grid>
+              ))}
+            </ItemGridContainer>
+          </Grid>
+          <Grid
+            item
+            container
+            spacing={1}
+            direction="column"
+            justify="center"
+            alignItems="center"
+            alignContent="center"
+            wrap="nowrap"
+          >
+            <Grid item>
+              <Typography variant="h1" color="initial">
+                Popular products
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Typography variant="body1" color="textSecondary">
+                Order it for you or for your beloved ones
+              </Typography>
+            </Grid>
+            <ItemGridContainer item container spacing={4}>
+              {popularProducts.map((item) => (
+                <Grid item xs={3}>
+                  <ItemCard id={item.id} />
+                </Grid>
+              ))}
+            </ItemGridContainer>
           </Grid>
           <Grid item></Grid>
         </Grid>
