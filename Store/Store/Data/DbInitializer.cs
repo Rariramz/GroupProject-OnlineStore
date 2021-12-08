@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Store.Entities;
+using Store.Tools;
 
 namespace Store.Data
 {
@@ -77,8 +78,11 @@ namespace Store.Data
                 {
                     Name = "Свечи обычные",
                     Description = "Свечи обычные описание",
+                    Image = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\Все_свечи.jpg"),
+                    InsideImage = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\все_свечи_широкая.jpg"),
                     ParentID = null 
                 };
+
 
 
                 _context.Categories.Add(rootCategory);
@@ -92,21 +96,21 @@ namespace Store.Data
                         {
                             Name = "Свеча длинная",
                             Description = "Очень красивая длинная свеча, пригодится для долгих праздников",
-                            Image = "long_candle.jpg",
+                            Image = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\свеча_длинная.jpg"),
                             CategoryID = rootCategory.ID
                         },
                         new Item
                         {
                             Name = "Свеча толстая",
                             Description = "Очень красивая толстая свеча",
-                            Image = "fat_candle.jpg",
+                            Image = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\свеча_толстая.jpg"),
                             CategoryID = rootCategory.ID
                         },
                         new Item
                         {
                             Name = "Свеча фигурная",
                             Description = "Свеча в виде фигуры",
-                            Image = "figure_candle.jpg",
+                            Image = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\свеча_в_виде_фигуры.jpg"),
                             CategoryID = rootCategory.ID
                         },
                     });

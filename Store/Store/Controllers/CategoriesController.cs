@@ -2,17 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Store.Data;
 using Store.Entities;
+using Store.Models;
+using Store.Tools;
 
 namespace Store.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
-    public class CategoriesController : ControllerBase
+    public class CategoriesController : Controller
     {
         private readonly ApplicationDbContext _context;
 
@@ -45,11 +48,37 @@ namespace Store.Controllers
         // PUT: api/Categories/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [Authorize("admin")]
         public async Task<IActionResult> PutCategory(int id, Category category)
         {
+            CategoryResult categoryResult = new CategoryResult() { Success = true };
+
             if (id != category.ID)
             {
                 return BadRequest();
+            }
+
+            Category rootCategory = await _context.Categories.FirstAsync(c => c.ParentID == c.ID);
+
+            if (rootCategory != null && rootCategory.ID != category.ID)
+            {
+                if (category.ID == category.ParentID)
+                {
+                    categoryResult.Success = false;
+                    categoryResult.ErrorCodes.Add(CategoryResultConstants.ERROR_ROOT_ALREADY_EXISTS);
+                }
+            }
+
+            if (!category.ParentID.HasValue || !CategoryExists(category.ParentID ?? 0))
+            {
+                categoryResult.Success = false;
+                categoryResult.ErrorCodes.Add(CategoryResultConstants.ERROR_PARENT_INVALID);
+            }
+
+            if (category.ChildItems?.Count > 0 && category.ChildCategories?.Count > 0)
+            {
+                categoryResult.Success = false;
+                categoryResult.ErrorCodes.Add(CategoryResultConstants.ERROR_CHILD_CONFLICT);
             }
 
             _context.Entry(category).State = EntityState.Modified;
@@ -70,22 +99,77 @@ namespace Store.Controllers
                 }
             }
 
-            return NoContent();
+            return Json(_context);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetImage(int id)
+        {
+            Category? category = _context.Categories.FirstOrDefault(category => category.ID == id);
+            if (category == null || category.Image == "")
+            {
+                return NoContent();
+            }
+
+            return File(ImageConverter.Base64ToImage(category.Image), "image/png");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetInsideImage(int id)
+        {
+            Category? category = _context.Categories.FirstOrDefault(category => category.ID == id);
+            if (category == null || category.InsideImage == "")
+            {
+                return NoContent();
+            }
+
+            return File(ImageConverter.Base64ToImage(category.InsideImage), "image/png");
         }
 
         // POST: api/Categories
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public async Task<ActionResult<Category>> PostCategory(Category category)
         {
-            _context.Categories.Add(category);
-            await _context.SaveChangesAsync();
+            CategoryResult categoryResult = new CategoryResult() { Success = true };
 
-            return CreatedAtAction("GetCategory", new { id = category.ID }, category);
+
+            Category rootCategory = await _context.Categories.FirstAsync(c => c.ParentID == c.ID);
+
+            if (rootCategory != null)
+            {
+                if (category.ID == category.ParentID)
+                {
+                    categoryResult.Success = false;
+                    categoryResult.ErrorCodes.Add(CategoryResultConstants.ERROR_ROOT_ALREADY_EXISTS);
+                }
+            }
+
+            if (!category.ParentID.HasValue || !CategoryExists(category.ParentID ?? 0))
+            {
+                categoryResult.Success = false;
+                categoryResult.ErrorCodes.Add(CategoryResultConstants.ERROR_PARENT_INVALID);
+            }
+
+            if (category.ChildItems?.Count > 0 && category.ChildCategories?.Count > 0)
+            {
+                categoryResult.Success = false;
+                categoryResult.ErrorCodes.Add(CategoryResultConstants.ERROR_CHILD_CONFLICT);
+            }
+
+            if (categoryResult.Success)
+            {
+                _context.Categories.Add(category);
+                await _context.SaveChangesAsync();
+            }
+
+            return Json(categoryResult);
         }
 
         // DELETE: api/Categories/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> DeleteCategory(int id)
         {
             var category = await _context.Categories.FindAsync(id);
