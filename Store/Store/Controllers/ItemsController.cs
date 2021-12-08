@@ -32,8 +32,8 @@ namespace Store.Controllers
             return await _context.Items.ToListAsync();
         }
 
-        // GET: api/Items/5
-        [HttpGet("{id}")]
+        // GET: api/Items?id=
+        [HttpGet]
         public async Task<ActionResult<Item>> GetItem(int id)
         {
             var item = await _context.Items.FindAsync(id);
@@ -113,12 +113,20 @@ namespace Store.Controllers
         public async Task<IActionResult> GetImage(int id)
         {
             Item? item = _context.Items.FirstOrDefault(item => item.ID == id);
-            if(item == null || item.Image == "")
+            
+
+            if(item == null)
             {
                 return NoContent();
             }
 
-            return File(ImageConverter.Base64ToImage(item.Image), "image/png");
+            Image? image = _context.Images.FirstOrDefault(image => image.ID == item.ImageID);
+            if (image == null)
+            {
+                return NoContent();
+            }
+
+            return File(ImageConverter.Base64ToImage(image.ImageData), "image/png");
         }
 
         [Authorize(Roles = "admin")]
@@ -166,7 +174,7 @@ namespace Store.Controllers
                 itemResult.ErrorCodes.Add(ItemResultConstants.ERROR_CATEGORY_NOT_EXISTS);
             }
 
-            if (itemModel.Price <= 0)
+            if(itemModel.Price <= 0)
             {
                 itemResult.ErrorCodes.Add(ItemResultConstants.ERROR_PRICE_VALUE);
             }
@@ -177,13 +185,17 @@ namespace Store.Controllers
                 return Json(itemResult);
             }
 
+            Image image = new Image() { ImageData = base64Image };
+            _context.Images.Add(image);
+            await _context.SaveChangesAsync();
+
             Item item = new Item()
             {
                 Name = itemModel.Name,
                 Description = itemModel.Description,
                 CategoryID = itemModel.CategoryID,
-                Price = (decimal)itemModel.Price,
-                Image = base64Image
+                Price = ((decimal)itemModel.Price),
+                ImageID = image.ID
             };
 
             _context.Items.Add(item);

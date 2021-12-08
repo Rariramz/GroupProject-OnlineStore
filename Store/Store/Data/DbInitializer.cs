@@ -74,20 +74,47 @@ namespace Store.Data
 
             if (!_context.Categories.Any())
             {
+                Image imageMain = new Image { ImageData = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\Все_свечи.jpg") };
+                Image insideImageMain = new Image { ImageData = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\все_свечи_широкая.jpg") };
+
+                _context.Images.Add(imageMain);
+                _context.Images.Add(insideImageMain);
+                _context.SaveChanges();
+
                 Category rootCategory = new Category
                 {
                     Name = "Свечи обычные",
                     Description = "Свечи обычные описание",
-                    Image = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\Все_свечи.jpg"),
-                    InsideImage = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\все_свечи_широкая.jpg"),
+                    ImageID = imageMain.ID,
+                    InsideImageID = insideImageMain.ID,
                     ParentID = null 
                 };
 
-
-
                 _context.Categories.Add(rootCategory);
 
+
                 await _context.SaveChangesAsync();
+
+                Category subCategory = new Category
+                {
+                    Name = "Свечи обычные но не совсем",
+                    Description = "Свечи не совсем обычные описание",
+                    ImageID = imageMain.ID,
+                    InsideImageID = insideImageMain.ID,
+                    ParentID = rootCategory.ID
+                };
+
+                _context.Categories.Add(subCategory);
+                await _context.SaveChangesAsync();
+
+                Image longCandle = new Image { ImageData = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\свеча_длинная.jpg") };
+                Image fatCandle = new Image { ImageData = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\свеча_толстая.jpg") };
+                Image coolCandle = new Image { ImageData = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\свеча_в_виде_фигуры.jpg") };
+
+                _context.Images.Add(longCandle);
+                _context.Images.Add(fatCandle);
+                _context.Images.Add(coolCandle);
+                _context.SaveChanges();
 
                 _context.Items.AddRange(
                     new List<Item>
@@ -96,22 +123,22 @@ namespace Store.Data
                         {
                             Name = "Свеча длинная",
                             Description = "Очень красивая длинная свеча, пригодится для долгих праздников",
-                            Image = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\свеча_длинная.jpg"),
-                            CategoryID = rootCategory.ID
+                            ImageID = longCandle.ID,
+                            CategoryID = subCategory.ID
                         },
                         new Item
                         {
                             Name = "Свеча толстая",
                             Description = "Очень красивая толстая свеча",
-                            Image = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\свеча_толстая.jpg"),
-                            CategoryID = rootCategory.ID
+                            ImageID = fatCandle.ID,
+                            CategoryID = subCategory.ID
                         },
                         new Item
                         {
                             Name = "Свеча фигурная",
                             Description = "Свеча в виде фигуры",
-                            Image = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\свеча_в_виде_фигуры.jpg"),
-                            CategoryID = rootCategory.ID
+                            ImageID = coolCandle.ID,
+                            CategoryID = subCategory.ID
                         },
                     });
                 await _context.SaveChangesAsync();

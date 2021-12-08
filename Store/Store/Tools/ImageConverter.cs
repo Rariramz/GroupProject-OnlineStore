@@ -30,7 +30,7 @@ namespace Store.Tools
                 Stream stream = formFile.OpenReadStream();
                 Image image = Image.Load(stream);
                 MemoryStream saveStream = new MemoryStream();
-                image.SaveAsPng(stream);
+                image.SaveAsPng(saveStream);
                 return Convert.ToBase64String(saveStream.ToArray());
             }
             catch

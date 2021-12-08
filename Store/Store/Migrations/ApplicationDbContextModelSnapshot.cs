@@ -323,11 +323,11 @@ namespace Store.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
-                    b.Property<string>("Image")
-                        .HasColumnType("text");
+                    b.Property<int>("ImageID")
+                        .HasColumnType("integer");
 
-                    b.Property<string>("InsideImage")
-                        .HasColumnType("text");
+                    b.Property<int>("InsideImageID")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Name")
                         .HasColumnType("text");
@@ -340,6 +340,23 @@ namespace Store.Migrations
                     b.HasIndex("ParentID");
 
                     b.ToTable("Categories");
+                });
+
+            modelBuilder.Entity("Store.Entities.Image", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
+
+                    b.Property<string>("ImageData")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Images");
                 });
 
             modelBuilder.Entity("Store.Entities.Item", b =>
@@ -356,8 +373,8 @@ namespace Store.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
-                    b.Property<string>("Image")
-                        .HasColumnType("text");
+                    b.Property<int>("ImageID")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Name")
                         .HasColumnType("text");

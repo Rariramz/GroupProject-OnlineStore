@@ -15,6 +15,7 @@ namespace Store.Data
         public DbSet<UserAddress> UserAddresses { get; set; }
         public DbSet<UserItem> UserItems { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Image> Images { get; set; }
 
         public ApplicationDbContext(DbContextOptions options, IOptions<OperationalStoreOptions> operationalStoreOptions)
             : base(options, operationalStoreOptions)

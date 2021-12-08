@@ -15,9 +15,5 @@ namespace Store.Entities
         public DateTime InitialDate { get; set; }
         public DateTime DeliveryDate { get; set; }
         public bool IsDelivery { get; set; }
-
-        public User? User {  get; set; }
-        public Address? Address {  get; set; }
-        public ICollection<UserItem>? UserItems { get; set;}
     }
 }

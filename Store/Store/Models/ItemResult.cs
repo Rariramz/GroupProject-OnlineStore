@@ -16,6 +16,7 @@
         public const int ERROR_DESCRIPTION_VALIDATION_FAIL = 445;
         public const int ERROR_IMAGE = 446;
         public const int ERROR_CATEGORY_NOT_EXISTS = 447;
-        public const int ERROR_PRICE_VALUE = 448;
+        public const int ERROR_PRICE_VALIDATION_FAIL = 448;
+        public const int ERROR_PRICE_VALUE = 449;
     }
 }
