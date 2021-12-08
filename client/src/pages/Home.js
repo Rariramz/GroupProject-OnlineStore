@@ -6,6 +6,7 @@ import React, { useRef } from "react";
 import ItemCard from "../components/ItemCard";
 import PrettyPreviewImage from "../components/PrettyPreviewImage";
 import CandleInfo from "../components/CandleInfo";
+import Header from "../components/Header";
 
 const Content = styled(Box)(({ theme }) => ({
   padding: theme.spacing(0, 32),

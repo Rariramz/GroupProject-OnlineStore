@@ -4,3 +4,5 @@ export const REGISTRATION_ROUTE = "/register";
 export const HOME_ROUTE = "/";
 export const CART_ROUTE = "/cart";
 export const ITEM_ROUTE = "/item";
+
+export const URL = "http://localhost:xxxx/";

@@ -8,7 +8,7 @@ import twoCandlesImage from "../images/twoCandles.png";
 const BackgroundedDiv = styled(Box)(({ theme }) => ({
   height: "60vh",
   backgroundColor: "#f7f8fa",
-  padding: theme.spacing(10, 40),
+  padding: theme.spacing(10, 32),
   display: "flex",
   flexDirection: "row",
   justifyContent: "space-around",
