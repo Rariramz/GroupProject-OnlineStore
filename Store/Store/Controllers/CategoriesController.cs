@@ -9,10 +9,11 @@ using Microsoft.EntityFrameworkCore;
 using Store.Data;
 using Store.Entities;
 using Store.Models;
+using Store.Tools;
 
 namespace Store.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class CategoriesController : Controller
     {
@@ -25,7 +26,6 @@ namespace Store.Controllers
 
         // GET: api/Categories
         [HttpGet]
-        [Authorize("admin")]
         public async Task<ActionResult<IEnumerable<Category>>> GetCategories()
         {
             return await _context.Categories.ToListAsync();
@@ -33,7 +33,6 @@ namespace Store.Controllers
 
         // GET: api/Categories/5
         [HttpGet("{id}")]
-        [Authorize("admin")]
         public async Task<ActionResult<Category>> GetCategory(int id)
         {
             var category = await _context.Categories.FindAsync(id);
@@ -103,10 +102,34 @@ namespace Store.Controllers
             return Json(_context);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetImage(int id)
+        {
+            Category? category = _context.Categories.FirstOrDefault(category => category.ID == id);
+            if (category == null || category.Image == "")
+            {
+                return NoContent();
+            }
+
+            return File(ImageConverter.Base64ToImage(category.Image), "image/png");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetInsideImage(int id)
+        {
+            Category? category = _context.Categories.FirstOrDefault(category => category.ID == id);
+            if (category == null || category.InsideImage == "")
+            {
+                return NoContent();
+            }
+
+            return File(ImageConverter.Base64ToImage(category.InsideImage), "image/png");
+        }
+
         // POST: api/Categories
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        [Authorize("admin")]
+        [Authorize(Roles = "admin")]
         public async Task<ActionResult<Category>> PostCategory(Category category)
         {
             CategoryResult categoryResult = new CategoryResult() { Success = true };
@@ -146,6 +169,7 @@ namespace Store.Controllers
 
         // DELETE: api/Categories/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> DeleteCategory(int id)
         {
             var category = await _context.Categories.FindAsync(id);

@@ -118,8 +118,6 @@ namespace Store.Controllers
                 return NoContent();
             }
 
-            //ImageConverter.SaveToDisk(item.Image, Environment.CurrentDirectory + @"\image.png");
-
             return File(ImageConverter.Base64ToImage(item.Image), "image/png");
         }
 

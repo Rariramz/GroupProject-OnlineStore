@@ -78,8 +78,8 @@ namespace Store.Data
                 {
                     Name = "Свечи обычные",
                     Description = "Свечи обычные описание",
-                    Image = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\все_свечи.jpg"),
-                    InsideImage = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\все_всечи_широкая.jpg"),
+                    Image = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\Все_свечи.jpg"),
+                    InsideImage = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\все_свечи_широкая.jpg"),
                     ParentID = null 
                 };
 
