@@ -11,7 +11,6 @@ import {
   LOGIN_ROUTE,
   REGISTRATION_ROUTE,
   CATEGORY_ROUTE,
-  SUBCATEGORY_ROUTE,
 } from "./utils/consts";
 
 export const authRoutes = [
@@ -39,6 +38,14 @@ export const publicRoutes = [
   },
   {
     path: CATEGORY_ROUTE + "/:name",
+    component: <CategoryPage />,
+  },
+  {
+    path: LOGIN_ROUTE + "/",
+    component: <CategoryPage />,
+  },
+  {
+    path: REGISTRATION_ROUTE + "/",
     component: <CategoryPage />,
   },
 ];

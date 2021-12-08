@@ -5,4 +5,3 @@ export const HOME_ROUTE = "/";
 export const CART_ROUTE = "/cart";
 export const ITEM_ROUTE = "/item";
 export const CATEGORY_ROUTE = "/category";
-export const SUBCATEGORY_ROUTE = "/subcategory";
