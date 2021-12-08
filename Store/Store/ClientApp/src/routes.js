@@ -3,7 +3,6 @@ import Cart from "./pages/Cart";
 import Home from "./pages/Home";
 import ItemPage from "./pages/ItemPage";
 import CategoryPage from "./pages/CategoryPage";
-
 import {
   ADMIN_ROUTE,
   CART_ROUTE,
@@ -13,7 +12,6 @@ import {
   REGISTRATION_ROUTE,
   CATEGORY_ROUTE,
   SUBCATEGORY_ROUTE,
-  HOME_ROUTE_ALT,
 } from "./utils/consts";
 
 export const authRoutes = [
@@ -33,10 +31,6 @@ export const publicRoutes = [
   /* маршруты, доступные всем пользователям */
   {
     path: HOME_ROUTE,
-    component: <Home />,
-  },
-  {
-    path: HOME_ROUTE_ALT,
     component: <Home />,
   },
   {

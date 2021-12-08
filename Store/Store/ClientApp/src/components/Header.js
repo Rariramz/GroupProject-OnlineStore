@@ -19,7 +19,7 @@ const HeaderDiv = styled(Box)(({ theme }) => ({
 const Header = () => {
   return (
     <HeaderDiv>
-      <Link to="home">
+      <Link to="">
         <img class="logo" src={logo} alt="Candleaf" />
       </Link>
       <HeaderDiv width="40vw">
