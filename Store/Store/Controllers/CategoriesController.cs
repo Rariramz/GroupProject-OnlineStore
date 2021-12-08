@@ -33,17 +33,30 @@ namespace Store.Controllers
         }
 
         // GET: api/Categories?id=
-        [HttpGet]
+        [HttpGet("{id}")]
         public async Task<ActionResult<Category>> GetCategory(int id)
         {
             var category = await _context.Categories.FindAsync(id);
-
             if (category == null)
             {
                 return NotFound();
             }
 
-            return category;
+            CategoryData categoryData = new CategoryData
+            {
+                Name = category.Name,
+                Description = category.Description,
+                ParentID = category.ParentID,
+                ImageID = category.ImageID,
+                InsideImageID = category.InsideImageID
+            };
+
+            categoryData.Items = _context.Items.Where(item => item.CategoryID == id).ToList();
+            categoryData.ChildCategoriesId = (from cat in _context.Categories
+                                             where cat.ParentID == id
+                                             select cat.ID).ToList();
+
+            return Json(categoryData);
         }
 
         // PUT: api/Categories/5
@@ -140,7 +153,7 @@ namespace Store.Controllers
             return File(ImageConverter.Base64ToImage(image.ImageData), "image/png");
         }
 
-        // POST: api/Categories/PostCategory
+        // POST: api/Categories/CreateCategory
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         [Authorize(Roles = "admin")]
