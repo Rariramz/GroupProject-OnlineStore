@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Store.Entities
+﻿namespace Store.Models
 {
-    public class Order
+    public class OrderData
     {
-        public int ID { get; set; }
         public string? Description { get; set; }
         public decimal TotalPrice { get; set; }
         public string UserID { get; set; } = "";

@@ -32,9 +32,9 @@ namespace Store.Controllers
             return await _context.Items.ToListAsync();
         }
 
-        // GET: api/Items/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Item>> GetItem(int id)
+        // GET: api/Items?id=
+        [HttpGet]
+        public async Task<ActionResult<ItemData>> GetItem(int id)
         {
             var item = await _context.Items.FindAsync(id);
 
@@ -43,7 +43,13 @@ namespace Store.Controllers
                 return NotFound();
             }
 
-            return item;
+            return new ItemData()
+            {
+                Name = item.Name,
+                Description = item.Description,
+                CategoryID = item.CategoryID,
+                Price = (float)item.Price,
+            };
         }
 
         // PUT: api/Items/5
@@ -113,12 +119,20 @@ namespace Store.Controllers
         public async Task<IActionResult> GetImage(int id)
         {
             Item? item = _context.Items.FirstOrDefault(item => item.ID == id);
-            if(item == null || item.Image == "")
+            
+
+            if(item == null)
             {
                 return NoContent();
             }
 
-            return File(ImageConverter.Base64ToImage(item.Image), "image/png");
+            Image? image = _context.Images.FirstOrDefault(image => image.ID == item.ImageID);
+            if (image == null)
+            {
+                return NoContent();
+            }
+
+            return File(ImageConverter.Base64ToImage(image.ImageData), "image/png");
         }
 
         [Authorize(Roles = "admin")]
@@ -166,23 +180,6 @@ namespace Store.Controllers
                 itemResult.ErrorCodes.Add(ItemResultConstants.ERROR_CATEGORY_NOT_EXISTS);
             }
 
-            //float price = 0;
-            //if (float.TryParse(itemModel.Price, out float priceParced))
-            //{
-            //    if(priceParced <= 0)
-            //    {
-            //        itemResult.ErrorCodes.Add(ItemResultConstants.ERROR_PRICE_VALUE);
-            //    }
-            //    else
-            //    {
-            //        price = priceParced;
-            //    }
-            //}
-            //else
-            //{
-            //    itemResult.ErrorCodes.Add(ItemResultConstants.ERROR_PRICE_VALIDATION_FAIL);
-            //}
-
             if(itemModel.Price <= 0)
             {
                 itemResult.ErrorCodes.Add(ItemResultConstants.ERROR_PRICE_VALUE);
@@ -194,13 +191,17 @@ namespace Store.Controllers
                 return Json(itemResult);
             }
 
+            Image image = new Image() { ImageData = base64Image };
+            _context.Images.Add(image);
+            await _context.SaveChangesAsync();
+
             Item item = new Item()
             {
                 Name = itemModel.Name,
                 Description = itemModel.Description,
                 CategoryID = itemModel.CategoryID,
                 Price = ((decimal)itemModel.Price),
-                Image = base64Image
+                ImageID = image.ID
             };
 
             _context.Items.Add(item);
