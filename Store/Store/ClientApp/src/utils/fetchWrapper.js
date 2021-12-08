@@ -1,5 +1,3 @@
-import { ResetTvRounded } from "@mui/icons-material";
-
 export const get = async (url, callback) => {
   fetchWrapper("GET", url, callback);
 };
