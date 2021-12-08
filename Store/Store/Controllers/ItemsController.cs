@@ -7,12 +7,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Store.Entities;
 using Store.Data;
+using Microsoft.AspNetCore.Authorization;
+using Store.Models;
 
 namespace Store.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
-    public class ItemsController : ControllerBase
+    public class ItemsController : Controller
     {
         private readonly ApplicationDbContext _context;
 
@@ -104,5 +106,12 @@ namespace Store.Controllers
         {
             return _context.Items.Any(e => e.ID == id);
         }
+
+        //[Authorize(Roles = "admin")]
+        //[HttpPost]
+        //public async Task<IActionResult> CreateItem([FromForm]ItemModel itemModel)
+        //{
+            
+        //}
     }
 }
