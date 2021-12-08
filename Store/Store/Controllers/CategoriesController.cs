@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -47,60 +48,60 @@ namespace Store.Controllers
 
         // PUT: api/Categories/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        [Authorize("admin")]
-        public async Task<IActionResult> PutCategory(int id, Category category)
-        {
-            CategoryResult categoryResult = new CategoryResult() { Success = true };
+        //[HttpPut("{id}")]
+        //[Authorize(Roles = "admin")]
+        //public async Task<IActionResult> PutCategory(int id, Category category)
+        //{
+        //    CategoryResult categoryResult = new CategoryResult() { Success = true };
 
-            if (id != category.ID)
-            {
-                return BadRequest();
-            }
+        //    if (id != category.ID)
+        //    {
+        //        return BadRequest();
+        //    }
 
-            Category rootCategory = await _context.Categories.FirstAsync(c => c.ParentID == c.ID);
+        //    Category rootCategory = await _context.Categories.FirstAsync(c => c.ParentID == c.ID);
 
-            if (rootCategory != null && rootCategory.ID != category.ID)
-            {
-                if (category.ID == category.ParentID)
-                {
-                    categoryResult.Success = false;
-                    categoryResult.ErrorCodes.Add(CategoryResultConstants.ERROR_ROOT_ALREADY_EXISTS);
-                }
-            }
+        //    if (rootCategory != null && rootCategory.ID != category.ID)
+        //    {
+        //        if (category.ID == category.ParentID)
+        //        {
+        //            categoryResult.Success = false;
+        //            categoryResult.ErrorCodes.Add(CategoryResultConstants.ERROR_ROOT_ALREADY_EXISTS);
+        //        }
+        //    }
 
-            if (!category.ParentID.HasValue || !CategoryExists(category.ParentID ?? 0))
-            {
-                categoryResult.Success = false;
-                categoryResult.ErrorCodes.Add(CategoryResultConstants.ERROR_PARENT_INVALID);
-            }
+        //    if (!category.ParentID.HasValue || !CategoryExists(category.ParentID ?? 0))
+        //    {
+        //        categoryResult.Success = false;
+        //        categoryResult.ErrorCodes.Add(CategoryResultConstants.ERROR_PARENT_INVALID);
+        //    }
 
-            if (category.ChildItems?.Count > 0 && category.ChildCategories?.Count > 0)
-            {
-                categoryResult.Success = false;
-                categoryResult.ErrorCodes.Add(CategoryResultConstants.ERROR_CHILD_CONFLICT);
-            }
+        //    if (category.ChildItems?.Count > 0 && category.ChildCategories?.Count > 0)
+        //    {
+        //        categoryResult.Success = false;
+        //        categoryResult.ErrorCodes.Add(CategoryResultConstants.ERROR_CHILD_CONFLICT);
+        //    }
 
-            _context.Entry(category).State = EntityState.Modified;
+        //    _context.Entry(category).State = EntityState.Modified;
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CategoryExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+        //    try
+        //    {
+        //        await _context.SaveChangesAsync();
+        //    }
+        //    catch (DbUpdateConcurrencyException)
+        //    {
+        //        if (!CategoryExists(id))
+        //        {
+        //            return NotFound();
+        //        }
+        //        else
+        //        {
+        //            throw;
+        //        }
+        //    }
 
-            return Json(_context);
-        }
+        //    return Json(_context);
+        //}
 
         [HttpGet]
         public async Task<IActionResult> GetImage(int id)
@@ -126,43 +127,86 @@ namespace Store.Controllers
             return File(ImageConverter.Base64ToImage(category.InsideImage), "image/png");
         }
 
-        // POST: api/Categories
+        // POST: api/Categories/PostCategory
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         [Authorize(Roles = "admin")]
-        public async Task<ActionResult<Category>> PostCategory(Category category)
+        public async Task<ActionResult<Category>> CreateCategory([FromForm]CategoryModel categoryModel)
         {
             CategoryResult categoryResult = new CategoryResult() { Success = true };
 
+            Category? parentCategory = await _context.Categories.FirstOrDefaultAsync(category => category.ID == categoryModel.ParentID);
 
-            Category rootCategory = await _context.Categories.FirstAsync(c => c.ParentID == c.ID);
-
-            if (rootCategory != null)
+            if(parentCategory == null)
             {
-                if (category.ID == category.ParentID)
-                {
-                    categoryResult.Success = false;
-                    categoryResult.ErrorCodes.Add(CategoryResultConstants.ERROR_ROOT_ALREADY_EXISTS);
-                }
+                categoryResult.ErrorCodes.Add(CategoryResultConstants.ERROR_PARENT_NOT_EXISTS);
             }
 
-            if (!category.ParentID.HasValue || !CategoryExists(category.ParentID ?? 0))
+            List<Item> items = _context.Items.Where(item => item.CategoryID == parentCategory.ID).ToList();
+            if(items.Count > 0)
             {
-                categoryResult.Success = false;
-                categoryResult.ErrorCodes.Add(CategoryResultConstants.ERROR_PARENT_INVALID);
-            }
-
-            if (category.ChildItems?.Count > 0 && category.ChildCategories?.Count > 0)
-            {
-                categoryResult.Success = false;
                 categoryResult.ErrorCodes.Add(CategoryResultConstants.ERROR_CHILD_CONFLICT);
             }
 
-            if (categoryResult.Success)
+            string nameRegex = @"^[а-яА-Яa-zA-Z -]+$";
+            string descriptionRegex = @"^[а-яА-Яa-zA-Z0-9 -.,:]+$";
+
+            if (string.IsNullOrEmpty(categoryModel.Name))
             {
-                _context.Categories.Add(category);
-                await _context.SaveChangesAsync();
+                categoryResult.ErrorCodes.Add(CategoryResultConstants.ERROR_NAME_EMPTY);
             }
+            else if(!Regex.IsMatch(categoryModel.Name, nameRegex))
+            {
+                categoryResult.ErrorCodes.Add(CategoryResultConstants.ERROR_NAME_VALIDATION_FAIL);
+            }
+            else if(categoryModel.Name.Length > 50)
+            {
+                categoryResult.ErrorCodes.Add(CategoryResultConstants.ERROR_NAME_TOO_LONG);
+            }
+
+            if (string.IsNullOrEmpty(categoryModel.Description))
+            {
+                categoryResult.ErrorCodes.Add(CategoryResultConstants.ERROR_DESCRIPTION_EMPTY);
+            }
+            else if (!Regex.IsMatch(categoryModel.Description, descriptionRegex))
+            {
+                categoryResult.ErrorCodes.Add(CategoryResultConstants.ERROR_DESCRIPTION_VALIDATION_FAIL);
+            }
+            else if (categoryModel.Description.Length > 500)
+            {
+                categoryResult.ErrorCodes.Add(CategoryResultConstants.ERROR_DESCRIPTION_TOO_LONG);
+            }
+
+            string image1 = ImageConverter.ImageToBase64(categoryModel.Image);
+            string image2 = ImageConverter.ImageToBase64(categoryModel.InsideImage);
+
+            if(image1 == "")
+            {
+                categoryResult.ErrorCodes.Add(CategoryResultConstants.ERROR_IMAGE_1);
+            }
+            if (image2 == "")
+            {
+                categoryResult.ErrorCodes.Add(CategoryResultConstants.ERROR_IMAGE_2);
+            }
+
+            if (categoryResult.ErrorCodes.Count > 0)
+            {
+                categoryResult.Success = false;
+                return Json(categoryResult);
+            }
+
+
+            Category category = new Category()
+            {
+                Name = categoryModel.Name,
+                Description = categoryModel.Description,
+                ParentID = categoryModel.ParentID,
+                Image = image1,
+                InsideImage = image2
+            };
+
+            _context.Categories.Add(category);
+            _context.SaveChanges();
 
             return Json(categoryResult);
         }
