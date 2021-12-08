@@ -7,6 +7,7 @@ import ItemCard from "../components/ItemCard";
 import PrettyPreviewImage from "../components/PrettyPreviewImage";
 import CandleInfo from "../components/CandleInfo";
 import CategoryCard from "../components/CategoryCard";
+import fetchWrapper from "../utils/fetchWrapper";
 
 const Content = styled(Box)(({ theme }) => ({
   padding: theme.spacing(0, 32),
@@ -35,7 +36,9 @@ const Home = () => {
   const scrollToProducts = () => {
     productsRef.current.scrollIntoView({ behavior: "smooth" });
   };
-  useEffect(() => {}, []);
+  useEffect(() => {
+    console.log(fetchWrapper("POST", "api/Account/Register", console.log, {}));
+  }, []);
 
   const renderProductCategoryCard = () => {
     return (
