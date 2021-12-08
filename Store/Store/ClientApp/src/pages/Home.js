@@ -7,6 +7,7 @@ import ItemCard from "../components/ItemCard";
 import PrettyPreviewImage from "../components/PrettyPreviewImage";
 import CandleInfo from "../components/CandleInfo";
 import CategoryCard from "../components/CategoryCard";
+import fetchWrapper, { post } from "../utils/fetchWrapper";
 
 const Content = styled(Box)(({ theme }) => ({
   padding: theme.spacing(0, 32),
@@ -35,7 +36,23 @@ const Home = () => {
   const scrollToProducts = () => {
     productsRef.current.scrollIntoView({ behavior: "smooth" });
   };
-  useEffect(() => {}, []);
+  useEffect(() => {
+    post("api/Account/Register", func, {
+      firstname: "as2d",
+      lastname: "asdww",
+      email: "as1df@mail.ru",
+      password: "12344312",
+      passwordConfirm: "12344312",
+    });
+  }, []);
+
+  const func = (res) => {
+    if (res.success) {
+      console.log("HOORAY");
+    } else {
+      console.log(res.errorCodes);
+    }
+  };
 
   const renderProductCategoryCard = () => {
     return (
