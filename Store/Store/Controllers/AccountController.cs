@@ -50,12 +50,12 @@ namespace Store.Controllers
             };
 
             List<UserAddress> addressesRelations = _context.UserAddresses.Where(address => address.UserID == user.Id).ToList();
-            List<Address> addresses = new List<Address>();
+            List<AddressData> addresses = new List<AddressData>();
 
             foreach (UserAddress relation in addressesRelations)
             {
                 Address address = _context.Addresses.FirstOrDefault(address => address.ID == relation.AddressID);
-                addresses.Add(address);
+                addresses.Add(new AddressData() { AddressString = address.AddressString});
             }
 
             userData.Addresses = addresses;
