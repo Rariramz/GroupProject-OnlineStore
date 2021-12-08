@@ -16,7 +16,7 @@ namespace Store.Migrations
                 {
                     ID = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    AddressString = table.Column<string>(type: "text", nullable: true)
+                    AddressString = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -74,7 +74,9 @@ namespace Store.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: true),
                     Description = table.Column<string>(type: "text", nullable: true),
-                    ParentID = table.Column<int>(type: "integer", nullable: true)
+                    ParentID = table.Column<int>(type: "integer", nullable: true),
+                    ImageID = table.Column<int>(type: "integer", nullable: false),
+                    InsideImageID = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -103,6 +105,19 @@ namespace Store.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_DeviceCodes", x => x.UserCode);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Images",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    ImageData = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Images", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
@@ -315,7 +330,7 @@ namespace Store.Migrations
                     Name = table.Column<string>(type: "text", nullable: true),
                     Price = table.Column<decimal>(type: "numeric", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
-                    Image = table.Column<string>(type: "text", nullable: true),
+                    ImageID = table.Column<int>(type: "integer", nullable: false),
                     CategoryID = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
@@ -501,6 +516,9 @@ namespace Store.Migrations
 
             migrationBuilder.DropTable(
                 name: "DeviceCodes");
+
+            migrationBuilder.DropTable(
+                name: "Images");
 
             migrationBuilder.DropTable(
                 name: "Keys");

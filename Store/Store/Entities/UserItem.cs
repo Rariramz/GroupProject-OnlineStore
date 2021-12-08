@@ -12,9 +12,5 @@ namespace Store.Entities
         public int ItemID { get; set; }
         public int OrderID { get; set; }
         public int Count { get; set; }
-
-        public User? User { get; set; }
-        public Item? Item { get; set; }
-        public Order? Order { get; set; }
     }
 }
