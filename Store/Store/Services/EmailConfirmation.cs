@@ -29,7 +29,7 @@ namespace Store.Services
             StringBuilder body = new StringBuilder();
             body.Append("<h2>Подтверждение email для Online Store.");
             body.Append("<br/>");
-            body.AppendLine($"<a href=\"{Url}/Account/Confirm?email={email}&code={code}\">Нажмите, чтобы подтвердить email</a>"); ; ;
+            body.AppendLine($"<a href=\"{Url}/api/Account/Confirm?email={email}&code={code}\">Нажмите, чтобы подтвердить email</a>"); ; ;
             message.Body = body.ToString();
             message.IsBodyHtml = true;
 
