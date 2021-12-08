@@ -11,13 +11,16 @@ namespace Store.Tools
             Image image = Image.Load(bytes);
             MemoryStream memoryStream = new MemoryStream();
             image.Save(memoryStream, PngFormat.Instance);
+            memoryStream.Seek(0, SeekOrigin.Begin);
             return memoryStream;
         }
 
         public static string ImageToBase64(string file)
         {
             Image image = Image.Load(file);
-            return image.ToBase64String(PngFormat.Instance);
+            MemoryStream stream = new MemoryStream();
+            image.SaveAsPng(stream);
+            return Convert.ToBase64String(stream.ToArray());
         }
 
         public static string ImageToBase64(IFormFile formFile)
@@ -26,12 +29,24 @@ namespace Store.Tools
             {
                 Stream stream = formFile.OpenReadStream();
                 Image image = Image.Load(stream);
-                return image.ToBase64String(PngFormat.Instance);
+                MemoryStream saveStream = new MemoryStream();
+                image.SaveAsPng(stream);
+                return Convert.ToBase64String(saveStream.ToArray());
             }
             catch
             {
                 return "";
             }
+        }
+
+        public static void SaveToDisk(string base64, string path)
+        {
+            MemoryStream stream = Base64ToImage(base64);
+            byte[] bytes = stream.ToArray();
+
+            FileStream fileStream = new FileStream(path, FileMode.Create, FileAccess.Write);
+            fileStream.Write(bytes);
+            fileStream.Close();
         }
     }
 }

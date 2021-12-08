@@ -9,6 +9,8 @@ using Store.Entities;
 using Store.Data;
 using Microsoft.AspNetCore.Authorization;
 using Store.Models;
+using System.Text.RegularExpressions;
+using Store.Tools;
 
 namespace Store.Controllers
 {
@@ -107,11 +109,88 @@ namespace Store.Controllers
             return _context.Items.Any(e => e.ID == id);
         }
 
-        //[Authorize(Roles = "admin")]
-        //[HttpPost]
-        //public async Task<IActionResult> CreateItem([FromForm]ItemModel itemModel)
-        //{
-            
-        //}
+        [HttpGet]
+        public async Task<IActionResult> GetImage(int id)
+        {
+            Item? item = _context.Items.FirstOrDefault(item => item.ID == id);
+            if(item == null || item.Image == "")
+            {
+                return NoContent();
+            }
+
+            //ImageConverter.SaveToDisk(item.Image, Environment.CurrentDirectory + @"\image.png");
+
+            return File(ImageConverter.Base64ToImage(item.Image), "image/png");
+        }
+
+        [Authorize(Roles = "admin")]
+        [HttpPost]
+        public async Task<IActionResult> CreateItem([FromForm] ItemModel itemModel)
+        {
+            ItemResult itemResult = new ItemResult() { Success = true };
+            string nameRegex = @"^[a-zA-Zа-яА-Я .-:]+$";
+
+            if (string.IsNullOrEmpty(itemModel.Name))
+            {
+                itemResult.ErrorCodes.Add(ItemResultConstants.ERROR_NAME_EMPTY);
+            }
+            else if(!Regex.IsMatch(itemModel.Name, nameRegex))
+            {
+                itemResult.ErrorCodes.Add(ItemResultConstants.ERROR_NAME_VALIDATION_FAIL);
+            }
+            else if(itemModel.Name.Length > 50)
+            {
+                itemResult.ErrorCodes.Add(ItemResultConstants.ERROR_NAME_TOO_LONG);
+            }
+
+            if (string.IsNullOrEmpty(itemModel.Description))
+            {
+                itemResult.ErrorCodes.Add(ItemResultConstants.ERROR_DESCRIPTION_EMPTY);
+            }
+            else if (!Regex.IsMatch(itemModel.Description, nameRegex))
+            {
+                itemResult.ErrorCodes.Add(ItemResultConstants.ERROR_DESCRIPTION_VALIDATION_FAIL);
+            }
+            else if (itemModel.Description.Length > 500)
+            {
+                itemResult.ErrorCodes.Add(ItemResultConstants.ERROR_DESCRIPTION_TOO_LONG);
+            }
+
+            string base64Image = ImageConverter.ImageToBase64(itemModel.Image);
+            if(base64Image == "")
+            {
+                itemResult.ErrorCodes.Add(ItemResultConstants.ERROR_IMAGE);
+            }
+
+            Category? category = _context.Categories.FirstOrDefault(category => category.ID == itemModel.CategoryID);
+            if(category == null)
+            {
+                itemResult.ErrorCodes.Add(ItemResultConstants.ERROR_CATEGORY_NOT_EXISTS);
+            }
+
+            if (itemModel.Price <= 0)
+            {
+                itemResult.ErrorCodes.Add(ItemResultConstants.ERROR_PRICE_VALUE);
+            }
+
+            if(itemResult.ErrorCodes.Count > 0)
+            {
+                itemResult.Success = false;
+                return Json(itemResult);
+            }
+
+            Item item = new Item()
+            {
+                Name = itemModel.Name,
+                Description = itemModel.Description,
+                CategoryID = itemModel.CategoryID,
+                Price = (decimal)itemModel.Price,
+                Image = base64Image
+            };
+
+            _context.Items.Add(item);
+            await _context.SaveChangesAsync();
+            return Json(itemResult);
+        }
     }
 }
