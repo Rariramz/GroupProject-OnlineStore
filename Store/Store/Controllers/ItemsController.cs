@@ -47,7 +47,6 @@ namespace Store.Controllers
             {
                 Name = item.Name,
                 Description = item.Description,
-                ImageID = item.ImageID,
                 CategoryID = item.CategoryID,
                 Price = (float)item.Price,
             };

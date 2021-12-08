@@ -33,7 +33,7 @@ namespace Store.Controllers
         }
 
         // GET: api/Categories?id=
-        [HttpGet("{id}")]
+        [HttpGet]
         public async Task<ActionResult<Category>> GetCategory(int id)
         {
             var category = await _context.Categories.FindAsync(id);
@@ -47,11 +47,12 @@ namespace Store.Controllers
                 Name = category.Name,
                 Description = category.Description,
                 ParentID = category.ParentID,
-                ImageID = category.ImageID,
                 InsideImageID = category.InsideImageID
             };
 
-            categoryData.Items = _context.Items.Where(item => item.CategoryID == id).ToList();
+            categoryData.Items = (from item in _context.Items
+                                  where item.CategoryID == id
+                                  select item.ID).ToList();
             categoryData.ChildCategoriesId = (from cat in _context.Categories
                                              where cat.ParentID == id
                                              select cat.ID).ToList();
