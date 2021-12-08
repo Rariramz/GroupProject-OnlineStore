@@ -32,8 +32,8 @@ namespace Store.Controllers
             return await _context.Categories.ToListAsync();
         }
 
-        // GET: api/Categories/5
-        [HttpGet("{id}")]
+        // GET: api/Categories?id=
+        [HttpGet]
         public async Task<ActionResult<Category>> GetCategory(int id)
         {
             var category = await _context.Categories.FindAsync(id);
@@ -107,24 +107,37 @@ namespace Store.Controllers
         public async Task<IActionResult> GetImage(int id)
         {
             Category? category = _context.Categories.FirstOrDefault(category => category.ID == id);
-            if (category == null || category.Image == "")
+
+            if (category == null)
             {
                 return NoContent();
             }
 
-            return File(ImageConverter.Base64ToImage(category.Image), "image/png");
+            Image? image = _context.Images.FirstOrDefault(image => image.ID == category.ImageID);
+            if (image == null)
+            {
+                return NoContent();
+            }
+
+            return File(ImageConverter.Base64ToImage(image.ImageData), "image/png");
         }
 
         [HttpGet]
         public async Task<IActionResult> GetInsideImage(int id)
         {
             Category? category = _context.Categories.FirstOrDefault(category => category.ID == id);
-            if (category == null || category.InsideImage == "")
+            if (category == null)
             {
                 return NoContent();
             }
 
-            return File(ImageConverter.Base64ToImage(category.InsideImage), "image/png");
+            Image? image = _context.Images.FirstOrDefault(image => image.ID == category.InsideImageID);
+            if (image == null)
+            {
+                return NoContent();
+            }
+
+            return File(ImageConverter.Base64ToImage(image.ImageData), "image/png");
         }
 
         // POST: api/Categories/PostCategory
@@ -195,14 +208,19 @@ namespace Store.Controllers
                 return Json(categoryResult);
             }
 
+            Image image = new Image() { ImageData = image1 };
+            Image insideImage = new Image() { ImageData = image2 };
+            _context.Images.Add(image);
+            _context.Images.Add(insideImage);
+            _context.SaveChanges();
 
             Category category = new Category()
             {
                 Name = categoryModel.Name,
                 Description = categoryModel.Description,
                 ParentID = categoryModel.ParentID,
-                Image = image1,
-                InsideImage = image2
+                ImageID = image.ID,
+                InsideImageID = insideImage.ID,
             };
 
             _context.Categories.Add(category);
