@@ -34,14 +34,25 @@ namespace Store.Controllers
 
         [HttpGet]
         [Authorize (Roles="admin")]
-        public async Task<ActionResult<IEnumerable<UserItem>>> GetUserItems()
+        public async Task<ActionResult<IEnumerable<UserItemData>>> GetUserItems()
         {
-            return await _context.UserItems.ToListAsync();
+            List<UserItemData> ans = new List<UserItemData>();
+            foreach (var userItem in _context.UserItems)
+            {
+                ans.Add(new UserItemData
+                {
+                    UserID = userItem.UserID,
+                    OrderID = userItem.OrderID,
+                    ItemID = userItem.ID,
+                    Count = userItem.Count,
+                });
+            }
+            return ans;
         }
 
         [HttpGet]
         [Authorize(Roles = "admin")]
-        public async Task<ActionResult<UserItem>> GetUserItem(int id)
+        public async Task<ActionResult<UserItemData>> GetUserItem(int id)
         {
             var userItem = await _context.UserItems.FindAsync(id);
 
@@ -50,7 +61,13 @@ namespace Store.Controllers
                 return NotFound();
             }
 
-            return userItem;
+            return new UserItemData
+            {
+                UserID = userItem.UserID,
+                OrderID = userItem.OrderID,
+                ItemID = userItem.ID,
+                Count = userItem.Count,
+            };
         }
 
         [HttpPost]

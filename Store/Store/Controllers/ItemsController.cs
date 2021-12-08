@@ -34,7 +34,7 @@ namespace Store.Controllers
 
         // GET: api/Items?id=
         [HttpGet]
-        public async Task<ActionResult<Item>> GetItem(int id)
+        public async Task<ActionResult<ItemData>> GetItem(int id)
         {
             var item = await _context.Items.FindAsync(id);
 
@@ -43,7 +43,14 @@ namespace Store.Controllers
                 return NotFound();
             }
 
-            return item;
+            return new ItemData()
+            {
+                Name = item.Name,
+                Description = item.Description,
+                ImageID = item.ImageID,
+                CategoryID = item.CategoryID,
+                Price = (float)item.Price,
+            };
         }
 
         // PUT: api/Items/5
