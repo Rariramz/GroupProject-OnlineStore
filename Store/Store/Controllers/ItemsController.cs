@@ -166,7 +166,24 @@ namespace Store.Controllers
                 itemResult.ErrorCodes.Add(ItemResultConstants.ERROR_CATEGORY_NOT_EXISTS);
             }
 
-            if (itemModel.Price <= 0)
+            //float price = 0;
+            //if (float.TryParse(itemModel.Price, out float priceParced))
+            //{
+            //    if(priceParced <= 0)
+            //    {
+            //        itemResult.ErrorCodes.Add(ItemResultConstants.ERROR_PRICE_VALUE);
+            //    }
+            //    else
+            //    {
+            //        price = priceParced;
+            //    }
+            //}
+            //else
+            //{
+            //    itemResult.ErrorCodes.Add(ItemResultConstants.ERROR_PRICE_VALIDATION_FAIL);
+            //}
+
+            if(itemModel.Price <= 0)
             {
                 itemResult.ErrorCodes.Add(ItemResultConstants.ERROR_PRICE_VALUE);
             }
@@ -182,7 +199,7 @@ namespace Store.Controllers
                 Name = itemModel.Name,
                 Description = itemModel.Description,
                 CategoryID = itemModel.CategoryID,
-                Price = (decimal)itemModel.Price,
+                Price = ((decimal)itemModel.Price),
                 Image = base64Image
             };
 

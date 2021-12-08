@@ -83,11 +83,11 @@ namespace Store.Data
                     ParentID = null 
                 };
 
-
-
                 _context.Categories.Add(rootCategory);
 
+
                 await _context.SaveChangesAsync();
+
 
                 _context.Items.AddRange(
                     new List<Item>
