@@ -59,9 +59,9 @@ namespace Store.Controllers
                 return BadRequest();
             }
 
-            Category rootCategory = await _context.Categories.FirstOrDefaultAsync(c => c.ParentID == c.ID);
+            Category rootCategory = await _context.Categories.FirstAsync(c => c.ParentID == c.ID);
 
-            if (rootCategory?.ID != category.ID)
+            if (rootCategory != null && rootCategory.ID != category.ID)
             {
                 if (category.ID == category.ParentID)
                 {
@@ -112,7 +112,7 @@ namespace Store.Controllers
             CategoryResult categoryResult = new CategoryResult() { Success = true };
 
 
-            Category rootCategory = await _context.Categories.FirstOrDefaultAsync(c => c.ParentID == c.ID);
+            Category rootCategory = await _context.Categories.FirstAsync(c => c.ParentID == c.ID);
 
             if (rootCategory != null)
             {
