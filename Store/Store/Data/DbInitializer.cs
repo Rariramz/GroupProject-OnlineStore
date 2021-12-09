@@ -82,8 +82,8 @@ namespace Store.Data
 
                 Category rootCategory = new Category
                 {
-                    Name = "Свечи обычные",
-                    Description = "Свечи обычные описание",
+                    Name = "",
+                    Description = "",
                     ImageID = image.ID,
                     InsideImageID = insideImage.ID,
                     ParentID = null
@@ -101,8 +101,8 @@ namespace Store.Data
 
                 Category ordinary = new Category
                 {
-                    Name = "Обычные свечи",
-                    Description = "Свечи применяются как источник освещения начиная с III тысячелетия до н. э. До появления и начала распространения электрических ламп накаливания с 1880-х годов, наряду с лампадами это был основной источник освещения. Свечи используются в этом качестве и на начало XXI века при отсутствии электричества.",
+                    Name = "Regular candles",
+                    Description = "Candles have been used as a source of illumination since the 3rd millennium BC. NS. Before the advent and spread of electric incandescent lamps in the 1880s, it was the main source of illumination along with lamps. Candles are used in this capacity even at the beginning of the XXI century in the absence of electricity.",
                     ImageID = image.ID,
                     InsideImageID = insideImage.ID,
                     ParentID = rootCategory.ID
