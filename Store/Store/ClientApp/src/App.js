@@ -10,21 +10,24 @@ import { fetchWrapper, get } from "./utils/fetchWrapper";
 
 const App = observer(() => {
   const { user } = useContext(Context);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
-    /*useEffect(() => {
-        fetchWrapper("GET", "api/Account/Info", func, {})
-    }, []);
+  /*
+  useEffect(() => {
+    fetchWrapper("GET", "api/Account/Info", func, {});
+  }, []);
 
-    const func = (res) => {
+  const func = (res) => {
         if (res.success) {
-            user.setIsAuth(true);
-            alert("NOT HOORAY")
+          user.setIsAuth(true);
+          if (res.isAdmin) {
+            user.setIsAdmin(true);
+          }
+          alert("HOORAY")
         } else {
             console.log(res.errorCodes);
-            alert("HOORAY")
+            alert("NOT HORAY.")
         }
-       
     };*/
 
   if (loading) {

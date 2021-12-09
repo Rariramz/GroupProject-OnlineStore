@@ -1,4 +1,4 @@
-useEffect(() => {
+/*useEffect(() => {
     post("api/Account/Register", func, {
       firstname: "as2d",
       lastname: "asdww",
@@ -14,4 +14,4 @@ useEffect(() => {
     } else {
       console.log(res.errorCodes);
     }
-  };
+  };*/
