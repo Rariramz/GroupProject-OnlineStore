@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using Store.Models;
 using System.Text.RegularExpressions;
 using Store.Tools;
+using Store.Extensions;
 
 namespace Store.Controllers
 {
@@ -25,7 +26,7 @@ namespace Store.Controllers
             _context = context;
         }
 
-        // GET: api/Items
+        // GET: api/Items/GetItems
         [HttpGet]
         public async Task<ActionResult> GetItems()
         {
@@ -47,7 +48,36 @@ namespace Store.Controllers
             return Json(itemDatas);
         }
 
-        // GET: api/Items?id=
+        // GET: api/Items/GetPopularItems?count=
+        [HttpGet]
+        public async Task<ActionResult> GetPopularItems(int count)
+        {
+            count = Math.Max(count, 0);
+            List<Item> items = await _context.Items.ToListAsync();
+            List<ItemData> itemDatas = new List<ItemData>();
+
+            foreach (Item item in items)
+            {
+                itemDatas.Add(new ItemData
+                {
+                    ID = item.ID,
+                    Name = item.Name,
+                    Description = item.Description,
+                    CategoryID = item.CategoryID,
+                });
+            }
+
+            TimeSpan time = DateTime.Now.TimeOfDay;
+
+            Random rnd = new Random((int)time.TotalMinutes);
+            itemDatas.Shuffle(rnd);
+            List<ItemData> popularItems = itemDatas.GetRange(0, Math.Min(count, itemDatas.Count));
+
+            return Json(popularItems);
+        }
+
+
+        // GET: api/Items/GetItem?id=
         [HttpGet]
         public async Task<ActionResult> GetItem(int id)
         {
