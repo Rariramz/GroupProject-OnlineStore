@@ -33,3 +33,51 @@ const fetchWrapper = async (method, url, callback, obj) => {
     console.error(e);
   }
 };
+
+export const getFile = async (url, callback) => {
+  try {
+    let res = await fetch(url, {
+      method: "GET",
+    });
+    if (res.ok) {
+      let reader = await res.body.getReader();
+      let base64Chunks = [];
+      let done;
+      let value;
+      while (!done) {
+        ({ value, done } = await reader.read());
+        if (done) {
+          callback(
+            `data:image/png;base64,${Buffer.from(
+              base64Chunks.join().split(",")
+            ).toString("base64")}`
+          );
+        }
+        base64Chunks.push(value);
+      }
+    }
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+export const getFileBase64 = async (url, callback) => {
+  try {
+    let res = await fetch(url, {
+      method: "GET",
+    });
+    if (res.ok) {
+      let json;
+      json = await res.body
+        .getReader()
+        .read()
+        .then(({ value }) =>
+          callback(
+            `data:image/png;base64,${Buffer.from(value).toString("base64")}`
+          )
+        );
+    }
+  } catch (e) {
+    console.error(e);
+  }
+};
