@@ -23,116 +23,98 @@ namespace Store.Controllers
         }
 
         [HttpPost]
-        [Authorize (Roles = "admin")]
-        public async Task<ActionResult<UserItem>> PostUserItem(UserItem userItem)
-        {
-            _context.UserItems.Add(userItem);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction(nameof(PostUserItem), new { id = userItem.ID }, userItem);
-        }
-
-        [HttpGet]
-        [Authorize (Roles="admin")]
-        public async Task<ActionResult<IEnumerable<UserItemData>>> GetUserItems()
-        {
-            List<UserItemData> ans = new List<UserItemData>();
-            foreach (var userItem in _context.UserItems)
-            {
-                ans.Add(new UserItemData
-                {
-                    UserID = userItem.UserID,
-                    ItemID = userItem.ID,
-                    Count = userItem.Count,
-                });
-            }
-            return ans;
-        }
-
-        [HttpGet]
-        [Authorize(Roles = "admin")]
-        public async Task<ActionResult<UserItemData>> GetUserItem(int id)
-        {
-            var userItem = await _context.UserItems.FindAsync(id);
-
-            if (userItem == null)
-            {
-                return NotFound();
-            }
-
-            return new UserItemData
-            {
-                UserID = userItem.UserID,
-                ItemID = userItem.ID,
-                Count = userItem.Count,
-            };
-        }
-
-        [HttpPost]
-        [Authorize(Roles = "admin, user")]
-        public async Task<IActionResult> AddItemForUser([FromForm] UserItemModel userItemModel)
+        public async Task<IActionResult> AddItemForUser([FromForm] CartItemModel cartItemModel)
         {
             User requestUser = await _userManager.FindByEmailAsync(User.Identity.Name);
-            User targetUser = await _userManager.FindByIdAsync(userItemModel.UserID);
-            UserItemResult userItemResult = new UserItemResult() { Success = true };
+            User targetUser = await _userManager.FindByIdAsync(cartItemModel.UserID);
+            CartItemResult cartItemResult = new CartItemResult() { Success = true };
 
-            if (string.IsNullOrEmpty(userItemModel.UserID))
+            if (string.IsNullOrEmpty(cartItemModel.UserID))
             {
                 targetUser = await _userManager.FindByIdAsync(requestUser.Id);
             }
 
             if (targetUser == null)
             {
-                userItemResult.ErrorCodes.Add(UserItemResultConstants.ERROR_USER_INVALID);
+                cartItemResult.ErrorCodes.Add(CartItemResultConstants.ERROR_USER_INVALID);
             }
             else if (requestUser.Id != targetUser.Id && !await _userManager.IsInRoleAsync(requestUser, "admin"))
             {
-                userItemResult.ErrorCodes.Add(UserItemResultConstants.ERROR_ACCESS_DENIED);
+                cartItemResult.ErrorCodes.Add(CartItemResultConstants.ERROR_ACCESS_DENIED);
             }
 
-            if (userItemResult.ErrorCodes.Count > 0)
+            if (cartItemResult.ErrorCodes.Count > 0)
             {
-                userItemResult.Success = false;
-                return Json(userItemResult);
+                cartItemResult.Success = false;
+                return Json(cartItemResult);
             }
 
-            if (userItemModel.Count < 1)
+            if (cartItemModel.Count < 1)
             {
-                userItemResult.ErrorCodes.Add(UserItemResultConstants.ERROR_COUNT_LESS_ONE);
+                cartItemResult.ErrorCodes.Add(CartItemResultConstants.ERROR_COUNT_LESS_ONE);
             }
 
-            if (userItemResult.ErrorCodes.Count > 0)
+            if (cartItemModel.Count == null)
             {
-                userItemResult.Success = false;
-                return Json(userItemResult);
+                cartItemResult.ErrorCodes.Add(CartItemResultConstants.ERROR_COUNT_IS_NULL);
             }
 
-            UserItem userItem = new UserItem() 
-            { 
-                UserID = userItemModel.UserID,
-                ItemID = userItemModel.ItemID,
-                Count = userItemModel.Count
-            };
-            _context.Add(userItem);
-            await _context.SaveChangesAsync();
+            Item? item = await _context.Items.FirstOrDefaultAsync(item => item.ID == cartItemModel.ItemID);
+            if(item == null)
+            {
+                cartItemResult.ErrorCodes.Add(CartItemResultConstants.ERROR_ITEM_NOT_EXIST);
+            }
 
-            return Json(userItemResult);
+            if (cartItemResult.ErrorCodes.Count > 0)
+            {
+                cartItemResult.Success = false;
+                return Json(cartItemResult);
+            }
+
+
+
+            UserItem? userItem = await _context.UserItems.FirstOrDefaultAsync(item => item.ItemID == cartItemModel.ItemID && item.UserID == targetUser.Id);
+            if(userItem != null)
+            {
+                userItem.Count++;
+                _context.Entry(userItem).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                userItem = new UserItem()
+                {
+                    UserID = targetUser!.Id,
+                    ItemID = cartItemModel.ItemID,
+                    Count = cartItemModel.Count!.Value
+                };
+                _context.Add(userItem);
+                await _context.SaveChangesAsync();
+            }        
+
+            return Json(cartItemResult);
         }
 
-        [Authorize]
         [HttpPost]
-        public async Task<IActionResult> IncrementItemCount(int userId, int itemId)
+        public async Task<IActionResult> ChangeItemCount([FromForm] CartItemModel cartItemModel)
         {
             User requestUser = await _userManager.FindByEmailAsync(User.Identity.Name);
-            User targetUser = await _userManager.FindByIdAsync(userId.ToString());
-            UserItemResult userItemResult = new UserItemResult() { Success = true };
+            User targetUser = await _userManager.FindByIdAsync(cartItemModel.UserID);
+
+            CartItemResult userItemResult = new CartItemResult() { Success = true };
+
+            if (string.IsNullOrEmpty(cartItemModel.UserID))
+            {
+                targetUser = await _userManager.FindByIdAsync(requestUser.Id);
+            }
+
             if (targetUser == null)
             {
-                userItemResult.ErrorCodes.Add(UserItemResultConstants.ERROR_USER_INVALID);
+                userItemResult.ErrorCodes.Add(CartItemResultConstants.ERROR_USER_INVALID);
             }
             else if (requestUser.Id != targetUser.Id && !await _userManager.IsInRoleAsync(requestUser, "admin"))
             {
-                userItemResult.ErrorCodes.Add(UserItemResultConstants.ERROR_ACCESS_DENIED);
+                userItemResult.ErrorCodes.Add(CartItemResultConstants.ERROR_ACCESS_DENIED);
             }
 
             if (userItemResult.ErrorCodes.Count > 0)
@@ -141,116 +123,117 @@ namespace Store.Controllers
                 return Json(userItemResult);
             }
 
-            UserItem? item = _context.UserItems.FirstOrDefault(item => item.ItemID == itemId
-                                                                && item.UserID == userId.ToString());
+            UserItem? item = _context.UserItems.FirstOrDefault(item => item.ItemID == cartItemModel.ItemID
+                                                                && item.UserID == targetUser.Id);
 
             if (item == null)
             {
-                userItemResult.ErrorCodes.Add(UserItemResultConstants.ERROR_USER_ITEM_NOT_FOUND);
+                userItemResult.ErrorCodes.Add(CartItemResultConstants.ERROR_CART_ITEM_NOT_FOUND);
+            }
+
+            if (cartItemModel.Count == null)
+            {
+                userItemResult.ErrorCodes.Add(CartItemResultConstants.ERROR_COUNT_IS_NULL);
             }
 
             if (userItemResult.ErrorCodes.Count > 0)
             {
                 userItemResult.Success = false;
                 return Json(userItemResult);
-            }
+            }  
 
-            item.Count++;
+            item!.Count += cartItemModel.Count!.Value;
+            if(item.Count < 1)
+            {
+                userItemResult.ErrorCodes.Add(CartItemResultConstants.ERROR_COUNT_LESS_ONE);
+                userItemResult.Success = false;
+                return Json(userItemResult);
+            }
+            _context.Entry(item).State = EntityState.Modified;
+
             await _context.SaveChangesAsync();
 
             return Json(userItemResult);
-        }
-
-        [Authorize]
+        }    
+  
         [HttpPost]
-        public async Task<IActionResult> DecrementItemCount(int userId, int itemId)
+        public async Task<IActionResult> Remove([FromForm] CartItemModel cartItemModel)
         {
             User requestUser = await _userManager.FindByEmailAsync(User.Identity.Name);
-            User targetUser = await _userManager.FindByIdAsync(userId.ToString());
-            UserItemResult userItemResult = new UserItemResult() { Success = true };
+            User targetUser = await _userManager.FindByIdAsync(cartItemModel.UserID);
+            CartItemResult cartItemResult = new CartItemResult { Success = true };
+
+            
+
+            if (string.IsNullOrEmpty(cartItemModel.UserID))
+            {
+                targetUser = await _userManager.FindByIdAsync(requestUser.Id);
+            }
+
             if (targetUser == null)
             {
-                userItemResult.ErrorCodes.Add(UserItemResultConstants.ERROR_USER_INVALID);
+                cartItemResult.ErrorCodes.Add(CartItemResultConstants.ERROR_USER_INVALID);
             }
             else if (requestUser.Id != targetUser.Id && !await _userManager.IsInRoleAsync(requestUser, "admin"))
             {
-                userItemResult.ErrorCodes.Add(UserItemResultConstants.ERROR_ACCESS_DENIED);
+                cartItemResult.ErrorCodes.Add(CartItemResultConstants.ERROR_ACCESS_DENIED);
             }
 
-            if (userItemResult.ErrorCodes.Count > 0)
+            if (cartItemResult.ErrorCodes.Count > 0)
             {
-                userItemResult.Success = false;
-                return Json(userItemResult);
+                cartItemResult.Success = false;
+                return Json(cartItemResult);
             }
 
-            UserItem? item = _context.UserItems.FirstOrDefault(item => item.ItemID == itemId
-                                                                && item.UserID == userId.ToString());
+            UserItem? userItem = await _context.UserItems.FirstOrDefaultAsync(cart => cart.ItemID == cartItemModel.ItemID &&
+                                                                                    cart.UserID == targetUser.Id);
 
-            if (item == null)
-            {
-                userItemResult.ErrorCodes.Add(UserItemResultConstants.ERROR_USER_ITEM_NOT_FOUND);
-            }
-            else if(item.Count == 1)
-            {
-                userItemResult.ErrorCodes.Add(UserItemResultConstants.ERROR_COUNT_LESS_ONE);
-            }
-
-            if (userItemResult.ErrorCodes.Count > 0)
-            {
-                userItemResult.Success = false;
-                return Json(userItemResult);
-            }
-
-            item.Count--;
-            await _context.SaveChangesAsync();
-
-            return Json(userItemResult);
-        }
-
-        /// <summary>
-        /// Удалить useritem
-        /// </summary>
-        /// <param name="id">id удаляемого useritem</param>      
-        [Authorize]
-        [HttpDelete]
-        public async Task<IActionResult> Remove(int id)
-        {
-            var userItem = _context.UserItems.Find(id);
             if (userItem == null)
             {
-                return NotFound();
+                cartItemResult.ErrorCodes.Add(CartItemResultConstants.ERROR_CART_ITEM_NOT_FOUND);
+            }
+
+            if(cartItemResult.ErrorCodes.Count > 0)
+            {
+                cartItemResult.Success = false;
+                return Json(cartItemResult);
             }
 
             _context.UserItems.Remove(userItem);
             await _context.SaveChangesAsync();
-            return NoContent();
+            return Json(cartItemResult);
 
         }
 
         [HttpGet]
         public async Task<IActionResult> GetShoppingDetails()
         {
-
-            User user = await _userManager.GetUserAsync(User);
+            User user = await _userManager.FindByEmailAsync(User.Identity.Name);
             List<UserItem> itemRelations = _context.UserItems.Where(userItem => userItem.UserID == user.Id).ToList();
-            return Json(itemRelations);
+            List<CartItemData> cartItems = new List<CartItemData>();
+
+            foreach(UserItem itemRelation in itemRelations)
+            {
+                cartItems.Add(new CartItemData() { ItemID = itemRelation.ItemID, Count = itemRelation.Count });
+            }
+
+            return Json(cartItems);
         }
 
         [HttpGet]
         public async Task<IActionResult> GetTotal()
         {
-            User user = await _userManager.GetUserAsync(User);
-            
-            decimal? total = decimal.Zero;
-            total = (decimal?)(from cartItems in _context.UserItems
-                               where cartItems.UserID == user.Id
-                               join item in _context.Items on cartItems.ItemID equals item.ID
-                   
-                               select cartItems.Count 
-                               *item.GetDiscountPrice(user.Discount)).Sum();
-            return Json(total ?? decimal.Zero);
+            User user = await _userManager.FindByNameAsync(User.Identity.Name);
+
+            List<UserItem> itemRelations = _context.UserItems.Where(userItem => userItem.UserID == user.Id).ToList();
+            decimal price = 0;
+            foreach (UserItem itemRelation in itemRelations)
+            {
+                Item item = await _context.Items.FirstOrDefaultAsync(it => it.ID == itemRelation.ItemID);
+                price += item.Price * itemRelation.Count;
+            }
+
+            return Json(price);
         }
-
-
     }
 }

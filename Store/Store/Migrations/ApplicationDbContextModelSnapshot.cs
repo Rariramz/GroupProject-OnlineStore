@@ -321,6 +321,7 @@ namespace Store.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int>("ImageID")
@@ -330,14 +331,13 @@ namespace Store.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int?>("ParentID")
                         .HasColumnType("integer");
 
                     b.HasKey("ID");
-
-                    b.HasIndex("ParentID");
 
                     b.ToTable("Categories");
                 });
@@ -371,20 +371,20 @@ namespace Store.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int>("ImageID")
                         .HasColumnType("integer");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("numeric");
 
                     b.HasKey("ID");
-
-                    b.HasIndex("CategoryID");
 
                     b.ToTable("Items");
                 });
@@ -404,6 +404,7 @@ namespace Store.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("InitialDate")
@@ -420,10 +421,6 @@ namespace Store.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("ID");
-
-                    b.HasIndex("AddressID");
-
-                    b.HasIndex("UserID");
 
                     b.ToTable("Orders");
                 });
@@ -524,10 +521,6 @@ namespace Store.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("AddressID");
-
-                    b.HasIndex("UserID");
-
                     b.ToTable("UserAddresses");
                 });
 
@@ -545,20 +538,11 @@ namespace Store.Migrations
                     b.Property<int>("ItemID")
                         .HasColumnType("integer");
 
-                    b.Property<int>("OrderID")
-                        .HasColumnType("integer");
-
                     b.Property<string>("UserID")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("ID");
-
-                    b.HasIndex("ItemID");
-
-                    b.HasIndex("OrderID");
-
-                    b.HasIndex("UserID");
 
                     b.ToTable("UserItems");
                 });
@@ -612,110 +596,6 @@ namespace Store.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Store.Entities.Category", b =>
-                {
-                    b.HasOne("Store.Entities.Category", "Parent")
-                        .WithMany("ChildCategories")
-                        .HasForeignKey("ParentID");
-
-                    b.Navigation("Parent");
-                });
-
-            modelBuilder.Entity("Store.Entities.Item", b =>
-                {
-                    b.HasOne("Store.Entities.Category", "Category")
-                        .WithMany("ChildItems")
-                        .HasForeignKey("CategoryID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Category");
-                });
-
-            modelBuilder.Entity("Store.Entities.Order", b =>
-                {
-                    b.HasOne("Store.Entities.Address", "Address")
-                        .WithMany()
-                        .HasForeignKey("AddressID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Store.Entities.User", "User")
-                        .WithMany("Orders")
-                        .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Address");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Store.Entities.UserAddress", b =>
-                {
-                    b.HasOne("Store.Entities.Address", "Address")
-                        .WithMany()
-                        .HasForeignKey("AddressID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Store.Entities.User", "User")
-                        .WithMany("UserAddresses")
-                        .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Address");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Store.Entities.UserItem", b =>
-                {
-                    b.HasOne("Store.Entities.Item", "Item")
-                        .WithMany()
-                        .HasForeignKey("ItemID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Store.Entities.Order", "Order")
-                        .WithMany("UserItems")
-                        .HasForeignKey("OrderID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Store.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Item");
-
-                    b.Navigation("Order");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Store.Entities.Category", b =>
-                {
-                    b.Navigation("ChildCategories");
-
-                    b.Navigation("ChildItems");
-                });
-
-            modelBuilder.Entity("Store.Entities.Order", b =>
-                {
-                    b.Navigation("UserItems");
-                });
-
-            modelBuilder.Entity("Store.Entities.User", b =>
-                {
-                    b.Navigation("Orders");
-
-                    b.Navigation("UserAddresses");
                 });
 #pragma warning restore 612, 618
         }
