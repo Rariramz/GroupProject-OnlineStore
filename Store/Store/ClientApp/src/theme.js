@@ -72,6 +72,14 @@ const theme = createTheme({
         },
       },
     },
+    MuiSkeleton: {
+      defaultProps: {},
+      styleOverrides: {
+        root: {
+          backgroundColor: "#D4FFE6",
+        },
+      },
+    },
   },
 });
 

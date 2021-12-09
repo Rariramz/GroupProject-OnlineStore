@@ -26,11 +26,7 @@ const fetchWrapper = async (method, url, callback, obj) => {
     }
     if (res.ok) {
       let json;
-      try {
-        json = await res.json();
-      } catch {
-        json = await res;
-      }
+      json = await res.json();
       callback(json);
     }
   } catch (e) {

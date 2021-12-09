@@ -1,7 +1,14 @@
-import { Card, CardContent, CardMedia, Grid, Typography } from "@mui/material";
+import {
+  Card,
+  CardContent,
+  CardMedia,
+  Grid,
+  Skeleton,
+  Typography,
+} from "@mui/material";
 import { Link } from "react-router-dom";
 import { styled } from "@mui/material/styles";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import { get } from "../utils/fetchWrapper";
 
@@ -17,23 +24,31 @@ const CustomCard = styled(Card)(({ theme }) => ({
 }));
 
 const ItemCard = (props) => {
+  const widthRef = useRef(null);
+  const [height, setHeight] = useState(0);
   const [itemInfo, setItemInfo] = useState({});
   const [image, setImage] = useState(null);
+
   useEffect(() => {
+    setHeight(widthRef.current.clientWidth);
     get(`api/Items/GetItem?id=${props.id}`, setItemInfo);
     get(`api/Items/GetImage?id=${props.id}`, console.log);
   }, []);
   return (
     <>
       <Link to={`../item/${props.id || 0}`} style={{ textDecoration: "none" }}>
-        <CustomCard elevation={0}>
-          <CardMedia component="img" image={image} />
+        <CustomCard elevation={0} ref={widthRef}>
+          {image ? (
+            <CardMedia component="img" image={image} />
+          ) : (
+            <Skeleton variant="rectangular" width="100%" height={height} />
+          )}
           <ItemCardContent>
             <Typography variant="body2" color="initial" textAlign="left">
-              {itemInfo.name}
+              {itemInfo ? itemInfo.name : <Skeleton />}
             </Typography>
             <Typography variant="body1" color="primary" textAlign="right">
-              9.99$
+              {itemInfo ? itemInfo.price : <Skeleton />}
             </Typography>
           </ItemCardContent>
         </CustomCard>
