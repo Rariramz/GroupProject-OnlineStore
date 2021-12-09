@@ -117,7 +117,7 @@ namespace Store.Data
                 _context.Images.Add(image);
                 _context.Images.Add(insideImage);
                 _context.SaveChanges();
-
+                
                 Category aroma = new Category
                 {
                     Name = "Ароматические свечи",
