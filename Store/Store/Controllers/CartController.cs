@@ -22,51 +22,6 @@ namespace Store.Controllers
             _userManager = userManager;
         }
 
-        [HttpPost]
-        [Authorize (Roles = "admin")]
-        public async Task<ActionResult<UserItem>> PostUserItem(UserItem userItem)
-        {
-            _context.UserItems.Add(userItem);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction(nameof(PostUserItem), new { id = userItem.ID }, userItem);
-        }
-
-        [HttpGet]
-        [Authorize (Roles="admin")]
-        public async Task<ActionResult<IEnumerable<UserItemData>>> GetUserItems()
-        {
-            List<UserItemData> ans = new List<UserItemData>();
-            foreach (var userItem in _context.UserItems)
-            {
-                ans.Add(new UserItemData
-                {
-                    UserID = userItem.UserID,
-                    ItemID = userItem.ID,
-                    Count = userItem.Count,
-                });
-            }
-            return ans;
-        }
-
-        [HttpGet]
-        [Authorize(Roles = "admin")]
-        public async Task<ActionResult<UserItemData>> GetUserItem(int id)
-        {
-            var userItem = await _context.UserItems.FindAsync(id);
-
-            if (userItem == null)
-            {
-                return NotFound();
-            }
-
-            return new UserItemData
-            {
-                UserID = userItem.UserID,
-                ItemID = userItem.ID,
-                Count = userItem.Count,
-            };
-        }
 
         [HttpPost]
         [Authorize(Roles = "admin, user")]
@@ -207,6 +162,8 @@ namespace Store.Controllers
             return Json(userItemResult);
         }
 
+
+        //REFACTOR
         /// <summary>
         /// Удалить useritem
         /// </summary>
@@ -227,6 +184,7 @@ namespace Store.Controllers
 
         }
 
+        //REFACTOR
         [HttpGet]
         public async Task<IActionResult> GetShoppingDetails()
         {
