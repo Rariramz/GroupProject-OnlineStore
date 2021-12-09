@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
@@ -120,8 +120,8 @@ namespace Store.Data
                 
                 Category aroma = new Category
                 {
-                    Name = "Ароматические свечи",
-                    Description = "Ароматические свечи созданы для того, чтобы с помощью обоняния влиять на наш разум, настроение и самочувствие. Некоторые образцы помогают взбодриться, наполниться энергией и поймать волну активности. Другие имеют прямо противоположный эффект: убирают тревогу, успокаивают, снимают напряжение и помогают крепче спать.",
+                    Name = "Aroma candles",
+                    Description = "Scented candles are created in order to influence our mind, mood and well-being with the help of the sense of smell. Some patterns help to cheer up, fill with energy and catch a wave of activity. Others have the exact opposite effect: relieve anxiety, calm down, relieve tension, and help you sleep better.",
                     ImageID = image.ID,
                     InsideImageID = insideImage.ID,
                     ParentID = rootCategory.ID
@@ -139,8 +139,8 @@ namespace Store.Data
 
                 Category decorative = new Category
                 {
-                    Name = "Декоративные свечи",
-                    Description = "Мы часто видим свечи в интерьерах частной или жилой недвижимости, но не всегда задумываемся, какие лучше использовать не только для того, чтобы время от времени смотреть на живой огонь, но и украсить пространство наилучшим образом.",
+                    Name = "Decorative candles",
+                    Description = "We often see candles in the interiors of private or residential real estate, but we do not always think about which ones are better to use not only in order to look at a live fire from time to time, but also to decorate the space in the best possible way.",
                     ImageID = image.ID,
                     InsideImageID = insideImage.ID,
                     ParentID = rootCategory.ID
@@ -154,7 +154,7 @@ namespace Store.Data
                 //aroma sub categories
                 Category aromaSweet = new Category
                 {
-                    Name = "Сладкий аромат",
+                    Name = "Sweet scent",
                     Description = "",
                     ImageID = 0,
                     InsideImageID = 0,
@@ -163,7 +163,7 @@ namespace Store.Data
 
                 Category aromaFlower = new Category
                 {
-                    Name = "Цветочный аромат",
+                    Name = "Flower scent",
                     Description = "",
                     ImageID = 0,
                     InsideImageID = 0,
@@ -172,7 +172,7 @@ namespace Store.Data
 
                 Category aromaSpicy = new Category
                 {
-                    Name = "Пряный аромат",
+                    Name = "Spicy flavor",
                     Description = "",
                     ImageID = 0,
                     InsideImageID = 0,
@@ -181,7 +181,7 @@ namespace Store.Data
 
                 Category aromaConiferous = new Category
                 {
-                    Name = "Хвойный аромат",
+                    Name = "Coniferous aroma",
                     Description = "",
                     ImageID = 0,
                     InsideImageID = 0,
@@ -191,7 +191,7 @@ namespace Store.Data
                 //ordinary sub categories
                 Category ordinaryBig = new Category
                 {
-                    Name = "Большие свечи",
+                    Name = "Big candles",
                     Description = "",
                     ImageID = 0,
                     InsideImageID = 0,
@@ -200,7 +200,7 @@ namespace Store.Data
 
                 Category ordinaryCompact = new Category
                 {
-                    Name = "Компактные свечи",
+                    Name = "Compact candles",
                     Description = "",
                     ImageID = 0,
                     InsideImageID = 0,
@@ -209,7 +209,7 @@ namespace Store.Data
 
                 Category ordinaryMiddle = new Category
                 {
-                    Name = "Средние свечи",
+                    Name = "Medium candles",
                     Description = "",
                     ImageID = 0,
                     InsideImageID = 0,
@@ -218,7 +218,7 @@ namespace Store.Data
 
                 Category ordinarySet = new Category
                 {
-                    Name = "Набор свечей",
+                    Name = "Set of candles",
                     Description = "",
                     ImageID = 0,
                     InsideImageID = 0,
@@ -228,7 +228,7 @@ namespace Store.Data
                 //decorative sub categories
                 Category decorativeChristmas = new Category
                 {
-                    Name = "Новогодние",
+                    Name = "Christmas candles",
                     Description = "",
                     ImageID = 0,
                     InsideImageID = 0,
@@ -346,7 +346,7 @@ namespace Store.Data
                         new Item
                         {
                             Name = "ALMOND BLOSSOM, Collines de Provence",
-                            Description = "Сладостный, чуть терпкий аромат ALMOND BLOSSOM – это ноты цветов миндального дерева, персика и сандала. Ваниль и сладкий миндаль делают запах гурманским. Зажгите свечу Collines de Provence и насладитесь атмосферой дома.",
+                            Description = "The sweet, slightly tart aroma of ALMOND BLOSSOM contains notes of almond blossom, peach and sandalwood. Vanilla and sweet almonds add a gourmand flavor. Light the Collines de Provence candle and enjoy the atmosphere at home.",
                             ImageID = aromaSweet1.ID,
                             CategoryID = aromaSweet.ID,
                             Price = 3.19m
@@ -354,7 +354,7 @@ namespace Store.Data
                         new Item
                         {
                             Name = "BOURBON VANILLE, Voluspa",
-                            Description = "Любителям ванили посвящается! Свеча BOURBON VANILLE – это восхитительный теплый аромат дубовой бочки, в которой выдерживали кукурузный виски, и ваниль. Аромат бурбона- это аромат праздника по-американски. Ведь бурбон – это классический американский виски. Темно-золотистый цвет напитка насыщен ароматом сухофруктов, меда, и хранит в себе ноты древесины дуба.\n\nВсе эти запахи безукоризненно воплощены в аромате BOURBON VANILLE. Идеальный аккомпанемент – стручок французской ванили, который добавляет сладости и легкости этому легкому и праздничному аромату от Voluspa. А роскошная упаковка делает эту свечу просто совершенным подарком.",
+                            Description = "Dedicated to vanilla lovers! BOURBON VANILLE Candle is a delicious warm oak barrel aged corn whiskey and vanilla. The scent of bourbon is an American holiday scent. After all, bourbon is a classic American whiskey. The dark golden color of the drink is saturated with the aroma of dried fruits, honey, and retains the notes of oak wood. All these scents are impeccably embodied in the BOURBON VANILLE fragrance. The perfect accompaniment is a French vanilla pod that adds sweetness and lightness to this light and festive fragrance from Voluspa. And the luxurious packaging makes this candle a perfect gift.",
                             ImageID = aromaSweet2.ID,
                             CategoryID = aromaSweet.ID,
                             Price = 4.29m
@@ -362,7 +362,7 @@ namespace Store.Data
                         new Item
                         {
                             Name = "CITRUS INFUSION, Collines de Provence",
-                            Description = "Аромасвеча CITRUS INFUSION – это абсолютно гурманский аромат. Микс апельсина, абрикосов, ванили, коричневого сахара и сочной красной смородины. Нотки какао в финале добавляют аромату мягкости.\n\nСвеча Collines de Provence выполнена из матового стекла и имеет керамическую крышечку, которая защитит поверхность свечи от пыли.",
+                            Description = "The CITRUS INFUSION aroma candle is an absolutely gourmand scent. A mix of orange, apricot, vanilla, brown sugar and juicy red currant. The cocoa notes in the finish add softness to the aroma. The Collines de Provence candle is made of frosted glass and has a ceramic lid that protects the surface of the candle from dust.",
                             ImageID = aromaSweet3.ID,
                             CategoryID = aromaSweet.ID,
                             Price = 2.09m
@@ -370,7 +370,7 @@ namespace Store.Data
                         new Item
                         {
                             Name = "LEMON CURD, Urban Apothecary",
-                            Description = "Английский десерт лимонный курд – это заварной крем с ярким цитрусовым вкусом. Аромат свечи LEMON CURD от Urban Apothecary посвящен именно ему. Сладко-цитрусовый, в нем хорошо ощущается цедра лимона, тягучая сладость взбитых сливок с капелькой апельсинового ликера, а ванильно-кокосовое звучание добавляет запаху законченное звучание. Очень вкусный аромат, который мгновенно настроит на ужин или субботний завтрак.\n\nСредняя свеча в прозрачной баночке с металлическим замочком так и намекает: на кухне мне самое место!",
+                            Description = "The English Lemon Kurdish dessert is a custard with a rich citrus flavor. The aroma of the LEMON CURD candle from Urban Apothecary is dedicated to him. Sweet citrus, lemon zest is well felt in it, the viscous sweetness of whipped cream with a drop of orange liqueur, and the vanilla-coconut sound adds a complete sound to the smell. A delicious scent that will instantly set you up for dinner or Saturday breakfast. The middle candle in a transparent jar with a metal lock hints: I belong in the kitchen!",
                             ImageID = aromaSweet4.ID,
                             CategoryID = aromaSweet.ID,
                             Price = 4.99m
@@ -380,7 +380,7 @@ namespace Store.Data
                         new Item
                         {
                             Name = "CAMELIA, Collines de Provence",
-                            Description = "Тонкий и элегантный аромат свечи CAMELIA от Collines de Provence понравится поклонникам запахов белых цветов. Выразительный, и при этом деликатный, это запах с нотами садовых роз, белоснежных гвоздик и удивительный аромат камелии. Кстати, цветы камелии не имеют запаха. Но парфюмеры решили исправить это недоразумение и синтетически создали аромат этому цветку. Традиционно он звучит как смесь чайных нот и пиона.\n\nСвеча в стеклянном стакане белого цвета CAMELIA станет идеальным подарком: она упакована в очаровательную коробочку с лентой. Изящно и со вкусом!",
+                            Description = "The subtle and elegant scent of the CAMELIA candle by Collines de Provence will appeal to fans of white flowers. Expressive, and at the same time delicate, it is a scent with notes of garden roses, snow-white carnations and an amazing scent of camellia. By the way, camellia flowers are odorless. But the perfumers decided to correct this misunderstanding and synthetically created a fragrance for this flower. Traditionally, it sounds like a mixture of tea notes and peony. The candle in a white glass CAMELIA is an ideal gift: it is packed in a charming box with a ribbon. Elegant and tasteful!",
                             ImageID = aromaflower1.ID,
                             CategoryID = aromaFlower.ID,
                             Price = 3.7m
@@ -396,7 +396,7 @@ namespace Store.Data
                         new Item
                         {
                             Name = "RED POPPIES, BROAD st. BRAND",
-                            Description = "Парфюмеры BROAD st. BRAND заботятся о том, чтобы жители мегаполисов могли отдохнуть от каменных джунглей и почувствовать свою близость к природе. Именно поэтому они создали аромат RED POPPIES. Его основная нота – красный мак. Изящное растение, с невероятно красивыми цветками, которые пленяют нежнейшим запахом.\nЗажгите свечу RED POPPIES, и ваш дом наполнится ароматом цветов: жизнерадостным, стремительным и сладостным. Этот аромат и правда – сладостный! Девушки его просто обожают, и возвращаются за ним снова и снова.",
+                            Description = "The subtle and elegant scent of the CAMELIA candle by Collines de Provence will appeal to fans of white flowers. Expressive, and at the same time delicate, it is a scent with notes of garden roses, snow-white carnations and an amazing scent of camellia. By the way, camellia flowers are odorless. But the perfumers decided to correct this misunderstanding and synthetically created a fragrance for this flower. Traditionally, it sounds like a mixture of tea notes and peony. The candle in a white glass CAMELIA is an ideal gift: it is packed in a charming box with a ribbon. Elegant and tasteful!",
                             ImageID = aromaflower3.ID,
                             CategoryID = aromaFlower.ID,
                             Price = 4.19m
@@ -404,7 +404,7 @@ namespace Store.Data
                         new Item
                         {
                             Name = "LEMPI, Skandinavisk",
-                            Description = "Чем пахнет скандинавская любовь? Конечно, цветами. Нежные лепестки роз, садовые пионы и свежая нота мха – основа аромата LEMPI от Skandinavisk. Аромат спелой клубники делает запах еще более романтичным и манящим. Зажгите эту свечу, и пусть аромат любви наполнит весь ваш дом!\n\nСвеча в стеклянном стаканчике с крышкой из бука упакована в стильную коробочку. И она станет идеальным подарком поклоннику скандинавского дизайна.",
+                            Description = "What does Scandinavian love smell like? Flowers, of course. Delicate rose petals, garden peonies and a fresh note of moss are the basis of Skandinavisk's LEMPI fragrance. The aroma of ripe strawberries makes the scent even more romantic and inviting. Light this candle and let the scent of love fill your entire home! The candle in a glass cup with a beech lid is packed in a stylish box. And it will be the perfect gift for a fan of Scandinavian design.",
                             ImageID = aromaflower4.ID,
                             CategoryID = aromaFlower.ID,
                             Price = 4.89m
@@ -414,7 +414,7 @@ namespace Store.Data
                         new Item
                         {
                             Name = "ABSINTHE, BROAD st. BRAND",
-                            Description = "Культовый напиток богемы, “зеленая фея” – спутница художников Мане и Ван Гога. Это аромат тонкий и с выраженными нотами полыни и мяты. Лучшее начало пятничного вечера на Broad Street – заглянуть в один из баров и заказать порцию абсента.\n\nИли зажечь свечу ABSINTHE и насладиться расслабляющим ароматом. Обещаем, это будет лучшее начало уикенда!\n\nА еще это аромат, который можно смело дарить мужчине: он оценит ваш тонкий вкус и будет с удовольствием зажигать его дома. В нем нет алкогольных нот и звучать он будет, скорее, фоном.",
+                            Description = "The iconic bohemian drink, the “green fairy” is the companion of the artists Manet and Van Gogh. It is a delicate aroma with pronounced notes of wormwood and mint. The best way to start a Friday night on Broad Street is to pop into one of the bars for a serving of absinthe. Or light an ABSINTHE candle and enjoy the relaxing scent. We promise this will be the best start to the weekend! And it is also a scent that you can safely give a man: he will appreciate your delicate taste and will be happy to light it at home. There are no alcoholic notes in it and it will sound rather in the background.",
                             ImageID = aromaspicy1.ID,
                             CategoryID = aromaSpicy.ID,
                             Price = 2.99m
@@ -422,7 +422,7 @@ namespace Store.Data
                         new Item
                         {
                             Name = "AMBER & HELIOTROPE, Collines de Provence",
-                            Description = "Французский бренд Collines de Provence не перестает радовать нас новыми ароматами! В новой элегантной упаковке из матового стекла! Аромат AMBER & HELIOTROPE удивительный! Многогранное, сложное сочетание нот амбры, гелиотропа, сандала и герани.\n\nВоск окрашен пищевым красителем в терракотовый цвет, напоминающий красный восточный песок. Этот аромат унесет вас в самое сердце Востока! Самое время зажечь свечу и насладится прекрасным ароматом роскошной свечи.",
+                            Description = "The French brand Collines de Provence never ceases to delight us with new fragrances! New, elegant frosted glass packaging! AMBER & HELIOTROPE is amazing! A multifaceted, complex combination of amber, heliotrope, sandalwood and geranium notes. The wax is colored with food coloring in a terracotta color, reminiscent of the red oriental sand. This fragrance will take you to the very heart of the East! It's time to light a candle and enjoy the wonderful scent of a luxurious candle.",
                             ImageID = aromaspicy2.ID,
                             CategoryID = aromaSpicy.ID,
                             Price = 3.99m
@@ -430,7 +430,7 @@ namespace Store.Data
                         new Item
                         {
                             Name = "TEAKWOOD + JASMINE, PaddyWax",
-                            Description = "Еще одна прекрасная новинка от PaddyWax! Коллекция Hygge включает теплые домашние ароматы. Когда хочется свернутся калачиком под мягким теплым пледом и читать любимую книгу. Эти свечи точно будут кстати! Аромат TEAKWOOD + JASMINE яркий и в то же время нежный и ненавязчивый. В составе – тиковое дерево, бергамот и теплая амбра. Легкие ноты жасмина отлично вписываются в общую композицию.\n\nСвеча в керамической баночке небесно-голубого цвета выглядит роскошно и передаёт настроение аромата. Однозначно советуем попробовать эту новинку! Сейчас самое время!",
+                            Description = "Another great new product from PaddyWax! The Hygge collection includes warm home fragrances. When you want to curl up under a soft warm blanket and read your favorite book. These candles will definitely come in handy! The aroma of TEAKWOOD + JASMINE is bright and at the same time delicate and unobtrusive. It contains teak wood, bergamot and warm amber. Light notes of jasmine fit perfectly into the overall composition. The candle in a ceramic jar in sky blue looks luxurious and conveys the mood of the fragrance. We definitely recommend you try this new product! Right now!",
                             ImageID = aromaspicy3.ID,
                             CategoryID = aromaSpicy.ID,
                             Price = 4.59m
@@ -438,7 +438,7 @@ namespace Store.Data
                         new Item
                         {
                             Name = "BLOND TABAC, Voluspa",
-                            Description = "Драгоценные украшения – вдохновение для создания свечи Blond Tabac от Voluspa. Элегантная упаковка в матовом золоте и изысканное сочетание ароматов.\nТеплый, слегка землистый аромат листьев табака Перик с пряными нюансами, стручковая ваниль и сандаловое дерево создают благородное звучание. Драгоценным является и сам табак Перик, который растет только в северной Америке на небольшой территории Сент-Джеймс.\nЗажгите аромат свечи Blond Tabac и погрузитесь в атмосферу 19 века: с пышными платьями, роскошными интерьерами и красивыми ритуалами.",
+                            Description = "The precious jewelry is the inspiration for the Blond Tabac candle from Voluspa. Elegant packaging in matt gold and a sophisticated combination of aromas. Warm, slightly earthy scent of tobacco leaves Perique with spicy nuances, vanilla pods and sandalwood create a noble sound. The Perique tobacco itself, which grows only in North America in the small area of St. James, is also precious. Light the scent of a Blond Tabac candle and immerse yourself in the atmosphere of the 19th century: with lush dresses, luxurious interiors and beautiful rituals.",
                             ImageID = aromaspicy4.ID,
                             CategoryID = aromaSpicy.ID,
                             Price = 4.99m
@@ -449,7 +449,7 @@ namespace Store.Data
                         new Item
                         {
                             Name = "BALSAM & EUCALYPTUS, PaddyWax",
-                            Description = "Если вы поклонник хвойных ароматов, то не пропустите эту свечу BALSAM & EUCALYPTUS от PaddyWax. Хвойно-пряный, с травяными нотами, этот запах звучит насыщенно и интересно. Запах еловой хвои, сосновые шишки смягчены теплой замшей и пачули. А травяное звучание аромат приобрел благодаря сочной мяте и эвкалипту.\n\nИ только посмотрите, какая красивая свеча получилась: глазурованная керамика с сияющими разводами, золотистая крышка из металла: глаз не оторвать!",
+                            Description = "If you are a fan of coniferous scents, then don't miss this BALSAM & EUCALYPTUS candle by PaddyWax. Spicy coniferous, with herbal notes, this smell sounds rich and interesting. The scent of spruce needles, pine cones are softened by warm suede and patchouli. And the aroma acquired a herbal sound thanks to juicy mint and eucalyptus.\n\nAnd just look what a beautiful candle it turned out: glazed ceramics with shining stains, golden metal lid: you can't take your eyes off!",
                             ImageID = aromaconiferous1.ID,
                             CategoryID = aromaConiferous.ID,
                             Price = 2.89m
@@ -457,7 +457,7 @@ namespace Store.Data
                         new Item
                         {
                             Name = "WHITE CYPRESS Средняя свеча в стеклянной баночке, Voluspa",
-                            Description = "Еще один лимитированный аромат для дома от бренда Voluspa. Теплый, уютный запах WHITE CYPRESS – это ноты кипариса. Немного хвои, немного древесины и очень много удовольствия и ощущения дома. А еще этот аромат Voluspa моментально создаст дома ощущение живой ели: отличный вариант, если вы не планируете покупку живого дерева к празднику. У свечи “Белый кипарис” очень красивая упаковка из сине-зеленого стекла, как будто хвойный лес припорошен снегом. И только взгляните на эту стеклянную баночку свечи, ее из рук выпускать не хочется.",
+                            Description = "Another limited edition home fragrance from the Voluspa brand. The warm, cozy scent of WHITE CYPRESS is cypress. A little pine needles, a little wood, and a lot of fun and home feeling. And this Voluspa scent will instantly create the feeling of living spruce at home: a great option if you are not planning to buy a living tree for the holiday. The White Cypress candle has a very beautiful package made of blue-green glass, as if a coniferous forest is covered with snow. And just look at this glass candle jar, you don't want to let go of it.",
                             ImageID = aromaconiferous2.ID,
                             CategoryID = aromaConiferous.ID,
                             Price = 2.99m
@@ -465,7 +465,7 @@ namespace Store.Data
                         new Item
                         {
                             Name = "CYPRESS & FIR MINI, PaddyWax",
-                            Description = "Свеча-елочка от PaddyWax – это абсолютный восторг! Правда!\n\nКерамическая елочка из двух частей: нижняя – это свеча с ароматом хвои ели, кипариса, сосновых шишечек и эвкалипта. А верхняя – может служить декором, а может стать подставкой для благовоний. Составьте части и перед вами – очаровательная белая елочка, как будто припорошенная снежком. Отличное украшение праздничного стола и декор для дома. А еще вы можете собрать целую еловую полянку из свечей-елочек разного размера и цвета. Здорово, правда?",
+                            Description = "The PaddyWax herringbone candle is an absolute delight! True!\n\nCeramic herringbone in two parts: the lower one is a candle with the scent of spruce needles, cypress, pine cones and eucalyptus. And the top one can serve as a decor, or it can become a stand for incense. Compose the parts and in front of you is a charming white Christmas tree, as if powdered with snow. Great festive table decoration and home decor. And you can also make a whole spruce meadow from Christmas tree candles of different sizes and colors. Great, isn't it?",
                             ImageID = aromaconiferous3.ID,
                             CategoryID = aromaConiferous.ID,
                             Price = 2.99m
@@ -473,7 +473,7 @@ namespace Store.Data
                         new Item
                         {
                             Name = "CYPRESS & FIR, PaddyWax",
-                            Description = "Свеча в стаканчике хвойного цвета с золотистыми узорами CYPRESS & FIR упакована в красивую праздничную коробочку. Лаконичное и элегантное решение для подарка от PaddyWax! Внутри – самый новогодний аромат: Ноты хвои ели, кипариса, сосновых шишечек и эвкалипта мгновенно наполнит дом ощущением праздника, как бы погода не была за окном.",
+                            Description = "A candle in a coniferous glass with golden patterns CYPRESS & FIR is packed in a beautiful holiday box. A laconic and elegant gift solution from PaddyWax! Inside - the most New Year's scent: Notes of spruce needles, cypress, pine cones and eucalyptus will instantly fill the house with a feeling of celebration, no matter how the weather is outside the window.",
                             ImageID = aromaconiferous4.ID,
                             CategoryID = aromaConiferous.ID,
                             Price = 3.99m
@@ -483,7 +483,7 @@ namespace Store.Data
                         new Item
                         {
                             Name = "BALTIC AMBER, Voluspa",
-                            Description = "Волнующий теплый аромат смолы янтарного дерева, ноты сандала, кедра и послевкусие цветка ванили.. BALTIC AMBER – это один из самых благородных запахов коллекции.  Нежный, сладковатый и чуть пряный. Бархатный аромат этой свечи Voluspa подойдет для вечера: уютного и спокойного.",
+                            Description = "Exciting warm scent of amber resin, notes of sandalwood, cedar and vanilla flower aftertaste .. BALTIC AMBER is one of the noblest fragrances in the collection. Delicate, sweetish and slightly spicy. The velvety scent of this Voluspa candle is perfect for an evening: cozy and calm.",
                             ImageID = ordinarybig1.ID,
                             CategoryID = ordinaryBig.ID,
                             Price = 2.49m
@@ -491,7 +491,7 @@ namespace Store.Data
                         new Item
                         {
                             Name = "INSIDIAE, Apotheca",
-                            Description = "Аромат соснового леса ночью: мистический, окутывающий и внушающий благоговение перед силами природы. Свеча INSIDIAE – это хвоя и древесина кедра, много воздуха и свежести.\n\nЕсли вы уже влюбились в этот аромат Apotheca, закажите большую свечу: она будет радовать вас целых 200 часов. Такая свеча отлично подойдет для большой квартиры или загородного дома. У нее 5 фитилей, которые обеспечивают очень ровное плавление воска и насыщенный аромат.",
+                            Description = "The scent of a pine forest at night: mystical, enveloping and awe-inspiring to the forces of nature. The INSIDIAE candle is made of cedar needles and wood, a lot of air and freshness.\n\nIf you are already in love with this Apotheca scent, order a large candle: it will delight you for 200 hours. Such a candle is perfect for a large apartment or a country house. It has 5 wicks that provide a very even wax melting and a rich aroma.",
                             ImageID = ordinarybig2.ID,
                             CategoryID = ordinaryBig.ID,
                             Price = 3.49m
@@ -499,7 +499,7 @@ namespace Store.Data
                         new Item
                         {
                             Name = "APPLE BLUE CLOVER, Voluspa",
-                            Description = "Свежий, хрустящий аромат с тонкой фруктовой нотой яблока. Свеча APPLE BLUE CLOVER от Voluspa понравится и поклонником запахов ягод и фруктов, и тем, кто любит освежающие ароматы. Эта свеча как будто бы пахнет горным воздухом, весенней зеленью и свободой. Ноты клевера, мха и огурца делают аромат волнующим и легким.\n\nСвеча большого объема Voluspa подойдет для загородного дома или просторной квартиры. В ней почти 3,5 кг воска, так что гореть она будет целых 250 часов. А еще у этой свечи Voluspa 5 фитилей и потрясающе красивая коробка.",
+                            Description = "Fresh, crunchy aroma with a subtle fruity apple note. The APPLE BLUE CLOVER candle from Voluspa will appeal to fans of berry and fruit scents as well as to those who love refreshing aromas. This candle seems to smell like mountain air, spring greenery and freedom. Notes of clover, moss and cucumber make the fragrance exciting and light.\n\nThe Voluspa large volume candle is suitable for a country house or a spacious apartment. It contains almost 3.5 kg of wax, so it will burn for 250 hours. This Voluspa candle also has 5 wicks and a stunningly beautiful box.",
                             ImageID = ordinarybig3.ID,
                             CategoryID = ordinaryBig.ID,
                             Price = 4.49m
@@ -507,7 +507,7 @@ namespace Store.Data
                         new Item
                         {
                             Name = "BURNING WOODS, Voluspa",
-                            Description = "Поклонники дымных ароматов точно оценят новинку от Voluspa. Аромат BURNING WOODS напомнит вам теплые летние вечера у костра и скрасит любую осеннюю непогоду! В составе – кедр, можжевельник и тлеющее дерево. Интересное сочетание, правда?\n\nСвеча в большом стакане из фактурного белого стекла с крышкой выглядит потрясающе! Она идеально впишется в просторной гостиной или спальне. Объем воска рассчитан на 80 часов горения. Эта свеча будет радовать вас очень долго!",
+                            Description = "Fans of smoky fragrances will definitely appreciate the new fragrance from Voluspa. The BURNING WOODS scent will remind you of warm summer evenings by the fire and brighten up any autumn weather! It contains cedar, juniper and smoldering wood. An interesting combination, right?\n\nThe candle in a large glass made of textured white glass with a lid looks amazing! It fits perfectly into a spacious living room or bedroom. The volume of wax is designed for 80 hours of burning. This candle will delight you for a very long time!",
                             ImageID = ordinarybig4.ID,
                             CategoryID = ordinaryBig.ID,
                             Price = 2.39m
@@ -517,7 +517,7 @@ namespace Store.Data
                         new Item
                         {
                             Name = "CATHERINE, Flame Moscow",
-                            Description = "Аромат CATHERINE, пожалуй, самый уютный из новинок Flame Moscow! Ноты какао, кардамона, корицы и шоколада так и манят! А шалфей, папирус и красное дерево прекрасно оттеняют аромат, добавляя свежую ноту.\n\nКомпактная свеча из стекла серого цвета имеет деревянный фитиль, который будет уютно потрескивать при горении. Эта свеча отлично подойдет в качестве небольшого презента коллеге или подружке!",
+                            Description = "The CATHERINE scent is perhaps the coziest of the new Flame Moscow fragrances! The notes of cocoa, cardamom, cinnamon and chocolate beckon! And sage, papyrus and mahogany perfectly set off the scent, adding a fresh note.\n\nThe compact gray glass candle has a wooden wick that will crackle comfortably when burning. This candle is perfect as a small presentation to a colleague or girlfriend!",
                             ImageID = ordinarycompact1.ID,
                             CategoryID = ordinaryCompact.ID,
                             Price = 2.49m
@@ -525,7 +525,7 @@ namespace Store.Data
                         new Item
                         {
                             Name = "FRANCESCO, PaddyWax",
-                            Description = "Знакомьтесь – Франческо! Так зовут эту свечу-персону. Добродушный Франческо встречает закат, лежа в гамаке и попыхивая сигарой. Он умеет наслаждаться жизнью как никто другой. Неспешно и со вкусом.\n\nАромат свечи FRANCESCO – это томный запах дыма и сладостной амбры, мягкий и уютный. Он напомнит вам вечер у камина или костра. У каждой свечи Persona от PaddyWax – свой характер. А еще очаровательная шляпка, которую можно использовать как крышку и подставку под спички или палочки благовоний.",
+                            Description = "Meet Francesco! This is the name of this candle-person. Good-natured Francesco greets the sunset, lying in a hammock and puffing on a cigar. He knows how to enjoy life like no other. Slowly and tastefully.\n\nThe scent of the FRANCESCO candle is a languid scent of smoke and sweet amber, soft and cozy. It will remind you of an evening by the fireplace or campfire. Each Persona candle by PaddyWax has its own personality. And also a charming hat that can be used as a lid and stand for matches or incense sticks.",
                             ImageID = ordinarycompact2.ID,
                             CategoryID = ordinaryCompact.ID,
                             Price = 2.99m
@@ -533,7 +533,7 @@ namespace Store.Data
                         new Item
                         {
                             Name = "FORBIDDEN FIG, Voluspa",
-                            Description = "Свеча FORBIDDEN FIG от Voluspa – это аромат-осень! Инжир просто повсюду! В составе – плоды и листья инжира. Роза прекрасно и ненавязчиво дополняет аромат.\n\nСвеча небольшого размера в баночке резного стекла с металлической крышкой: это всегда отличная идея! Отлично подойдет в качестве небольшого подарка маме или любимой подруге. Всем советуем попробовать новинку американского бренда!",                            
+                            Description = "The FORBIDDEN FIG Candle by Voluspa is a fall fragrance! Figs are just everywhere! It contains fruits and leaves of figs. Rose beautifully and unobtrusively complements the scent.\n\nSmall candle in a carved glass jar with a metal lid: this is always a great idea! Perfect as a small gift for mom or beloved friend. We advise everyone to try the new American brand!",                            
                             ImageID = ordinarycompact3.ID,
                             CategoryID = ordinaryCompact.ID,
                             Price = 3.99m
@@ -541,7 +541,7 @@ namespace Store.Data
                         new Item
                         {
                             Name = "AMBRE LUMIERE NEW, Voluspa",
-                            Description = "Древесный аромат с нотами благовоний и сладостной амбры – это AMBRE LUMIERE от Voluspa. Теплый, мягкий, очень уютный и совершенно универсальный, не смотря на яркие компоненты в составе.\n\nА свеча небольшого размера в баночке резного стекла с металлической крышкой: это всегда отличная идея! С нее можно начать знакомство с одним из самых популярных ароматов калифорнийского бренда.",
+                            Description = "A woody scent with notes of incense and sweet amber is AMBER LUMIERE by Voluspa. Warm, soft, very cozy and completely versatile, despite the bright components in the composition.\n\nA small candle in a carved glass jar with a metal lid: always a great idea! With her, you can start your acquaintance with one of the most popular fragrances of the Californian brand.",
                             ImageID = ordinarycompact4.ID,
                             CategoryID = ordinaryCompact.ID,
                             Price = 2.99m
@@ -551,7 +551,7 @@ namespace Store.Data
                         new Item
                         {
                             Name = "FRESH BERGAMOT, Collines de Provence",
-                            Description = "Аромат свечи FRESH BERGAMOT создан для поклонников травяных и цитрусовых ароматов. Сочный базилик, горьковатый бергамот и лимон. Теплая база из сандала и кедра делает аромат более стойким. А нероли добавляет сладости. Это очень красивый аромат, который максимально ассоциируется с летом в Средиземноморье.\n\nСвеча Collines de Provence выполнена из матового стекла и имеет керамическую крышечку, которая защитит поверхность свечи от пыли.",
+                            Description = "The scent of the FRESH BERGAMOT candle was created for fans of herbal and citrus aromas. Juicy basil, bitter bergamot and lemon. A warm sandalwood and cedarwood base adds a long-lasting fragrance. And neroli adds sweetness. This is a very beautiful scent that is most closely associated with summer in the Mediterranean.\n\nThe Collines de Provence candle is made of frosted glass and has a ceramic lid that protects the surface of the candle from dust.",
                             ImageID = ordinarymiddle1.ID,
                             CategoryID = ordinaryMiddle.ID,
                             Price = 4.99m
@@ -559,7 +559,7 @@ namespace Store.Data
                         new Item
                         {
                             Name = "FRESH FIG Средняя свеча в стекле, Collines de Provence",
-                            Description = "Всегда уместный, спокойный и взвешенный аромат, с тонкой пудровой ноткой. Сомневаетесь в выборе, выбирайте инжир. Аромат свечи FRESH FIG – не исключение. Спелые плоды фигового дерева и немного зелени: идеально! Зажгите свечу Collines de Provence и насладитесь атмосферой дома.",
+                            Description = "Always appropriate, calm and balanced scent, with a subtle powdery note. If you doubt your choice, choose figs. The scent of the FRESH FIG candle is no exception. Ripe figs and some greenery: perfect! Light the Collines de Provence candle and enjoy the atmosphere at home.",
                             ImageID = ordinarymiddle2.ID,
                             CategoryID = ordinaryMiddle.ID,
                             Price = 4.99m
@@ -567,7 +567,7 @@ namespace Store.Data
                         new Item
                         {
                             Name = "GOJI TAROCCO ORANGE, Voluspa",
-                            Description = "Свеча GOJI TAROCCO ORANGE – один из лучших запахов от Voluspa: терпкая ягода годжи, спелый манго и кисло-сладкий красный апельсин. Сочный коктейль, от которого у вас буквально потекут слюнки. Волнующий, насыщенный, сочный – идеален для начала дня: яркий и волнующий, он доставит вам подлинное наслаждение.\n\nЭта свеча Voluspa рассчитана на 50 часов горения. Очаровательная баночка резного стекла со стеклянной крышкой пленит вас с первого взгляда. Только представьте, как красиво будет смотреться огонь сквозь алое стекло!",
+                            Description = "GOJI TAROCCO ORANGE Candle is one of the best scents from Voluspa: tart goji berry, ripe mango and sweet and sour red orange. A juicy cocktail that will literally make your mouth water. Exciting, full-bodied, juicy - perfect to start the day: bright and exciting, it will give you a real delight.\n\nThis Voluspa candle is designed to burn for 50 hours. A charming carved glass jar with a glass lid will captivate you at first sight. Just imagine how beautiful the fire will look through the crimson glass!",
                             ImageID = ordinarymiddle3.ID,
                             CategoryID = ordinaryMiddle.ID,
                             Price = 4.99m
@@ -575,7 +575,7 @@ namespace Store.Data
                         new Item
                         {
                             Name = "GOJI TAROCCO ORANGE, Voluspa",
-                            Description = "Сочный, сладкий аромат! Терпкая ягода годжи, спелый манго и кисло-сладкий красный апельсин. Сочный коктейль, от которого у вас буквально потекут слюнки. Волнующий, насыщенный, сочный – идеален для начала дня: яркий и волнующий, он доставит вам подлинное наслаждение.\n\nКрасивая и элегантная свеча в стеклянном стаканчике и подарочной коробочке – готовый презент к любому торжеству. И только посмотрите на цвет стекла и представьте, как красиво его будет подсвечивать огонь: сплошное эстетическое удовольствие!",
+                            Description = "Juicy, sweet aroma! Tart goji berry, ripe mango and sweet and sour red orange. A juicy cocktail that will literally make your mouth water. Exciting, intense, juicy - ideal for starting the day: bright and exciting, it will bring you real delight.\n\nBeautiful and elegant candle in a glass cup and gift box is a ready present for any occasion. And just look at the color of the glass and imagine how beautifully the fire will illuminate it: sheer aesthetic pleasure!",
                             ImageID = ordinarymiddle4.ID,
                             CategoryID = ordinaryMiddle.ID,
                             Price = 2.99m
@@ -586,7 +586,7 @@ namespace Store.Data
                         new Item
                         {
                             Name = "JAPONICA ARCHIVE, Voluspa",
-                            Description = "Роскошный подарочный набор из 12 мини-свечей Voluspa. В этом наборе вы найдете самые популярные ароматы коллекции Japonica: сочные, сладкие, хвойные и пряные. Все, чтобы угодить адресату подарка. И только взгляните на упаковку: великолепный кейс впечатлит самого взыскательного человека. Согласны?",
+                            Description = "Luxurious gift set of 12 Voluspa mini candles. In this set you will find the most popular Japonica fragrances: juicy, sweet, coniferous and spicy. Everything to please the recipient of the gift. And just look at the packaging: the magnificent case will impress the most discerning person. Do you agree?",
                             ImageID = ordinaryset1.ID,
                             CategoryID = ordinarySet.ID,
                             Price = 2.99m
@@ -594,7 +594,7 @@ namespace Store.Data
                         new Item
                         {
                             Name = "NATUR, Skandinavisk",
-                            Description = "В подарочном наборе NATUR бренд Skandinavisk собрал 3 аромата, вдохновленных северной природой. FJORD – легкий и волнующий запах в честь фьордов, OY – это свеча вдохновленная островами и HAV – очень натуралистичный аромат северного моря.\n\nЭтот презент абсолютно точно понравится поклонникам Скандинавии и дикой природы. А еще тем, кто предпочитает свежие и акватические запахи.",
+                            Description = "In the NATUR gift set, Skandinavisk has collected 3 scents inspired by northern nature. FJORD is a light and exciting scent in honor of the fjords, OY is a candle inspired by the islands and HAV is a very natural aroma of the north sea.\n\nThis present will definitely appeal to fans of Scandinavia and wildlife. And also for those who prefer fresh and aquatic scents.",
                             ImageID = ordinaryset2.ID,
                             CategoryID = ordinarySet.ID,
                             Price = 3.39m
@@ -602,7 +602,7 @@ namespace Store.Data
                         new Item
                         {
                             Name = "VANILLA+OAKMOSS & POMEGRANATE+SPRUCE GIFT BOX, PaddyWax",
-                            Description = "Тук-тук. Это вечерняя доставка удовольствия Relish.\nВам понадобится: 1 ванная, 2 свечи и 20 минут\nРецепт 1. Ваниль и дубовый мох – сочетание неожиданное, но какое приятное! Наполните теплую ванную, добавьте пену вашу любимую, налейте бокал шампанского и зажгите свечу VANILLA + OAKMOSS. Осталось лишь насладиться моментом.\nРецепт 2. Терпко-сладкие, винные нюансы свечи POMEGRANATE & SPRUCE как будто предназначены для романтических вечеров. С приглушенным светом, лепестками роз, пеной и всем тем, от чего так сладостно кружится голова…\n\nВыбирайте аромат под настроение или сочетайте их между собой. 2 теплых и насыщенных запаха в наборе Relish – то, что нужно для приятного вечера.",
+                            Description = "Knock Knock. This is an evening delivery of Relish pleasure.\nYou will need: 1 bathroom, 2 candles and 20 minutes \nRecipe 1. Vanilla and oakmoss are an unexpected combination, but how pleasant! Fill a warm bathroom, add your favorite foam, pour a glass of champagne and light a VANILLA + OAKMOSS candle. All that remains is to enjoy the moment.\nRecipe 2. The tart-sweet, winey nuances of the POMEGRANATE & SPRUCE candles seem to be meant for romantic evenings. With dim lights, rose petals, foam and everything that makes your head spin so sweetly ...\n\nChoose a fragrance according to your mood or combine them with each other. 2 warm and rich scents in the Relish set are just what you need for a pleasant evening.",
                             ImageID = ordinaryset3.ID,
                             CategoryID = ordinarySet.ID,
                             Price = 4.49m
@@ -610,7 +610,7 @@ namespace Store.Data
                         new Item
                         {
                             Name = "JAPONICA BESTSELLERS PEDESTAL, Voluspa",
-                            Description = "JAPONICA BESTSELLERS PEDESTAL 4 – это набор самых популярных ароматов Voluspa в этом сезоне! Сочный и сладкий GOJI TAROCCO ORANGE с нотами ягод годжи, апельсина и манго, теплый BALTIC AMBER с нотами ванили, сандала, амбры, мягкий древесный FRENCH CADE LAVENDER с нотами лаванды и можжевельника. И очень интересная новинка этой осени – FORBIDDEN FIG! Это фруктово-травяной аромат листьев и плодов инжира.\n\nСвечи упакованы в роскошный кейс – очень красивый и солидный подарок! Вы можете зажигать свечи по отдельности или составить свою особенную композицию. Очень удобно, правда? Нам очень нравится!",
+                            Description = "JAPONICA BESTSELLERS PEDESTAL 4 is a collection of the most popular Voluspa fragrances this season! Juicy and sweet GOJI TAROCCO ORANGE with notes of goji berries, orange and mango, warm BALTIC AMBER with notes of vanilla, sandalwood, amber, soft woody FRENCH CADE LAVENDER with notes of lavender and juniper. And a very interesting novelty this fall - FORBIDDEN FIG! This is a herbal and fruity aroma of fig leaves and fruits.\n\nThe candles are packed in a luxurious case - a very beautiful and solid gift! You can light the candles individually or create your own special composition. Very convenient, right? We really like it!",
                             ImageID = ordinaryset4.ID,
                             CategoryID = ordinarySet.ID,
                             Price = 4.49m
@@ -620,32 +620,32 @@ namespace Store.Data
                         //decorative -> decorativeChristmas
                         new Item
                         {
-                            Name = "Свеча, 6 см, в ассортименте, красная/серебристая/золотистая, Шар, Christmas",
-                            Description = "Размер: 6 см.\nМатериал: парафин\nНе зажигать вблизи легковоспламеняющихся поверхностей. Хранить в местах, недоступных для детей.",
+                            Name = "Candle, 6 cm, assorted, red / silver / golden, Ball, Christmas",
+                            Description = "Size: 6 cm.\nMaterial: paraffin\nDo not ignite near flammable surfaces. Keep out of the reach of children.",
                             ImageID = decorativechristmas4.ID,
                             CategoryID = decorativeChristmas.ID,
                             Price = 2.19m
                         },
                         new Item
                         {
-                            Name = "Свеча, 14 см, зеленая, Елка заснеженная, Christmas bright ",
-                            Description = "Свеча.\nРазмер: 14 см.\nМатериал: парафин.\nХранить в недоступном для детей месте. Не зажигать вблизи легковоспламеняющихся предметов. Температура хранения от 0-35℃.",
+                            Name = "Candle, 14 cm, green, Snow-covered Christmas tree, Christmas bright",
+                            Description = "Candle.\nSize: 14 cm.\nMaterial: paraffin.\nKeep out of the reach of children. Do not light near flammable objects. Storage temperature from 0-35 ℃.",
                             ImageID = decorativechristmas2.ID,
                             CategoryID = decorativeChristmas.ID,
                             Price = 2.29m
                         },
                         new Item
                         {
-                            Name = "Свеча, 12 см, серая, Шишка, Christmas",
-                            Description = "Свеча.\nРазмер: 12 см.\nМатериал: парафин.\nХранить в недоступном для детей месте. Не зажигать вблизи легковоспламеняющихся предметов. Температура хранения от 0-35℃.",
+                            Name = "Candle, 12 cm, gray, Pine cone, Christmas",
+                            Description = "Candle.\nSize: 12 cm.\nMaterial: paraffin.\nKeep out of the reach of children. Do not light near flammable objects. Storage temperature from 0-35 ℃.",
                             ImageID = decorativechristmas1.ID,
                             CategoryID = decorativeChristmas.ID,
                             Price = 3.79m
                         },                        
                         new Item
                         {
-                            Name = "Свеча, 13 см, золотистая, блестки, Тигр, Tiger",
-                            Description = "Свеча.\nРазмер: 13 см.\nМатериал: парафин.\nНе зажигать вблизи легковоспламеняющихся предметов. Хранить в недоступном для детей месте. Температура хранения от 0-35℃",
+                            Name = "Candle, 13 cm, golden, sparkles, Tiger",
+                            Description = "Candle.\nSize: 13 cm.\nMaterial: paraffin.\nDo not light near flammable objects. Keep out of the reach of children. Storage temperature from 0-35 ℃",
                             ImageID = decorativechristmas3.ID,
                             CategoryID = decorativeChristmas.ID,
                             Price = 4.69m
