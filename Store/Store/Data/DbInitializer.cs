@@ -74,7 +74,7 @@ namespace Store.Data
 
             if (!_context.Categories.Any())
             {
-                Image image = new Image { ImageData = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\Все_свечи.jpg") };
+                /*Image image = new Image { ImageData = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\Все_свечи.jpg") };
                 Image insideImage = new Image { ImageData = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\все_свечи_широкая.jpg") };
                 _context.Images.Add(image);
                 _context.Images.Add(insideImage);
@@ -610,7 +610,7 @@ namespace Store.Data
                             CategoryID = decorativeChristmas.ID
                         },                       
                     }); ;
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();*/
             }
 
         }

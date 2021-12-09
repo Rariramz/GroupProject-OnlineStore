@@ -5,14 +5,7 @@ export const post = async (url, callback, obj) => {
     fetchWrapper("POST", url, callback, obj);
 };
 
-const fetchWrapper = async (method, url, callback, obj) => {
-<<<<<<< HEAD
-    try {
-        let formData = new FormData();
-        Object.entries(obj).forEach((element) => {
-            formData.append(element[0], element[1]);
-        });
-=======
+export const fetchWrapper = async (method, url, callback, obj) => {
   try {
     let formData = new FormData();
     if (obj) {
@@ -20,7 +13,6 @@ const fetchWrapper = async (method, url, callback, obj) => {
         formData.append(element[0], element[1]);
       });
     }
->>>>>>> develop
 
         let res = await fetch(url, {
             method,

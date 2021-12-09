@@ -6,31 +6,28 @@ import Footer from "./components/Footer";
 import Header from "./components/Header";
 import theme from "./theme";
 import { Context } from "./index";
-import fetchWrapper, { get } from "./utils/fetchWrapper";
+import { fetchWrapper, get } from "./utils/fetchWrapper";
 
 const App = observer(() => {
   const { user } = useContext(Context);
-  //const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        get("api/Account/Info", func)
+    /*useEffect(() => {
+        fetchWrapper("GET", "api/Account/Info", func, {})
     }, []);
 
     const func = (res) => {
         if (res.success) {
             user.setIsAuth(true);
+            alert("NOT HOORAY")
         } else {
             console.log(res.errorCodes);
+            alert("HOORAY")
         }
        
-    };
+    };*/
 
-
-
-
-
-
-  /*if (loading) {
+  if (loading) {
     return (
       <Box
         height="100vh"
@@ -41,7 +38,7 @@ const App = observer(() => {
         <CircularProgress />
       </Box>
     );
-  }*/
+  }
 
   return (
     <ThemeProvider theme={theme}>
