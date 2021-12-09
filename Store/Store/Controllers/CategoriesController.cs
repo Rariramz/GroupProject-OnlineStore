@@ -53,10 +53,19 @@ namespace Store.Controllers
         [HttpGet]
         public  ActionResult GetMainCategories()
         {
-            Category  rootCategory = _context.Categories.Where(cat => cat.ParentID == null).First();
-            List<Category> mainCategories= (from category in _context.Categories
+            Category rootCategory = _context.Categories.Where(cat => cat.ParentID == null).First();
+            if (rootCategory == null)
+            {
+                return NoContent();
+            }
+
+            List<Category> mainCategories = (from category in _context.Categories
                     where category.ParentID == rootCategory.ID
                     select category).ToList();
+            if (mainCategories.Count == 0)
+            {
+                return NoContent();
+            }
 
             List<CategoryData> categoriesData = new List<CategoryData>();
             foreach (Category category in mainCategories)
@@ -277,7 +286,6 @@ namespace Store.Controllers
             return Json(categoryResult);
         }
 
-        // DELETE: api/Categories/DeleteCategory/5
         [HttpDelete]
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> DeleteCategory(int id)
