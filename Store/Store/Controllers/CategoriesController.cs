@@ -27,7 +27,7 @@ namespace Store.Controllers
 
         // GET: api/Categories
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CategoryData>>> GetCategories()
+        public async Task<ActionResult> GetCategories()
         {
             var categories = await _context.Categories.ToListAsync();
             List<CategoryData> categoriesData = new List<CategoryData>();
@@ -35,10 +35,10 @@ namespace Store.Controllers
             {
                 CategoryData categoryData = new CategoryData
                 {
+                    ID = category.ID,
                     Name = category.Name,
                     Description = category.Description,
                     ParentID = category.ParentID,
-                    InsideImageID = category.InsideImageID
                 };
 
                 categoryData.ItemsIDs = GetCategoryItems(category.ID);
@@ -52,7 +52,7 @@ namespace Store.Controllers
 
         // GET: api/Categories?id=
         [HttpGet]
-        public async Task<ActionResult<CategoryData>> GetCategory(int id)
+        public async Task<ActionResult> GetCategory(int id)
         {
             var category = await _context.Categories.FindAsync(id);
             if (category == null)
@@ -62,10 +62,10 @@ namespace Store.Controllers
 
             CategoryData categoryData = new CategoryData
             {
+                ID = category.ID,
                 Name = category.Name,
                 Description = category.Description,
                 ParentID = category.ParentID,
-                InsideImageID = category.InsideImageID
             };
 
             categoryData.ItemsIDs = GetCategoryItems(id);
@@ -73,63 +73,6 @@ namespace Store.Controllers
 
             return Json(categoryData);
         }
-
-        // PUT: api/Categories/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        //[HttpPut("{id}")]
-        //[Authorize(Roles = "admin")]
-        //public async Task<IActionResult> PutCategory(int id, Category category)
-        //{
-        //    CategoryResult categoryResult = new CategoryResult() { Success = true };
-
-        //    if (id != category.ID)
-        //    {
-        //        return BadRequest();
-        //    }
-
-        //    Category rootCategory = await _context.Categories.FirstAsync(c => c.ParentID == c.ID);
-
-        //    if (rootCategory != null && rootCategory.ID != category.ID)
-        //    {
-        //        if (category.ID == category.ParentID)
-        //        {
-        //            categoryResult.Success = false;
-        //            categoryResult.ErrorCodes.Add(CategoryResultConstants.ERROR_ROOT_ALREADY_EXISTS);
-        //        }
-        //    }
-
-        //    if (!category.ParentID.HasValue || !CategoryExists(category.ParentID ?? 0))
-        //    {
-        //        categoryResult.Success = false;
-        //        categoryResult.ErrorCodes.Add(CategoryResultConstants.ERROR_PARENT_INVALID);
-        //    }
-
-        //    if (category.ChildItems?.Count > 0 && category.ChildCategories?.Count > 0)
-        //    {
-        //        categoryResult.Success = false;
-        //        categoryResult.ErrorCodes.Add(CategoryResultConstants.ERROR_CHILD_CONFLICT);
-        //    }
-
-        //    _context.Entry(category).State = EntityState.Modified;
-
-        //    try
-        //    {
-        //        await _context.SaveChangesAsync();
-        //    }
-        //    catch (DbUpdateConcurrencyException)
-        //    {
-        //        if (!CategoryExists(id))
-        //        {
-        //            return NotFound();
-        //        }
-        //        else
-        //        {
-        //            throw;
-        //        }
-        //    }
-
-        //    return Json(_context);
-        //}
 
         [HttpGet]
         public async Task<IActionResult> GetImage(int id)
@@ -172,7 +115,7 @@ namespace Store.Controllers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         [Authorize(Roles = "admin")]
-        public async Task<ActionResult<Category>> CreateCategory([FromForm]CategoryModel categoryModel)
+        public async Task<ActionResult> CreateCategory([FromForm]CategoryModel categoryModel)
         {
             CategoryResult categoryResult = new CategoryResult() { Success = true };
 
@@ -182,11 +125,13 @@ namespace Store.Controllers
             {
                 categoryResult.ErrorCodes.Add(CategoryResultConstants.ERROR_PARENT_NOT_EXISTS);
             }
-
-            List<Item> items = _context.Items.Where(item => item.CategoryID == parentCategory.ID).ToList();
-            if(items.Count > 0)
+            else
             {
-                categoryResult.ErrorCodes.Add(CategoryResultConstants.ERROR_CHILD_CONFLICT);
+                List<Item> items = _context.Items.Where(item => item.CategoryID == parentCategory.ID).ToList();
+                if (items.Count > 0)
+                {
+                    categoryResult.ErrorCodes.Add(CategoryResultConstants.ERROR_CHILD_CONFLICT);
+                }
             }
 
             string nameRegex = @"^[а-яА-Яa-zA-Z -]+$";
@@ -254,6 +199,16 @@ namespace Store.Controllers
             _context.Categories.Add(category);
             _context.SaveChanges();
 
+            CategoryData categoryData = new CategoryData()
+            {
+                ID = category.ID,
+                Name = category.Name,
+                Description = category.Description,
+                ParentID = category.ParentID,
+            };
+
+            categoryResult.CategoryData = categoryData;
+            
             return Json(categoryResult);
         }
 
