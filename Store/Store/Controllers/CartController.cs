@@ -42,7 +42,6 @@ namespace Store.Controllers
                 ans.Add(new UserItemData
                 {
                     UserID = userItem.UserID,
-                    OrderID = userItem.OrderID,
                     ItemID = userItem.ID,
                     Count = userItem.Count,
                 });
@@ -64,7 +63,6 @@ namespace Store.Controllers
             return new UserItemData
             {
                 UserID = userItem.UserID,
-                OrderID = userItem.OrderID,
                 ItemID = userItem.ID,
                 Count = userItem.Count,
             };
@@ -116,7 +114,95 @@ namespace Store.Controllers
                 Count = userItemModel.Count
             };
             _context.Add(userItem);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
+
+            return Json(userItemResult);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> IncrementItemCount(int userId, int itemId)
+        {
+            User requestUser = await _userManager.FindByEmailAsync(User.Identity.Name);
+            User targetUser = await _userManager.FindByIdAsync(userId.ToString());
+            UserItemResult userItemResult = new UserItemResult() { Success = true };
+            if (targetUser == null)
+            {
+                userItemResult.ErrorCodes.Add(UserItemResultConstants.ERROR_USER_INVALID);
+            }
+            else if (requestUser.Id != targetUser.Id && !await _userManager.IsInRoleAsync(requestUser, "admin"))
+            {
+                userItemResult.ErrorCodes.Add(UserItemResultConstants.ERROR_ACCESS_DENIED);
+            }
+
+            if (userItemResult.ErrorCodes.Count > 0)
+            {
+                userItemResult.Success = false;
+                return Json(userItemResult);
+            }
+
+            UserItem? item = _context.UserItems.FirstOrDefault(item => item.ItemID == itemId
+                                                                && item.UserID == userId.ToString());
+
+            if (item == null)
+            {
+                userItemResult.ErrorCodes.Add(UserItemResultConstants.ERROR_USER_ITEM_NOT_FOUND);
+            }
+
+            if (userItemResult.ErrorCodes.Count > 0)
+            {
+                userItemResult.Success = false;
+                return Json(userItemResult);
+            }
+
+            item.Count++;
+            await _context.SaveChangesAsync();
+
+            return Json(userItemResult);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> DecrementItemCount(int userId, int itemId)
+        {
+            User requestUser = await _userManager.FindByEmailAsync(User.Identity.Name);
+            User targetUser = await _userManager.FindByIdAsync(userId.ToString());
+            UserItemResult userItemResult = new UserItemResult() { Success = true };
+            if (targetUser == null)
+            {
+                userItemResult.ErrorCodes.Add(UserItemResultConstants.ERROR_USER_INVALID);
+            }
+            else if (requestUser.Id != targetUser.Id && !await _userManager.IsInRoleAsync(requestUser, "admin"))
+            {
+                userItemResult.ErrorCodes.Add(UserItemResultConstants.ERROR_ACCESS_DENIED);
+            }
+
+            if (userItemResult.ErrorCodes.Count > 0)
+            {
+                userItemResult.Success = false;
+                return Json(userItemResult);
+            }
+
+            UserItem? item = _context.UserItems.FirstOrDefault(item => item.ItemID == itemId
+                                                                && item.UserID == userId.ToString());
+
+            if (item == null)
+            {
+                userItemResult.ErrorCodes.Add(UserItemResultConstants.ERROR_USER_ITEM_NOT_FOUND);
+            }
+            else if(item.Count == 1)
+            {
+                userItemResult.ErrorCodes.Add(UserItemResultConstants.ERROR_COUNT_LESS_ONE);
+            }
+
+            if (userItemResult.ErrorCodes.Count > 0)
+            {
+                userItemResult.Success = false;
+                return Json(userItemResult);
+            }
+
+            item.Count--;
+            await _context.SaveChangesAsync();
 
             return Json(userItemResult);
         }
