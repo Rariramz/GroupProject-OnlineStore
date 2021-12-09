@@ -47,6 +47,10 @@ const theme = createTheme({
       },
       styleOverrides: {
         contained: { fontcolor: "#fff" },
+        sizeLarge: {
+          paddingInline: 40,
+          paddingBlock: 20,
+        },
       },
     },
     MuiCard: {

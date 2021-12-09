@@ -33,7 +33,7 @@ const CartItem = (props) => {
             wrap="nowrap"
           >
             <Grid item>
-              <img src={itemImage} style={{ width: 250 }} />
+              <img src={itemImage} style={{ width: "100%" }} />
             </Grid>
             <Grid
               item

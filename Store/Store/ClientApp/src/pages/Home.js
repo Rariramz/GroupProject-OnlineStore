@@ -7,7 +7,7 @@ import ItemCard from "../components/ItemCard";
 import PrettyPreviewImage from "../components/PrettyPreviewImage";
 import CandleInfo from "../components/CandleInfo";
 import CategoryCard from "../components/CategoryCard";
-import fetchWrapper, { post } from "../utils/fetchWrapper";
+import fetchWrapper, { get, post } from "../utils/fetchWrapper";
 
 const Content = styled(Box)(({ theme }) => ({
   padding: theme.spacing(0, 32),
@@ -22,28 +22,13 @@ const ItemGridContainer = styled(Grid)(({ theme }) => ({
 const Home = () => {
   const productsRef = useRef(null);
   const [categories, setCategories] = useState(["2", "2", "2"]);
-  const [popularProducts, PopularProducts] = useState([
-    "2",
-    "2",
-    "2",
-    "2",
-    "2",
-    "2",
-    "2",
-    "2",
-  ]);
+  const [popularProducts, setPopularProducts] = useState([]);
 
   const scrollToProducts = () => {
     productsRef.current.scrollIntoView({ behavior: "smooth" });
   };
   useEffect(() => {
-    post("api/Account/Register", func, {
-      firstname: "as2d",
-      lastname: "asdww",
-      email: "as1df@mail.ru",
-      password: "12344312",
-      passwordConfirm: "12344312",
-    });
+    get("api/Items/GetPopularItems?count=8", setPopularProducts);
   }, []);
 
   const func = (res) => {
@@ -123,7 +108,7 @@ const Home = () => {
                 Order it for you or for your beloved ones
               </Typography>
             </Grid>
-            <ItemGridContainer item container spacing={4}>
+            <ItemGridContainer item container spacing={4} alignItems="stretch">
               {popularProducts.map((item) => (
                 <Grid item xs={3}>
                   <ItemCard id={item.id} />

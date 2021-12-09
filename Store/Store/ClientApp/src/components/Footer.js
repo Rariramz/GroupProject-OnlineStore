@@ -10,16 +10,9 @@ const Footer1 = styled(Box)(({ theme }) => ({
   flexDirection: "row",
   justifyContent: "space-around",
   alignItems: "center",
-  padding: 10,
+  paddingInline: theme.spacing(20),
+  paddingBottom: theme.spacing(10),
   backgroundColor: "#272727",
-}));
-
-const Footer2 = styled(Box)(({ theme }) => ({
-  display: "flex",
-  flexDirection: "row",
-  justifyContent: "space-around",
-  alignItems: "center",
-  padding: 10,
 }));
 
 const Footer = () => {
@@ -30,39 +23,24 @@ const Footer = () => {
           item
           container
           spacing={3}
-          direction="column"
-          justify="center"
+          direction="row"
+          justifyContent="center"
           alignItems="center"
           alignContent="center"
-          wrap="nowrap"
         >
-          <hr width="1200" height="1.5" style={{ marginTop: 60 }}></hr>
-          <Grid
-            item
-            container
-            direction="row"
-            justify="center"
-            alignItems="center"
-            alignContent="center"
-            wrap="nowrap"
-          >
-            <Grid
-              item
-              container
-              direction="column"
-              justify="center"
-              alignItems="flex-start"
-              alignContent="center"
-              wrap="nowrap"
-            >
-              <img class="logo" src={logo} alt="Candleaf" />
-              <Typography variant="body2" color="#FFFFFF">
-                Your natural candle made for your home and for your wellness.
-              </Typography>
-              <Typography variant="h3" color="#FFFFFF">
-                ©Candleaf All Rights Reserved.
-              </Typography>
-            </Grid>
+          <Grid item xs={12}>
+            <hr width="1200" height="1.5" style={{ marginTop: 60 }} />
+          </Grid>
+          <Grid item xs={6}>
+            <img class="logo" src={logo} alt="Candleaf" />
+          </Grid>
+          <Grid item xs={6}>
+            <Typography variant="body2" color="#FFFFFF" textAlign="right">
+              Your natural candle made for your home and for your wellness.
+            </Typography>
+            <Typography variant="h3" color="#FFFFFF" textAlign="right">
+              ©Candleaf All Rights Reserved.
+            </Typography>
           </Grid>
         </Grid>
       </Footer1>
