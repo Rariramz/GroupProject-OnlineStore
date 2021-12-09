@@ -11,6 +11,9 @@ import {
   MenuItem,
   Select,
   OutlinedInput,
+  Grid,
+  Input,
+  Typography,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { fetchWrapper, get, post } from "../../utils/fetchWrapper";
@@ -18,23 +21,31 @@ import { fetchWrapper, get, post } from "../../utils/fetchWrapper";
 const CreateSubcategory = ({ open, onHide }) => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [parentId, setParentId] = useState(0);
+  const [parentID, setParentId] = useState(0);
   const [image, setImage] = useState(null);
   const [insideImage, setInsideImage] = useState(null);
 
   const [selectedCategory, setSelectedCategory] = useState("");
 
   const postCategoryResult = (res) => {
+    console.log(res);
+    if (res.success) {
+      console.log("OKEY");
+    }
     if (!res.success) {
       console.log(res.errorCodes + "POST CATEGORY ERROR");
     }
   };
   const addSubcategory = () => {
-    post("api/Categories/CreateCategory", postCategoryResult, {
+    console.log(name);
+    console.log(description);
+    console.log(parentId);
+    console.log(image);
+    console.log(insideImage);
+    const res = post("api/Categories/CreateCategory", postCategoryResult, {
       name,
       description,
-      parentId,
-      image,
+      parentID,
       insideImage,
     });
     setName("");
@@ -49,13 +60,14 @@ const CreateSubcategory = ({ open, onHide }) => {
 
   const [categories, setCategories] = useState([]);
   useEffect(() => {
-    get("api/Categories/GetCategories", console.log);
+    get("api/Categories/GetCategories", setCategories);
   }, []);
 
   const StyledInput = styled(TextField)(({ theme }) => ({
     margin: "dense",
     variant: "outlined",
     width: "100%",
+    margin: theme.spacing(2, 0),
   }));
 
   function handleSetImage(e) {
@@ -71,9 +83,16 @@ const CreateSubcategory = ({ open, onHide }) => {
     PaperProps: {
       style: {
         maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-        width: 250,
+        width: 300,
       },
     },
+  };
+
+  const selectImage = (e) => {
+    setImage(e.target.files[0]);
+  };
+  const selectInsideImage = (e) => {
+    setInsideImage(e.target.files[0]);
   };
 
   return (
@@ -91,7 +110,7 @@ const CreateSubcategory = ({ open, onHide }) => {
           onChange={(e) => setDescription(e.target.value)}
         />
 
-        <FormControl sx={{ m: 1, width: 300 }}>
+        <FormControl sx={{ width: 400, marginBlock: 5 }}>
           <InputLabel id="demo-multiple-name-label">Category</InputLabel>
           <Select
             labelId="demo-multiple-name-label"
@@ -100,14 +119,13 @@ const CreateSubcategory = ({ open, onHide }) => {
             MenuProps={MenuProps}
           >
             {categories
-              .filter((c) => c.parentId == null)
+              .filter((c) => c.parentID == 1)
               .map((category) => (
                 <MenuItem
                   key={category.id}
                   value={category}
-                  onClick={(e) => (
-                    setParentId(e.target.value.id),
-                    setSelectedCategory(e.target.value.name)
+                  onClick={() => (
+                    setParentId(category.id), setSelectedCategory(category.name)
                   )}
                 >
                   {category.name}
@@ -116,20 +134,27 @@ const CreateSubcategory = ({ open, onHide }) => {
           </Select>
         </FormControl>
 
-        <StyledInput type="file" value={image} onChange={handleSetImage} />
-        <StyledInput
-          type="file"
-          value={insideImage}
-          onChange={handleSetInsideImage}
-        />
+        <Button variant="outlined" component="label" sx={{ width: "100%" }}>
+          <Typography variant="body2">Upload Image</Typography>
+          <Input type="file" onChange={selectImage} sx={{ display: "none" }} />
+        </Button>
+
+        <Button
+          variant="outlined"
+          component="label"
+          sx={{ width: "100%", marginTop: 2 }}
+        >
+          <Typography variant="body2">Upload Inside Image</Typography>
+          <Input
+            type="file"
+            onChange={selectInsideImage}
+            sx={{ display: "none" }}
+          />
+        </Button>
       </DialogContent>
-      <DialogActions>
-        <Button variant="outlined" onClick={onHide}>
-          Cancel
-        </Button>
-        <Button variant="outlined" onClick={addSubcategory}>
-          Subscribe
-        </Button>
+      <DialogActions style={{ paddingInline: 25, paddingBottom: 20 }}>
+        <Button onClick={onHide}>Cancel</Button>
+        <Button onClick={addSubcategory}>Subscribe</Button>
       </DialogActions>
     </Dialog>
   );
