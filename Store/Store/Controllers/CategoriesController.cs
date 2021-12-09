@@ -27,14 +27,32 @@ namespace Store.Controllers
 
         // GET: api/Categories
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Category>>> GetCategories()
+        public async Task<ActionResult<IEnumerable<CategoryData>>> GetCategories()
         {
-            return await _context.Categories.ToListAsync();
+            var categories = await _context.Categories.ToListAsync();
+            List<CategoryData> categoriesData = new List<CategoryData>();
+            foreach (Category category in categories)
+            {
+                CategoryData categoryData = new CategoryData
+                {
+                    Name = category.Name,
+                    Description = category.Description,
+                    ParentID = category.ParentID,
+                    InsideImageID = category.InsideImageID
+                };
+
+                categoryData.Items = GetCategoryItems(category.ID);
+                categoryData.ChildCategoriesId = GetCategoryChilds(category.ID);
+
+                categoriesData.Add(categoryData);
+            }
+
+            return Json(categoriesData);
         }
 
         // GET: api/Categories?id=
         [HttpGet]
-        public async Task<ActionResult<Category>> GetCategory(int id)
+        public async Task<ActionResult<CategoryData>> GetCategory(int id)
         {
             var category = await _context.Categories.FindAsync(id);
             if (category == null)
@@ -50,12 +68,8 @@ namespace Store.Controllers
                 InsideImageID = category.InsideImageID
             };
 
-            categoryData.Items = (from item in _context.Items
-                                  where item.CategoryID == id
-                                  select item.ID).ToList();
-            categoryData.ChildCategoriesId = (from cat in _context.Categories
-                                             where cat.ParentID == id
-                                             select cat.ID).ToList();
+            categoryData.Items = GetCategoryItems(id);
+            categoryData.ChildCategoriesId = GetCategoryChilds(id);
 
             return Json(categoryData);
         }
@@ -243,8 +257,8 @@ namespace Store.Controllers
             return Json(categoryResult);
         }
 
-        // DELETE: api/Categories/5
-        [HttpDelete("{id}")]
+        // DELETE: api/Categories/DeleteCategory/5
+        [HttpDelete]
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> DeleteCategory(int id)
         {
@@ -263,6 +277,20 @@ namespace Store.Controllers
         private bool CategoryExists(int id)
         {
             return _context.Categories.Any(e => e.ID == id);
+        }
+
+        private List<int> GetCategoryItems(int id)
+        {
+            return (from item in _context.Items
+             where item.CategoryID == id
+             select item.ID).ToList();
+        }
+
+        private List<int> GetCategoryChilds(int id)
+        {
+            return (from cat in _context.Categories
+                    where cat.ParentID == id
+                    select cat.ID).ToList();
         }
     }
 }

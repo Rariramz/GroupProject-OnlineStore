@@ -639,7 +639,7 @@ namespace Store.Data
                             Name = "Свеча, 12 см, серая, Шишка, Christmas",
                             Description = "Свеча.\nРазмер: 12 см.\nМатериал: парафин.\nХранить в недоступном для детей месте. Не зажигать вблизи легковоспламеняющихся предметов. Температура хранения от 0-35℃.",
                             ImageID = decorativechristmas1.ID,
-                            CategoryID = decorativeChristmas.ID
+                            CategoryID = decorativeChristmas.ID,
                             Price = 3.79m
                         },                        
                         new Item
