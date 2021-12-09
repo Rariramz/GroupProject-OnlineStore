@@ -34,14 +34,13 @@ namespace Store.Controllers
 
         [HttpGet]
         [Authorize (Roles="admin")]
-        public async Task<ActionResult<IEnumerable<UserItemData>>> GetUserItems()
+        public async Task<ActionResult<IEnumerable<CartItemData>>> GetUserItems()
         {
-            List<UserItemData> ans = new List<UserItemData>();
+            List<CartItemData> ans = new List<CartItemData>();
             foreach (var userItem in _context.UserItems)
             {
-                ans.Add(new UserItemData
+                ans.Add(new CartItemData
                 {
-                    UserID = userItem.UserID,
                     ItemID = userItem.ID,
                     Count = userItem.Count,
                 });
@@ -51,7 +50,7 @@ namespace Store.Controllers
 
         [HttpGet]
         [Authorize(Roles = "admin")]
-        public async Task<ActionResult<UserItemData>> GetUserItem(int id)
+        public async Task<ActionResult<CartItemData>> GetUserItem(int id)
         {
             var userItem = await _context.UserItems.FindAsync(id);
 
@@ -60,9 +59,8 @@ namespace Store.Controllers
                 return NotFound();
             }
 
-            return new UserItemData
+            return new CartItemData
             {
-                UserID = userItem.UserID,
                 ItemID = userItem.ID,
                 Count = userItem.Count,
             };
@@ -70,11 +68,11 @@ namespace Store.Controllers
 
         [HttpPost]
         [Authorize(Roles = "admin, user")]
-        public async Task<IActionResult> AddItemForUser([FromForm] UserItemModel userItemModel)
+        public async Task<IActionResult> AddItemForUser([FromForm] CartItemModel userItemModel)
         {
             User requestUser = await _userManager.FindByEmailAsync(User.Identity.Name);
             User targetUser = await _userManager.FindByIdAsync(userItemModel.UserID);
-            UserItemResult userItemResult = new UserItemResult() { Success = true };
+            CartItemResult userItemResult = new CartItemResult() { Success = true };
 
             if (string.IsNullOrEmpty(userItemModel.UserID))
             {
@@ -83,11 +81,11 @@ namespace Store.Controllers
 
             if (targetUser == null)
             {
-                userItemResult.ErrorCodes.Add(UserItemResultConstants.ERROR_USER_INVALID);
+                userItemResult.ErrorCodes.Add(CartItemResultConstants.ERROR_USER_INVALID);
             }
             else if (requestUser.Id != targetUser.Id && !await _userManager.IsInRoleAsync(requestUser, "admin"))
             {
-                userItemResult.ErrorCodes.Add(UserItemResultConstants.ERROR_ACCESS_DENIED);
+                userItemResult.ErrorCodes.Add(CartItemResultConstants.ERROR_ACCESS_DENIED);
             }
 
             if (userItemResult.ErrorCodes.Count > 0)
@@ -98,7 +96,7 @@ namespace Store.Controllers
 
             if (userItemModel.Count < 1)
             {
-                userItemResult.ErrorCodes.Add(UserItemResultConstants.ERROR_COUNT_LESS_ONE);
+                userItemResult.ErrorCodes.Add(CartItemResultConstants.ERROR_COUNT_LESS_ONE);
             }
 
             if (userItemResult.ErrorCodes.Count > 0)
@@ -125,14 +123,14 @@ namespace Store.Controllers
         {
             User requestUser = await _userManager.FindByEmailAsync(User.Identity.Name);
             User targetUser = await _userManager.FindByIdAsync(userId.ToString());
-            UserItemResult userItemResult = new UserItemResult() { Success = true };
+            CartItemResult userItemResult = new CartItemResult() { Success = true };
             if (targetUser == null)
             {
-                userItemResult.ErrorCodes.Add(UserItemResultConstants.ERROR_USER_INVALID);
+                userItemResult.ErrorCodes.Add(CartItemResultConstants.ERROR_USER_INVALID);
             }
             else if (requestUser.Id != targetUser.Id && !await _userManager.IsInRoleAsync(requestUser, "admin"))
             {
-                userItemResult.ErrorCodes.Add(UserItemResultConstants.ERROR_ACCESS_DENIED);
+                userItemResult.ErrorCodes.Add(CartItemResultConstants.ERROR_ACCESS_DENIED);
             }
 
             if (userItemResult.ErrorCodes.Count > 0)
@@ -146,7 +144,7 @@ namespace Store.Controllers
 
             if (item == null)
             {
-                userItemResult.ErrorCodes.Add(UserItemResultConstants.ERROR_USER_ITEM_NOT_FOUND);
+                userItemResult.ErrorCodes.Add(CartItemResultConstants.ERROR_CART_ITEM_NOT_FOUND);
             }
 
             if (userItemResult.ErrorCodes.Count > 0)
@@ -167,14 +165,14 @@ namespace Store.Controllers
         {
             User requestUser = await _userManager.FindByEmailAsync(User.Identity.Name);
             User targetUser = await _userManager.FindByIdAsync(userId.ToString());
-            UserItemResult userItemResult = new UserItemResult() { Success = true };
+            CartItemResult userItemResult = new CartItemResult() { Success = true };
             if (targetUser == null)
             {
-                userItemResult.ErrorCodes.Add(UserItemResultConstants.ERROR_USER_INVALID);
+                userItemResult.ErrorCodes.Add(CartItemResultConstants.ERROR_USER_INVALID);
             }
             else if (requestUser.Id != targetUser.Id && !await _userManager.IsInRoleAsync(requestUser, "admin"))
             {
-                userItemResult.ErrorCodes.Add(UserItemResultConstants.ERROR_ACCESS_DENIED);
+                userItemResult.ErrorCodes.Add(CartItemResultConstants.ERROR_ACCESS_DENIED);
             }
 
             if (userItemResult.ErrorCodes.Count > 0)
@@ -188,11 +186,11 @@ namespace Store.Controllers
 
             if (item == null)
             {
-                userItemResult.ErrorCodes.Add(UserItemResultConstants.ERROR_USER_ITEM_NOT_FOUND);
+                userItemResult.ErrorCodes.Add(CartItemResultConstants.ERROR_CART_ITEM_NOT_FOUND);
             }
             else if(item.Count == 1)
             {
-                userItemResult.ErrorCodes.Add(UserItemResultConstants.ERROR_COUNT_LESS_ONE);
+                userItemResult.ErrorCodes.Add(CartItemResultConstants.ERROR_COUNT_LESS_ONE);
             }
 
             if (userItemResult.ErrorCodes.Count > 0)
@@ -250,7 +248,6 @@ namespace Store.Controllers
                                *item.GetDiscountPrice(user.Discount)).Sum();
             return Json(total ?? decimal.Zero);
         }
-
 
     }
 }

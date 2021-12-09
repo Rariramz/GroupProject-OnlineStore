@@ -50,6 +50,35 @@ namespace Store.Controllers
             return Json(categoriesData);
         }
 
+        [HttpGet]
+        public  ActionResult GetMainCategories()
+        {
+            Category  rootCategory = _context.Categories.Where(cat => cat.ParentID == null).First();
+            List<Category> mainCategories= (from category in _context.Categories
+                    where category.ParentID == rootCategory.ID
+                    select category).ToList();
+
+            List<CategoryData> categoriesData = new List<CategoryData>();
+            foreach (Category category in mainCategories)
+            {
+                CategoryData categoryData = new CategoryData
+                {
+                    ID = category.ID,
+                    Name = category.Name,
+                    Description = category.Description,
+                    ParentID = category.ParentID,
+                };
+
+                categoryData.ItemsIDs = GetCategoryItems(category.ID);
+                categoryData.ChildCategoriesIDs = GetCategoryChilds(category.ID);
+
+                categoriesData.Add(categoryData);
+            }
+
+            return Json(categoriesData);
+
+        }
+
         // GET: api/Categories?id=
         [HttpGet]
         public async Task<ActionResult> GetCategory(int id)
