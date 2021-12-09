@@ -10,7 +10,7 @@ import { Link } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import React, { useEffect, useRef, useState } from "react";
 
-import { get } from "../utils/fetchWrapper";
+import { get, getFile, getFileBase64 } from "../utils/fetchWrapper";
 
 const ItemCardContent = styled(CardContent)(({ theme }) => ({
   paddingBottom: 10,
@@ -32,14 +32,14 @@ const ItemCard = (props) => {
   useEffect(() => {
     setHeight(widthRef.current.clientWidth);
     get(`api/Items/GetItem?id=${props.id}`, setItemInfo);
-    get(`api/Items/GetImage?id=${props.id}`, console.log);
+    getFile(`api/Items/GetImage?id=${props.id}`, setImage);
   }, []);
   return (
     <>
       <Link to={`../item/${props.id || 0}`} style={{ textDecoration: "none" }}>
         <CustomCard elevation={0} ref={widthRef}>
           {image ? (
-            <CardMedia component="img" image={image} />
+            <CardMedia component="img" alt="No Image" image={image} />
           ) : (
             <Skeleton variant="rectangular" width="100%" height={height} />
           )}

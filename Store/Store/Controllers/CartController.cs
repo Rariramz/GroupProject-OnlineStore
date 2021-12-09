@@ -22,7 +22,6 @@ namespace Store.Controllers
             _userManager = userManager;
         }
 
-
         [HttpPost]
         public async Task<IActionResult> AddItemForUser([FromForm] CartItemModel cartItemModel)
         {
@@ -111,11 +110,11 @@ namespace Store.Controllers
 
             if (targetUser == null)
             {
-                userItemResult.ErrorCodes.Add(UserItemResultConstants.ERROR_USER_INVALID);
+                userItemResult.ErrorCodes.Add(CartItemResultConstants.ERROR_USER_INVALID);
             }
             else if (requestUser.Id != targetUser.Id && !await _userManager.IsInRoleAsync(requestUser, "admin"))
             {
-                userItemResult.ErrorCodes.Add(UserItemResultConstants.ERROR_ACCESS_DENIED);
+                userItemResult.ErrorCodes.Add(CartItemResultConstants.ERROR_ACCESS_DENIED);
             }
 
             if (userItemResult.ErrorCodes.Count > 0)

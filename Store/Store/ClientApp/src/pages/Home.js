@@ -28,6 +28,7 @@ const Home = () => {
     productsRef.current.scrollIntoView({ behavior: "smooth" });
   };
   useEffect(() => {
+    get("api/Categories/GetCategories", setCategories);
     get("api/Items/GetPopularItems?count=8", setPopularProducts);
   }, []);
 
@@ -37,14 +38,6 @@ const Home = () => {
     } else {
       console.log(res.errorCodes);
     }
-  };
-
-  const renderProductCategoryCard = () => {
-    return (
-      <Link to={`category/${0}`} style={{ textDecoration: "none" }}>
-        <CategoryCard />
-      </Link>
-    );
   };
 
   return (
@@ -77,13 +70,13 @@ const Home = () => {
             </Grid>
             <Grid item>
               <Typography variant="body1" color="textSecondary">
-                You will find any candle your heart could wish for!
+                You will find any candle your heart only could wish for!
               </Typography>
             </Grid>
             <ItemGridContainer item container spacing={4}>
               {categories.map((item) => (
                 <Grid item xs={4}>
-                  {renderProductCategoryCard(item)}
+                  <CategoryCard id={item.id} key={item.id} />
                 </Grid>
               ))}
             </ItemGridContainer>
@@ -111,7 +104,7 @@ const Home = () => {
             <ItemGridContainer item container spacing={4} alignItems="stretch">
               {popularProducts.map((item) => (
                 <Grid item xs={3}>
-                  <ItemCard id={item.id} />
+                  <ItemCard id={item.id} key={item.id} />
                 </Grid>
               ))}
             </ItemGridContainer>
