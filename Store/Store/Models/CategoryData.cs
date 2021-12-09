@@ -9,7 +9,7 @@ namespace Store.Models
         public string Description { get; set; } = "";
         public int? ParentID { get; set; }
         public int InsideImageID { get; set; }
-        public List<int> Items { get; set; } = new List<int>();
-        public List<int> ChildCategoriesId {  get; set; } = new List<int>();
+        public List<int> ItemsIDs { get; set; } = new List<int>();
+        public List<int> ChildCategoriesIDs {  get; set; } = new List<int>();
     }
 }

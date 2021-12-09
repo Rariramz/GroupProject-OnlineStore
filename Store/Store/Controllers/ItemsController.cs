@@ -27,7 +27,7 @@ namespace Store.Controllers
 
         // GET: api/Items
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Item>>> GetItems()
+        public async Task<ActionResult> GetItems()
         {
             
             List<Item> items = await _context.Items.ToListAsync();
@@ -49,23 +49,23 @@ namespace Store.Controllers
 
         // GET: api/Items?id=
         [HttpGet]
-        public async Task<ActionResult<ItemData>> GetItem(int id)
+        public async Task<ActionResult> GetItem(int id)
         {
             var item = await _context.Items.FindAsync(id);
 
             if (item == null)
             {
-                return NotFound();
+                return NoContent();
             }
 
-            return new ItemData()
+            return Json(new ItemData()
             {
                 ID = item.ID,
                 Name = item.Name,
                 Description = item.Description,
                 CategoryID = item.CategoryID,
                 Price = (float)item.Price,
-            };
+            });
         }
 
         [HttpGet]
@@ -131,6 +131,12 @@ namespace Store.Controllers
             if(category == null)
             {
                 itemResult.ErrorCodes.Add(ItemResultConstants.ERROR_CATEGORY_NOT_EXISTS);
+            }
+
+            List<Category> subcategories = _context.Categories.Where(cat => cat.ParentID == category.ID).ToList();
+            if(subcategories.Count > 0)
+            {
+                itemResult.ErrorCodes.Add(ItemResultConstants.ERROR_CATEGORY_CHILD_CONFLICT);
             }
 
             if(itemModel.Price <= 0)

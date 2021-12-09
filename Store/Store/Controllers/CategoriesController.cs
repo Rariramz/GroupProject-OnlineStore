@@ -39,7 +39,7 @@ namespace Store.Controllers
             var category = await _context.Categories.FindAsync(id);
             if (category == null)
             {
-                return NotFound();
+                return NoContent();
             }
 
             CategoryData categoryData = new CategoryData
@@ -50,10 +50,10 @@ namespace Store.Controllers
                 InsideImageID = category.InsideImageID
             };
 
-            categoryData.Items = (from item in _context.Items
+            categoryData.ItemsIDs = (from item in _context.Items
                                   where item.CategoryID == id
                                   select item.ID).ToList();
-            categoryData.ChildCategoriesId = (from cat in _context.Categories
+            categoryData.ChildCategoriesIDs = (from cat in _context.Categories
                                              where cat.ParentID == id
                                              select cat.ID).ToList();
 

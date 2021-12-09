@@ -12,7 +12,6 @@ namespace Store.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    [Authorize(Roles = "admin, user")]
     public class AccountController : Controller
     {
         private ApplicationDbContext _context;
@@ -30,7 +29,6 @@ namespace Store.Controllers
             _emailConfirmation = emailConfirmation;
         }
 
-        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> Info()
         {
@@ -46,7 +44,8 @@ namespace Store.Controllers
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Email = user.Email,
-                Discount = user.Discount
+                Discount = user.Discount,
+                IsAdmin = await _userManager.IsInRoleAsync(user, "admin")
             };
 
             List<UserAddress> addressesRelations = _context.UserAddresses.Where(address => address.UserID == user.Id).ToList();
@@ -66,7 +65,9 @@ namespace Store.Controllers
             return Json(userData);
         }
 
+        
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
@@ -74,7 +75,6 @@ namespace Store.Controllers
         }
 
         [HttpPost]
-        [AllowAnonymous]
         public async Task<IActionResult> Login([FromForm]LoginModel loginModel)
         {
             string email = loginModel.Email;
@@ -236,7 +236,6 @@ namespace Store.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous]
         public async Task<IActionResult> Confirm(string email, string code)
         {
             User user = await _userManager.FindByEmailAsync(email);
