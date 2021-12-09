@@ -266,7 +266,7 @@ namespace Store.Data
                 Image aromaspicy2 = new Image { ImageData = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\candles\aroma\spicy\collines_duos-parfumes_candle_ambre-heliotrope.png") };
                 Image aromaspicy3 = new Image { ImageData = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\candles\aroma\spicy\Paddywax_hygge_candle_teakwoodjasmine_141.png") };
                 Image aromaspicy4 = new Image { ImageData = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\candles\aroma\spicy\BLOND-TABAC-Voluspa.png") };
-                Image aromaconiferous1 = new Image { ImageData = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\candles\aroma\coniferous\Paddywax_glow_small_Balsam-Eucalyptus.png") };
+                Image aromaconiferous1 = new Image { ImageData = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\candles\aroma\сoniferous\Paddywax_glow_small_Balsam-Eucalyptus.png") };
                 Image aromaconiferous2 = new Image { ImageData = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\candles\aroma\coniferous\voluspa_japonica_small_white-cypress.png") };
                 Image aromaconiferous3 = new Image { ImageData = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\candles\aroma\coniferous\Paddywax_CYPRESSFIR_Small-White-Tree-Stack.png") };
                 Image aromaconiferous4 = new Image { ImageData = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\candles\aroma\coniferous\Paddywax_CYPRESSFIR_Boxed-Green-Glass.png") };
