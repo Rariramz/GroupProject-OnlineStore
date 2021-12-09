@@ -1,6 +1,6 @@
 ﻿namespace Store.Models
 {
-    public class UserItemData
+    public class CartItemModel
     {
         public string UserID { get; set; } = "";
         public int ItemID { get; set; }

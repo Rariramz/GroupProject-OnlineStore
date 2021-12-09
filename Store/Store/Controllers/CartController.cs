@@ -24,12 +24,11 @@ namespace Store.Controllers
 
 
         [HttpPost]
-        [Authorize(Roles = "admin, user")]
-        public async Task<IActionResult> AddItemForUser([FromForm] UserItemModel userItemModel)
+        public async Task<IActionResult> AddItemForUser([FromForm] CartItemModel userItemModel)
         {
             User requestUser = await _userManager.FindByEmailAsync(User.Identity.Name);
             User targetUser = await _userManager.FindByIdAsync(userItemModel.UserID);
-            UserItemResult userItemResult = new UserItemResult() { Success = true };
+            CartItemResult userItemResult = new CartItemResult() { Success = true };
 
             if (string.IsNullOrEmpty(userItemModel.UserID))
             {
@@ -74,13 +73,13 @@ namespace Store.Controllers
             return Json(userItemResult);
         }
 
-        [Authorize]
+        //REFACTOR
         [HttpPost]
         public async Task<IActionResult> IncrementItemCount(int userId, int itemId)
         {
             User requestUser = await _userManager.FindByEmailAsync(User.Identity.Name);
             User targetUser = await _userManager.FindByIdAsync(userId.ToString());
-            UserItemResult userItemResult = new UserItemResult() { Success = true };
+            CartItemResult userItemResult = new CartItemResult() { Success = true };
             if (targetUser == null)
             {
                 userItemResult.ErrorCodes.Add(UserItemResultConstants.ERROR_USER_INVALID);
@@ -101,7 +100,7 @@ namespace Store.Controllers
 
             if (item == null)
             {
-                userItemResult.ErrorCodes.Add(UserItemResultConstants.ERROR_USER_ITEM_NOT_FOUND);
+                userItemResult.ErrorCodes.Add(UserItemResultConstants.ERROR_CART_ITEM_NOT_FOUND);
             }
 
             if (userItemResult.ErrorCodes.Count > 0)
@@ -116,13 +115,13 @@ namespace Store.Controllers
             return Json(userItemResult);
         }
 
-        [Authorize]
+        //REFACTOR
         [HttpPost]
         public async Task<IActionResult> DecrementItemCount(int userId, int itemId)
         {
             User requestUser = await _userManager.FindByEmailAsync(User.Identity.Name);
             User targetUser = await _userManager.FindByIdAsync(userId.ToString());
-            UserItemResult userItemResult = new UserItemResult() { Success = true };
+            CartItemResult userItemResult = new CartItemResult() { Success = true };
             if (targetUser == null)
             {
                 userItemResult.ErrorCodes.Add(UserItemResultConstants.ERROR_USER_INVALID);
@@ -143,7 +142,7 @@ namespace Store.Controllers
 
             if (item == null)
             {
-                userItemResult.ErrorCodes.Add(UserItemResultConstants.ERROR_USER_ITEM_NOT_FOUND);
+                userItemResult.ErrorCodes.Add(UserItemResultConstants.ERROR_CART_ITEM_NOT_FOUND);
             }
             else if(item.Count == 1)
             {
@@ -168,7 +167,6 @@ namespace Store.Controllers
         /// Удалить useritem
         /// </summary>
         /// <param name="id">id удаляемого useritem</param>      
-        [Authorize]
         [HttpDelete]
         public async Task<IActionResult> Remove(int id)
         {
@@ -188,7 +186,6 @@ namespace Store.Controllers
         [HttpGet]
         public async Task<IActionResult> GetShoppingDetails()
         {
-
             User user = await _userManager.GetUserAsync(User);
             List<UserItem> itemRelations = _context.UserItems.Where(userItem => userItem.UserID == user.Id).ToList();
             return Json(itemRelations);
@@ -208,7 +205,5 @@ namespace Store.Controllers
                                *item.GetDiscountPrice(user.Discount)).Sum();
             return Json(total ?? decimal.Zero);
         }
-
-
     }
 }
