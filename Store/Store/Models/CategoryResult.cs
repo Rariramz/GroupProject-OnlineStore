@@ -4,6 +4,7 @@
     {
         public bool Success { get; set; }
         public List<int> ErrorCodes { get; set; } = new List<int> { };
+        public CategoryData? CategoryData { get; set; }
     }
 
     public static class CategoryResultConstants
