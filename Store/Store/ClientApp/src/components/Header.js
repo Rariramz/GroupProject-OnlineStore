@@ -20,7 +20,7 @@ const Header = () => {
   return (
     <HeaderDiv>
       <Link to="">
-        <img class="logo" src={logo} alt="Candleaf" />
+        <img src={logo} alt="Candleaf" />
       </Link>
       <HeaderDiv width="40vw">
         <Typography variant="body1" color="initial">
@@ -36,10 +36,10 @@ const Header = () => {
 
       <HeaderDiv width="7vw">
         <Link to="/login">
-          <img class="profile" src={profile} alt="profile" />
+          <img src={profile} alt="profile" />
         </Link>
         <Link to="cart">
-          <img class="cart" src={cart} alt="cart" paddingRight="20" />
+          <img src={cart} alt="cart" paddingRight="20" />
         </Link>
       </HeaderDiv>
     </HeaderDiv>
