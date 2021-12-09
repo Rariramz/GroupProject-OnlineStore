@@ -8,7 +8,7 @@ namespace Store.Entities
     public class Order
     {
         public int ID { get; set; }
-        public string? Description { get; set; }
+        public string Description { get; set; } = "";
         public decimal TotalPrice { get; set; }
         public string UserID { get; set; } = "";
         public int AddressID { get; set; }

@@ -27,92 +27,45 @@ namespace Store.Controllers
 
         // GET: api/Items
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Item>>> GetItems()
+        public async Task<ActionResult> GetItems()
         {
-            return await _context.Items.ToListAsync();
+            
+            List<Item> items = await _context.Items.ToListAsync();
+            List<ItemData> itemDatas = new List<ItemData>();
+
+            foreach(Item item in items)
+            {
+                itemDatas.Add(new ItemData
+                {
+                    ID = item.ID,
+                    Name = item.Name,
+                    Description = item.Description,
+                    CategoryID = item.CategoryID,
+                });
+            }
+
+            return Json(itemDatas);
         }
 
         // GET: api/Items?id=
         [HttpGet]
-        public async Task<ActionResult<ItemData>> GetItem(int id)
+        public async Task<ActionResult> GetItem(int id)
         {
             var item = await _context.Items.FindAsync(id);
 
             if (item == null)
             {
-                return NotFound();
+                return NoContent();
             }
 
-            return new ItemData()
+            return Json(new ItemData()
             {
+                ID = item.ID,
                 Name = item.Name,
                 Description = item.Description,
                 CategoryID = item.CategoryID,
                 Price = (float)item.Price,
-            };
-        }
-
-        // PUT: api/Items/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutItem(int id, Item item)
-        {
-            if (id != item.ID)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(item).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ItemExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/Items
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Item>> PostItem(Item item)
-        {
-            _context.Items.Add(item);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetItem", new { id = item.ID }, item);
-        }
-
-        // DELETE: api/Items/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteItem(int id)
-        {
-            var item = await _context.Items.FindAsync(id);
-            if (item == null)
-            {
-                return NotFound();
-            }
-
-            _context.Items.Remove(item);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool ItemExists(int id)
-        {
-            return _context.Items.Any(e => e.ID == id);
+            });
         }
 
         [HttpGet]
@@ -178,6 +131,12 @@ namespace Store.Controllers
             if(category == null)
             {
                 itemResult.ErrorCodes.Add(ItemResultConstants.ERROR_CATEGORY_NOT_EXISTS);
+            }
+
+            List<Category> subcategories = _context.Categories.Where(cat => cat.ParentID == category.ID).ToList();
+            if(subcategories.Count > 0)
+            {
+                itemResult.ErrorCodes.Add(ItemResultConstants.ERROR_CATEGORY_CHILD_CONFLICT);
             }
 
             if(itemModel.Price <= 0)
