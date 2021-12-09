@@ -10,22 +10,27 @@ import fetchWrapper, { get } from "./utils/fetchWrapper";
 
 const App = observer(() => {
   const { user } = useContext(Context);
-  const [loading, setLoading] = useState(true);
+  //const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        get("api/account/info", func)
+        get("api/Account/Info", func)
     }, []);
 
     const func = (res) => {
         if (res.success) {
             user.setIsAuth(true);
         } else {
-            console.log(res);
+            console.log(res.errorCodes);
         }
-        setLoading(false)
+       
     };
 
-  if (loading) {
+
+
+
+
+
+  /*if (loading) {
     return (
       <Box
         height="100vh"
@@ -36,7 +41,7 @@ const App = observer(() => {
         <CircularProgress />
       </Box>
     );
-  }
+  }*/
 
   return (
     <ThemeProvider theme={theme}>
