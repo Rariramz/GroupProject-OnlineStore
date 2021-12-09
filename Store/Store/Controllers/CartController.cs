@@ -36,11 +36,11 @@ namespace Store.Controllers
 
             if (targetUser == null)
             {
-                cartItemResult.ErrorCodes.Add(UserItemResultConstants.ERROR_USER_INVALID);
+                cartItemResult.ErrorCodes.Add(CartItemResultConstants.ERROR_USER_INVALID);
             }
             else if (requestUser.Id != targetUser.Id && !await _userManager.IsInRoleAsync(requestUser, "admin"))
             {
-                cartItemResult.ErrorCodes.Add(UserItemResultConstants.ERROR_ACCESS_DENIED);
+                cartItemResult.ErrorCodes.Add(CartItemResultConstants.ERROR_ACCESS_DENIED);
             }
 
             if (cartItemResult.ErrorCodes.Count > 0)
@@ -51,18 +51,18 @@ namespace Store.Controllers
 
             if (cartItemModel.Count < 1)
             {
-                cartItemResult.ErrorCodes.Add(UserItemResultConstants.ERROR_COUNT_LESS_ONE);
+                cartItemResult.ErrorCodes.Add(CartItemResultConstants.ERROR_COUNT_LESS_ONE);
             }
 
             if (cartItemModel.Count == null)
             {
-                cartItemResult.ErrorCodes.Add(UserItemResultConstants.ERROR_COUNT_IS_NULL);
+                cartItemResult.ErrorCodes.Add(CartItemResultConstants.ERROR_COUNT_IS_NULL);
             }
 
             Item? item = await _context.Items.FirstOrDefaultAsync(item => item.ID == cartItemModel.ItemID);
             if(item == null)
             {
-                cartItemResult.ErrorCodes.Add(UserItemResultConstants.ERROR_ITEM_NOT_EXIST);
+                cartItemResult.ErrorCodes.Add(CartItemResultConstants.ERROR_ITEM_NOT_EXIST);
             }
 
             if (cartItemResult.ErrorCodes.Count > 0)
@@ -128,12 +128,12 @@ namespace Store.Controllers
 
             if (item == null)
             {
-                userItemResult.ErrorCodes.Add(UserItemResultConstants.ERROR_CART_ITEM_NOT_FOUND);
+                userItemResult.ErrorCodes.Add(CartItemResultConstants.ERROR_CART_ITEM_NOT_FOUND);
             }
 
             if (cartItemModel.Count == null)
             {
-                userItemResult.ErrorCodes.Add(UserItemResultConstants.ERROR_COUNT_IS_NULL);
+                userItemResult.ErrorCodes.Add(CartItemResultConstants.ERROR_COUNT_IS_NULL);
             }
 
             if (userItemResult.ErrorCodes.Count > 0)
@@ -145,7 +145,7 @@ namespace Store.Controllers
             item!.Count += cartItemModel.Count!.Value;
             if(item.Count < 1)
             {
-                userItemResult.ErrorCodes.Add(UserItemResultConstants.ERROR_COUNT_LESS_ONE);
+                userItemResult.ErrorCodes.Add(CartItemResultConstants.ERROR_COUNT_LESS_ONE);
                 userItemResult.Success = false;
                 return Json(userItemResult);
             }
@@ -172,11 +172,11 @@ namespace Store.Controllers
 
             if (targetUser == null)
             {
-                cartItemResult.ErrorCodes.Add(UserItemResultConstants.ERROR_USER_INVALID);
+                cartItemResult.ErrorCodes.Add(CartItemResultConstants.ERROR_USER_INVALID);
             }
             else if (requestUser.Id != targetUser.Id && !await _userManager.IsInRoleAsync(requestUser, "admin"))
             {
-                cartItemResult.ErrorCodes.Add(UserItemResultConstants.ERROR_ACCESS_DENIED);
+                cartItemResult.ErrorCodes.Add(CartItemResultConstants.ERROR_ACCESS_DENIED);
             }
 
             if (cartItemResult.ErrorCodes.Count > 0)
@@ -190,7 +190,7 @@ namespace Store.Controllers
 
             if (userItem == null)
             {
-                cartItemResult.ErrorCodes.Add(UserItemResultConstants.ERROR_CART_ITEM_NOT_FOUND);
+                cartItemResult.ErrorCodes.Add(CartItemResultConstants.ERROR_CART_ITEM_NOT_FOUND);
             }
 
             if(cartItemResult.ErrorCodes.Count > 0)
