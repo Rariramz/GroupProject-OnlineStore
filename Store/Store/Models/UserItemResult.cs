@@ -10,6 +10,6 @@
         public const int ERROR_USER_INVALID = 440;
         public const int ERROR_COUNT_LESS_ONE = 441;
         public const int ERROR_ACCESS_DENIED = 442;
-
+        public const int ERROR_USER_ITEM_NOT_FOUND = 443;
     }
 }
