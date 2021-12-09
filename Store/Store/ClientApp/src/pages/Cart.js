@@ -60,7 +60,7 @@ const Cart = () => {
               </Typography>
             </Grid>
             <Grid item>
-              <Button style={{ paddingLeft: 40, paddingRight: 40 }}>
+              <Button size="large">
                 <Typography variant="h1" color="white">
                   Check-Out
                 </Typography>
