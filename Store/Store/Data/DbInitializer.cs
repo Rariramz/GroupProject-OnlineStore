@@ -299,17 +299,17 @@ namespace Store.Data
                 _context.Images.Add(aromaSweet3);
                 _context.Images.Add(aromaSweet4);
                 _context.Images.Add(aromaflower1);
-                _context.Images.Add(aromaflower1);
-                _context.Images.Add(aromaflower1);
-                _context.Images.Add(aromaflower1);
+                _context.Images.Add(aromaflower2);
+                _context.Images.Add(aromaflower3);
+                _context.Images.Add(aromaflower4);
                 _context.Images.Add(aromaspicy1);
-                _context.Images.Add(aromaspicy1);
-                _context.Images.Add(aromaspicy1);
-                _context.Images.Add(aromaspicy1);
+                _context.Images.Add(aromaspicy2);
+                _context.Images.Add(aromaspicy3);
+                _context.Images.Add(aromaspicy4);
                 _context.Images.Add(aromaconiferous1);
-                _context.Images.Add(aromaconiferous1);
-                _context.Images.Add(aromaconiferous1);
-                _context.Images.Add(aromaconiferous1);
+                _context.Images.Add(aromaconiferous2);
+                _context.Images.Add(aromaconiferous3);
+                _context.Images.Add(aromaconiferous4);
 
                 //ordinary
                 _context.Images.Add(ordinarybig1);
