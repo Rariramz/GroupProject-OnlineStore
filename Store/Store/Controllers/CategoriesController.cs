@@ -41,8 +41,8 @@ namespace Store.Controllers
                     InsideImageID = category.InsideImageID
                 };
 
-                categoryData.Items = GetCategoryItems(category.ID);
-                categoryData.ChildCategoriesId = GetCategoryChilds(category.ID);
+                categoryData.ItemsIDs = GetCategoryItems(category.ID);
+                categoryData.ChildCategoriesIDs = GetCategoryChilds(category.ID);
 
                 categoriesData.Add(categoryData);
             }
@@ -68,8 +68,8 @@ namespace Store.Controllers
                 InsideImageID = category.InsideImageID
             };
 
-            categoryData.Items = GetCategoryItems(id);
-            categoryData.ChildCategoriesId = GetCategoryChilds(id);
+            categoryData.ItemsIDs = GetCategoryItems(id);
+            categoryData.ChildCategoriesIDs = GetCategoryChilds(id);
 
             return Json(categoryData);
         }
