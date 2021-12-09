@@ -4,8 +4,9 @@ namespace Store.Models
 {
     public class CategoryData
     {
-        public string? Name { get; set; }
-        public string? Description { get; set; }
+        public int ID {  get; set; }
+        public string Name { get; set; } = "";
+        public string Description { get; set; } = "";
         public int? ParentID { get; set; }
         public int InsideImageID { get; set; }
         public List<int> Items { get; set; } = new List<int>();

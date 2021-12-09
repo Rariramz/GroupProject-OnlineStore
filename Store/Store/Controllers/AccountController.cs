@@ -54,8 +54,12 @@ namespace Store.Controllers
 
             foreach (UserAddress relation in addressesRelations)
             {
-                Address address = _context.Addresses.FirstOrDefault(address => address.ID == relation.AddressID);
-                addresses.Add(new AddressData() { AddressString = address.AddressString});
+                Address? address = _context.Addresses.FirstOrDefault(address => address.ID == relation.AddressID);
+                addresses.Add(new AddressData() 
+                {
+                    ID = address.ID,
+                    AddressString = address.AddressString
+                });
             }
 
             userData.Addresses = addresses;
