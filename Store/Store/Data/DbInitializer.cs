@@ -267,14 +267,14 @@ namespace Store.Data
                 Image aromaspicy3 = new Image { ImageData = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\candles\aroma\spicy\Paddywax_hygge_candle_teakwoodjasmine_141.png") };
                 Image aromaspicy4 = new Image { ImageData = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\candles\aroma\spicy\BLOND-TABAC-Voluspa.png") };
                 Image aromaconiferous1 = new Image { ImageData = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\candles\aroma\сoniferous\Paddywax_glow_small_Balsam-Eucalyptus.png") };
-                Image aromaconiferous2 = new Image { ImageData = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\candles\aroma\coniferous\voluspa_japonica_small_white-cypress.png") };
-                Image aromaconiferous3 = new Image { ImageData = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\candles\aroma\coniferous\Paddywax_CYPRESSFIR_Small-White-Tree-Stack.png") };
-                Image aromaconiferous4 = new Image { ImageData = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\candles\aroma\coniferous\Paddywax_CYPRESSFIR_Boxed-Green-Glass.png") };
+                Image aromaconiferous2 = new Image { ImageData = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\candles\aroma\сoniferous\voluspa_japonica_small_white-cypress.png") };
+                Image aromaconiferous3 = new Image { ImageData = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\candles\aroma\сoniferous\Paddywax_CYPRESSFIR_Small-White-Tree-Stack.png") };
+                Image aromaconiferous4 = new Image { ImageData = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\candles\aroma\сoniferous\Paddywax_CYPRESSFIR_Boxed-Green-Glass.png") };
 
                 Image ordinarybig1 = new Image { ImageData = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\candles\ordinary\big\bolshaya-v-stekle-baltic1-11.png") };
                 Image ordinarybig2 = new Image { ImageData = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\candles\ordinary\big\MIPABXLINSIDI_1.png") };
                 Image ordinarybig3 = new Image { ImageData = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\candles\ordinary\big\Voluspa_AppleBlueClover_candle_25.png") };
-                Image ordinarybig4 = new Image { ImageData = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\candles\ordinary\big\Voluspa_burning-woods_candle_850") };
+                Image ordinarybig4 = new Image { ImageData = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\candles\ordinary\big\Voluspa_burning-woods_candle_850.png") };
                 Image ordinarycompact1 = new Image { ImageData = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\candles\ordinary\compact\FM_wood-catherine.png") };
                 Image ordinarycompact2 = new Image { ImageData = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\candles\ordinary\compact\PE0402_RGB.png") };
                 Image ordinarycompact3 = new Image { ImageData = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\candles\ordinary\compact\Voluspa_forbidden-fig_candle_90.png") };
@@ -289,9 +289,9 @@ namespace Store.Data
                 Image ordinaryset4 = new Image { ImageData = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\candles\ordinary\set\Voluspa_candle_set2.png") };
 
                 Image decorativechristmas1 = new Image { ImageData = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\candles\decorative\christmas\christmas-balls.png") };
-                Image decorativechristmas2 = new Image { ImageData = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\candles\ordinary\christmas\Christmas-bright-tree.png") };
-                Image decorativechristmas3 = new Image { ImageData = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\candles\ordinary\christmas\Christmas-cone.png") };
-                Image decorativechristmas4 = new Image { ImageData = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\candles\ordinary\christmas\golden-tiger.png") };
+                Image decorativechristmas2 = new Image { ImageData = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\candles\decorative\christmas\Christmas-bright-tree.png") };
+                Image decorativechristmas3 = new Image { ImageData = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\candles\decorative\christmas\Christmas-cone.png") };
+                Image decorativechristmas4 = new Image { ImageData = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\candles\decorative\christmas\golden-tiger.png") };
 
                 //aroma
                 _context.Images.Add(aromaSweet1);

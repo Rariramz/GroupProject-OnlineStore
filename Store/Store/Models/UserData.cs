@@ -10,5 +10,6 @@ namespace Store.Models
         public string Email { get; set; } = "";
         public int Discount { get; set; } = 0;
         public List<AddressData> Addresses { get; set; } = new List<AddressData>();
+        public bool IsAdmin { get; set; }
     }
 }
