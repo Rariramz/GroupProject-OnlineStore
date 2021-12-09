@@ -94,6 +94,25 @@ namespace Store.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> GetImageBase64(int id)
+        {
+            Category? category = _context.Categories.FirstOrDefault(category => category.ID == id);
+
+            if (category == null)
+            {
+                return NoContent();
+            }
+
+            Image? image = _context.Images.FirstOrDefault(image => image.ID == category.ImageID);
+            if (image == null)
+            {
+                return NoContent();
+            }
+
+            return Json(image.ImageData);
+        }
+
+        [HttpGet]
         public async Task<IActionResult> GetInsideImage(int id)
         {
             Category? category = _context.Categories.FirstOrDefault(category => category.ID == id);
@@ -109,6 +128,23 @@ namespace Store.Controllers
             }
 
             return File(ImageConverter.Base64ToImage(image.ImageData), "image/png");
+        }
+
+        public async Task<IActionResult> GetInsideImageBase64(int id)
+        {
+            Category? category = _context.Categories.FirstOrDefault(category => category.ID == id);
+            if (category == null)
+            {
+                return NoContent();
+            }
+
+            Image? image = _context.Images.FirstOrDefault(image => image.ID == category.InsideImageID);
+            if (image == null)
+            {
+                return NoContent();
+            }
+
+            return Json(image.ImageData);
         }
 
         // POST: api/Categories/CreateCategory

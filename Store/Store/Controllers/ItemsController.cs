@@ -118,6 +118,26 @@ namespace Store.Controllers
             return File(ImageConverter.Base64ToImage(image.ImageData), "image/png");
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetImageBase64(int id)
+        {
+            Item? item = _context.Items.FirstOrDefault(item => item.ID == id);
+
+
+            if (item == null)
+            {
+                return NoContent();
+            }
+
+            Image? image = _context.Images.FirstOrDefault(image => image.ID == item.ImageID);
+            if (image == null)
+            {
+                return NoContent();
+            }
+
+            return Json(image.ImageData);
+        }
+
         [Authorize(Roles = "admin")]
         [HttpPost]
         public async Task<IActionResult> CreateItem([FromForm] ItemModel itemModel)
