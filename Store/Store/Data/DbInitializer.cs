@@ -89,6 +89,9 @@ namespace Store.Data
                     ParentID = null
                 };
 
+                _context.Categories.Add(rootCategory);
+                await _context.SaveChangesAsync();
+
 
                 image = new Image { ImageData = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\candles\slider\ordinary.png") };
                 insideImage = new Image { ImageData = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\candles\category\ordinary.png") };
@@ -105,6 +108,9 @@ namespace Store.Data
                     ParentID = rootCategory.ID
                 };
 
+                _context.Categories.Add(ordinary);
+                await _context.SaveChangesAsync();
+
 
                 image = new Image { ImageData = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\Все_свечи.jpg") };
                 insideImage = new Image { ImageData = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\candles\category\aroma.png") };
@@ -120,6 +126,9 @@ namespace Store.Data
                     InsideImageID = insideImage.ID,
                     ParentID = rootCategory.ID
                 };
+                
+                _context.Categories.Add(aroma);
+                await _context.SaveChangesAsync();
 
 
                 image = new Image { ImageData = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\Все_свечи.jpg") };
@@ -136,13 +145,9 @@ namespace Store.Data
                     InsideImageID = insideImage.ID,
                     ParentID = rootCategory.ID
                 };
-
-                _context.Categories.Add(rootCategory);
-                _context.Categories.Add(ordinary);
-                _context.Categories.Add(aroma);
+                
                 _context.Categories.Add(decorative);
                 await _context.SaveChangesAsync();
-
 
 
 
