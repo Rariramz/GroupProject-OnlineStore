@@ -25,8 +25,8 @@ const CreateItem = observer(({ open, onHide }) => {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedSubcategory, setSelectedSubcategory] = useState("");
 
-    const categories = get("api/Categories/GetCategories", getCategoriesResult);
-    alert(categories);
+    const categories = get("api/Categories/GetCategories", console.log);
+    
   function getCategoriesResult (res) {
     if (!res) console.log("GET CATEGORIES ERROR");
   };

@@ -1,14 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
+  TextField,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
   Button,
-  Modal,
-  Typography,
+  FormControl,
+  InputLabel,
   MenuItem,
   Select,
-  Box,
-  Input,
   OutlinedInput,
 } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import { fetchWrapper, get, post } from "../../utils/fetchWrapper";
 
 const CreateSubcategory = ({ open, onHide }) => {
@@ -43,74 +47,91 @@ const CreateSubcategory = ({ open, onHide }) => {
     onHide();
   };
 
-    const categories = get("api/Categories/GetCategories", getCategoriesResult);
-    alert(JSON.parse(categories));
-    function getCategoriesResult (res) {
-        if (!res) console.log("GET CATEGORIES ERROR");
-    }
+  const [categories, setCategories] = useState([]);
+  useEffect(() => {
+    get("api/Categories/GetCategories", console.log);
+  }, []);
+
+  const StyledInput = styled(TextField)(({ theme }) => ({
+    margin: "dense",
+    variant: "outlined",
+    width: "100%",
+  }));
+
+  function handleSetImage(e) {
+    setImage(e.target.value);
+  }
+  function handleSetInsideImage(e) {
+    setInsideImage(e.target.value);
+  }
+
+  const ITEM_HEIGHT = 48;
+  const ITEM_PADDING_TOP = 8;
+  const MenuProps = {
+    PaperProps: {
+      style: {
+        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+        width: 250,
+      },
+    },
+  };
 
   return (
-    <Modal
-      open={open}
-      onHide={onHide}
-      sx={{
-        position: "absolute",
-        top: "50%",
-        left: "50%",
-        transform: "translate(-50%, -50%)",
-      }}
-    >
-      <Typography variant="h4">Добавить категорию</Typography>
-      <Box>
-        <Input
-          placeholder="Name"
+    <Dialog open={open} onClose={onHide}>
+      <DialogTitle>Add subcategory</DialogTitle>
+      <DialogContent>
+        <StyledInput
+          label="Name"
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
-        <Input
-          placeholder="Description"
+        <StyledInput
+          label="Description"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
 
-        <Select
-          multiple
-          input={
-            <OutlinedInput label={selectedCategory || "Choose category"} />
-          }
-        >
-          {categories.map((category) => (
-            <MenuItem
-              key={category.id}
-              onClick={() => (
-                setParentId(category.id), setSelectedCategory(category.name)
-              )}
-            >
-              {category.name}
-            </MenuItem>
-          ))}
-        </Select>
+        <FormControl sx={{ m: 1, width: 300 }}>
+          <InputLabel id="demo-multiple-name-label">Category</InputLabel>
+          <Select
+            labelId="demo-multiple-name-label"
+            id="demo-multiple-name"
+            input={<OutlinedInput label="Choose category" />}
+            MenuProps={MenuProps}
+          >
+            {categories
+              .filter((c) => c.parentId == null)
+              .map((category) => (
+                <MenuItem
+                  key={category.id}
+                  value={category}
+                  onClick={(e) => (
+                    setParentId(e.target.value.id),
+                    setSelectedCategory(e.target.value.name)
+                  )}
+                >
+                  {category.name}
+                </MenuItem>
+              ))}
+          </Select>
+        </FormControl>
 
-        <Input
-          placeholder="Image"
-          type="file"
-          value={image}
-          onChange={(e) => setImage(e.target.value)}
-        />
-        <Input
-          placeholder="Image"
+        <StyledInput type="file" value={image} onChange={handleSetImage} />
+        <StyledInput
           type="file"
           value={insideImage}
-          onChange={(e) => setInsideImage(e.target.value)}
+          onChange={handleSetInsideImage}
         />
-      </Box>
-      <Button variant="outlined" onClick={onHide}>
-        Закрыть
-      </Button>
-      <Button variant="outlined" onClick={addSubcategory}>
-        Добавить
-      </Button>
-    </Modal>
+      </DialogContent>
+      <DialogActions>
+        <Button variant="outlined" onClick={onHide}>
+          Cancel
+        </Button>
+        <Button variant="outlined" onClick={addSubcategory}>
+          Subscribe
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 };
 
