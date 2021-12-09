@@ -20,6 +20,11 @@ const CreateSubcategory = ({ open, onHide }) => {
 
   const [selectedCategory, setSelectedCategory] = useState("");
 
+  const postCategoryResult = (res) => {
+    if (!res.success) {
+      console.log(res.errorCodes + "POST CATEGORY ERROR");
+    }
+  };
   const addSubcategory = () => {
     post("api/Categories/CreateCategory", postCategoryResult, {
       name,
@@ -37,16 +42,12 @@ const CreateSubcategory = ({ open, onHide }) => {
     setSelectedCategory("");
     onHide();
   };
-  function postCategoryResult(res) {
-    if (!res.success) {
-      console.log(res.errorCodes + "POST CATEGORY ERROR");
-    }
-  }
 
-  const categories = get("api/Categories/GetCategories", getCategoriesResult);
-  function getCategoriesResult(res) {
-    if (!res) console.log("GET CATEGORIES ERROR");
-  }
+    const categories = get("api/Categories/GetCategories", getCategoriesResult);
+    alert(JSON.parse(categories));
+    function getCategoriesResult (res) {
+        if (!res) console.log("GET CATEGORIES ERROR");
+    }
 
   return (
     <Modal
@@ -60,7 +61,6 @@ const CreateSubcategory = ({ open, onHide }) => {
       }}
     >
       <Typography variant="h4">Добавить категорию</Typography>
-
       <Box>
         <Input
           placeholder="Name"
@@ -76,7 +76,7 @@ const CreateSubcategory = ({ open, onHide }) => {
         <Select
           multiple
           input={
-            <OutlinedInput label={selectedCategory || "Выберите категорию"} />
+            <OutlinedInput label={selectedCategory || "Choose category"} />
           }
         >
           {categories.map((category) => (
@@ -104,7 +104,6 @@ const CreateSubcategory = ({ open, onHide }) => {
           onChange={(e) => setInsideImage(e.target.value)}
         />
       </Box>
-
       <Button variant="outlined" onClick={onHide}>
         Закрыть
       </Button>
