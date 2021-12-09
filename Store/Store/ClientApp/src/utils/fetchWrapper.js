@@ -8,9 +8,11 @@ export const post = async (url, callback, obj) => {
 const fetchWrapper = async (method, url, callback, obj) => {
   try {
     let formData = new FormData();
-    Object.entries(obj).forEach((element) => {
-      formData.append(element[0], element[1]);
-    });
+    if (obj) {
+      Object.entries(obj).forEach((element) => {
+        formData.append(element[0], element[1]);
+      });
+    }
 
     let res = await fetch(url, {
       method,
