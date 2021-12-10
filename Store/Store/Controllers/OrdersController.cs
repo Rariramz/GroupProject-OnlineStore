@@ -29,7 +29,7 @@ namespace Store.Controllers
         [HttpGet]
         public async Task<ActionResult<Order>> GetOrders()
         {
-            User user = await _userManager.GetUserAsync(User);
+            User user = await _userManager.FindByEmailAsync(User.Identity.Name);
 
             List<Order> orders = _context.Orders.Where(ord => ord.UserID.Equals(user.Id)).ToList();
             List<OrderData> orderDatas = new List<OrderData>();
@@ -38,6 +38,7 @@ namespace Store.Controllers
             {
                 OrderData orderData = new OrderData()
                 {
+                    ID = order.ID,
                     Description = order.Description,
                     TotalPrice = order.TotalPrice,
                     InitialDate = order.InitialDate,
@@ -60,67 +61,63 @@ namespace Store.Controllers
 
         }
 
-        // PUT: api/Orders/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutOrder(int id, Order order)
-        {
-            if (id != order.ID)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(order).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!OrderExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
         // POST: api/Orders
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Order>> PostOrder(Order order)
+        public async Task<IActionResult> PostOrder([FromForm]OrderModel orderModel)
         {
-            _context.Orders.Add(order);
-            await _context.SaveChangesAsync();
+            User requestUser = await _userManager.FindByEmailAsync(User.Identity.Name);
+            User targetUser = await _userManager.FindByIdAsync(orderModel.UserID);
+            OrderResult orderResult = new OrderResult() { Success = true };
 
-            return CreatedAtAction("GetOrder", new { id = order.ID }, order);
-        }
-
-        // DELETE: api/Orders/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteOrder(int id)
-        {
-            var order = await _context.Orders.FindAsync(id);
-            if (order == null)
+            if (string.IsNullOrEmpty(orderModel.UserID))
             {
-                return NotFound();
+                targetUser = await _userManager.FindByIdAsync(requestUser.Id);
             }
 
-            _context.Orders.Remove(order);
-            await _context.SaveChangesAsync();
+            if (targetUser == null)
+            {
+                orderResult.ErrorCodes.Add(OrderResultConstants.ERROR_USER_INVALID);
+            }
+            else if (requestUser.Id != targetUser.Id && !await _userManager.IsInRoleAsync(requestUser, "admin"))
+            {
+                orderResult.ErrorCodes.Add(OrderResultConstants.ERROR_ACCESS_DENIED);
+            }
 
-            return NoContent();
-        }
+            if (orderResult.ErrorCodes.Count > 0)
+            {
+                orderResult.Success = false;
+                return Json(orderResult);
+            }
+            Address? address = await _context.Addresses.FirstOrDefaultAsync(addr => addr.ID == orderModel.AddressID);
 
-        private bool OrderExists(int id)
-        {
-            return _context.Orders.Any(e => e.ID == id);
+            if (address == null)
+            {
+                orderResult.ErrorCodes.Add(OrderResultConstants.ERROR_ORDER_ADDRESS_NOT_EXIST);
+            }
+
+            if (orderResult.ErrorCodes.Count > 0)
+            {
+                orderResult.Success = false;
+                return Json(orderResult);
+            }
+
+
+
+           Order order = new Order()
+           {
+               Description = orderModel.Description,
+               TotalPrice = orderModel.TotalPrice,
+               UserID = orderModel.UserID,
+               AddressID = orderModel.AddressID,
+               InitialDate = orderModel.InitialDate,
+               DeliveryDate = orderModel.DeliveryDate,
+               IsDelivery = orderModel.IsDelivery
+           };
+
+            _context.Add(order);
+            return Json(orderResult);
+
         }
     }
 }

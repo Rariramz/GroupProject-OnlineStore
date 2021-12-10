@@ -16,6 +16,7 @@ namespace Store.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
+    [Authorize]
     public class AddressesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -30,42 +31,52 @@ namespace Store.Controllers
 
         // GET: api/Addresses/GetAddresses
         [HttpGet]
-        [Authorize("admin")]
-        public async Task<ActionResult<IEnumerable<Address>>> GetAddresses()
+        public async Task<ActionResult> GetAddresses()
         {
-            return await _context.Addresses.ToListAsync();
-        }
+            User user = await _userManager.FindByEmailAsync(User.Identity.Name);
+            List<UserAddress> userAddresses =  _context.UserAddresses.Where(address => address.UserID.Equals(user.Id)).ToList();
 
-        // GET: api/Addresses/GetAddress?id=
-        [HttpGet]
-        [Authorize("admin")]
-        public async Task<ActionResult<Address>> GetAddress(int id)
-        {
-            var address = await _context.Addresses.FindAsync(id);
+            List<AddressData> addresses = new List<AddressData>();
 
-            if (address == null)
+            foreach (UserAddress relation in userAddresses)
             {
-                return NotFound();
+                Address? address = _context.Addresses.FirstOrDefault(address => address.ID == relation.AddressID);
+                addresses.Add(new AddressData()
+                {
+                    ID = address.ID,
+                    AddressString = address.AddressString
+                });
             }
 
-            return address;
+            return Json(addresses);
+
         }
 
-        // POST: api/Addresses
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        [Authorize("admin")]
-        public async Task<ActionResult<Address>> PostAddress(Address address)
+        [HttpGet]
+        public ActionResult GetAddress([FromForm] AddressModel addressModel)
         {
-            _context.Addresses.Add(address);
-            await _context.SaveChangesAsync();
+            List<UserAddress> userAddresses = _context.UserAddresses.Where(address => address.UserID.Equals(addressModel.UserID)).ToList();
 
-            return CreatedAtAction("GetAddress", new { id = address.ID }, address);
+            foreach (UserAddress relation in userAddresses)
+            {
+                Address? address = _context.Addresses.FirstOrDefault(address => address.ID == relation.AddressID);
+                if (address.AddressString.Equals(addressModel.AddressString))
+                {
+                    AddressData addressData = new AddressData()
+                    {
+                        AddressString = address.AddressString,
+                        ID= address.ID
+                    };
+
+                    return Json(addressData);
+                }
+            }
+
+            return NoContent();
         }
 
         // DELETE: api/Addresses/DeleteAddress
         [HttpDelete]
-        [Authorize("admin")]
         public async Task<IActionResult> DeleteAddress(int id)
         {
             var address = await _context.Addresses.FindAsync(id);
@@ -80,16 +91,8 @@ namespace Store.Controllers
             return NoContent();
         }
 
-        // GET: api/Addresses/AddressExists?id=
-        [HttpGet]
-        [Authorize("admin")]
-        public async Task<bool> AddressExists(int id)
-        {
-            return _context.Addresses.Any(e => e.ID == id);
-        }
 
         [HttpPost]
-        [Authorize(Roles = "admin, user")]
         public async Task<IActionResult> CreateAddressForUser([FromForm]AddressModel addressModel)
         {
             User requestUser = await _userManager.FindByEmailAsync(User.Identity.Name);
