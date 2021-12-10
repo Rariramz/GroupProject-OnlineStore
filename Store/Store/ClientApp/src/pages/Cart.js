@@ -32,7 +32,10 @@ const Cart = () => {
   };
 
   const handleCheckoutConfirm = (address) => {
-    get(`api/Order/MakeOrder?addressData=${address}`, () => setOkOpen(ture));
+    get(`api/Orders/MakeOrder?addressData=${address}`, (item) => {
+      console.log(item);
+      setOkOpen(true);
+    });
     setModalOpen(false);
   };
 
@@ -112,11 +115,24 @@ const Cart = () => {
                 </Typography>
               </Grid>
               <Grid item>
-                <Button size="medium" onClick={() => setModalOpen(true)}>
-                  <Typography variant="h2" color="white">
-                    Check-Out
-                  </Typography>
-                </Button>
+                {cartItems.length > 0 ? (
+                  <Button
+                    size="medium"
+                    onClick={() => {
+                      setModalOpen(true);
+                    }}
+                  >
+                    <Typography variant="h2" color="white">
+                      Check-Out
+                    </Typography>
+                  </Button>
+                ) : (
+                  <Button size="medium" disabled>
+                    <Typography variant="h2" color="white">
+                      Check-Out
+                    </Typography>
+                  </Button>
+                )}
               </Grid>
             </Grid>
           )}
