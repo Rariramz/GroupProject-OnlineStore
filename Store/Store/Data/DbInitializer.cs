@@ -93,8 +93,8 @@ namespace Store.Data
                 await _context.SaveChangesAsync();
 
 
-                image = new Image { ImageData = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\candles\slider\ordinary.png") };
-                insideImage = new Image { ImageData = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\candles\category\ordinary.png") };
+                image = new Image { ImageData = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\candles\category\ordinary.png") };
+                insideImage = new Image { ImageData = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\candles\cat1.png") };
                 _context.Images.Add(image);
                 _context.Images.Add(insideImage);
                 _context.SaveChanges();
@@ -112,8 +112,8 @@ namespace Store.Data
                 await _context.SaveChangesAsync();
 
 
-                image = new Image { ImageData = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\Все_свечи.jpg") };
-                insideImage = new Image { ImageData = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\candles\category\aroma.png") };
+                image = new Image { ImageData = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\candles\category\aroma.png") };
+                insideImage = new Image { ImageData = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\candles\cat2.png") };
                 _context.Images.Add(image);
                 _context.Images.Add(insideImage);
                 _context.SaveChanges();
@@ -131,8 +131,8 @@ namespace Store.Data
                 await _context.SaveChangesAsync();
 
 
-                image = new Image { ImageData = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\Все_свечи.jpg") };
-                insideImage = new Image { ImageData = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\candles\category\decorative.png") };
+                image = new Image { ImageData = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\candles\category\decorative.png") };
+                insideImage = new Image { ImageData = ImageConverter.ImageToBase64(Environment.CurrentDirectory + @"\Init\candles\cat3.png") };
                 _context.Images.Add(image);
                 _context.Images.Add(insideImage);
                 _context.SaveChanges();
