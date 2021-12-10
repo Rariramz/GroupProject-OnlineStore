@@ -4,6 +4,7 @@ import { Typography } from "@mui/material";
 import { styled } from "@mui/styles";
 import CartItem, { CartItemsHeader } from "../components/CartItem";
 import { get, post } from "../utils/fetchWrapper";
+import AddressDialog from "../components/AddressDialog";
 
 const Content = styled(Box)(({ theme }) => ({
   alignSelf: "center",
@@ -14,6 +15,7 @@ const Content = styled(Box)(({ theme }) => ({
 const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
   const [total, setTotal] = useState(0);
+  const [modalOpen, setModalOpen] = useState(false);
 
   const onCountInc = (cartItemModel) => {
     post("api/Cart/ChangeItemCount", console.log, cartItemModel);
@@ -26,15 +28,22 @@ const Cart = () => {
     console.log(cartItemModel);
   };
 
-  const handleCheckout = () => {};
+  const handleCheckoutConfirm = (address) => {
+    console.log(address);
+  };
 
   useEffect(() => {
     get("api/Cart/GetShoppingDetails", setCartItems);
     get("api/Cart/GetTotal", setTotal);
-  });
+  }, []);
 
   return (
     <>
+      <AddressDialog
+        open={modalOpen}
+        handleClose={() => setModalOpen(false)}
+        onCheckoutConfirm={handleCheckoutConfirm}
+      />
       <Content>
         <Grid
           container
@@ -87,13 +96,6 @@ const Cart = () => {
               alignItems="center"
               spacing={10}
             >
-              {/* <Grid item>
-                <Button variant="outlined" size="medium" onClick={getTotal}>
-                  <Typography variant="h2" color="primary">
-                    Apply available discounts
-                  </Typography>
-                </Button>
-              </Grid> */}
               <Grid item>
                 <Typography variant="h2" color="initial" textAlign="right">
                   Subtotal:
@@ -105,7 +107,7 @@ const Cart = () => {
                 </Typography>
               </Grid>
               <Grid item>
-                <Button size="medium" onClick={handleCheckout}>
+                <Button size="medium" onClick={() => setModalOpen(true)}>
                   <Typography variant="h2" color="white">
                     Check-Out
                   </Typography>
