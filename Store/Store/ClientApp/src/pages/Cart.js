@@ -5,6 +5,8 @@ import { styled } from "@mui/styles";
 import CartItem, { CartItemsHeader } from "../components/CartItem";
 import { get, post } from "../utils/fetchWrapper";
 import AddressDialog from "../components/AddressDialog";
+import { Api } from "@mui/icons-material";
+import OkDialog from "../components/OkDialog";
 
 const Content = styled(Box)(({ theme }) => ({
   alignSelf: "center",
@@ -16,6 +18,7 @@ const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
   const [total, setTotal] = useState(0);
   const [modalOpen, setModalOpen] = useState(false);
+  const [okOpen, setOkOpen] = useState(false);
 
   const onCountInc = (cartItemModel) => {
     post("api/Cart/ChangeItemCount", console.log, cartItemModel);
@@ -29,7 +32,8 @@ const Cart = () => {
   };
 
   const handleCheckoutConfirm = (address) => {
-    console.log(address);
+    get(`api/Order/MakeOrder?addressData=${address}`, () => setOkOpen(ture));
+    setModalOpen(false);
   };
 
   useEffect(() => {
@@ -44,6 +48,7 @@ const Cart = () => {
         handleClose={() => setModalOpen(false)}
         onCheckoutConfirm={handleCheckoutConfirm}
       />
+      <OkDialog open={okOpen} handleClose={() => setOkOpen(false)} />
       <Content>
         <Grid
           container
