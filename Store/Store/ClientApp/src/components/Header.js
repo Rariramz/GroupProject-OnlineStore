@@ -35,7 +35,7 @@ const Header = () => {
           </Typography>
         </Link>
         <material.Link
-          href="mailto:group953501@gmail.com"
+          href="mailto:onlinestore953501@gmail.com"
           style={{
             textDecoration: "none",
           }}
