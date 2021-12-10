@@ -29,9 +29,15 @@ const AddressDialog = (props) => {
       </DialogContent>
       <DialogActions style={{ paddingBottom: 20, paddingRight: 20 }}>
         <Button onClick={props.handleClose}>Cancel</Button>
-        <Button onClick={() => props.onCheckoutConfirm(address)}>
-          Confirm
-        </Button>
+        {address ? (
+          <Button onClick={() => props.onCheckoutConfirm(address)}>
+            Confirm
+          </Button>
+        ) : (
+          <Button onClick={() => props.onCheckoutConfirm(address)} disabled>
+            Confirm
+          </Button>
+        )}
       </DialogActions>
     </Dialog>
   );
