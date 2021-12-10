@@ -65,6 +65,9 @@ namespace Store.Services
 
             body.AppendLine("<br/>");
             body.AppendLine($"<h4>Date of order: {orderEmailData.InitialDate}</h4>");
+            orderEmailData.InitialDate += new TimeSpan(2, 0, 0, 0);
+
+            body.AppendLine($"<h4>Estimated date of delivery: {orderEmailData.InitialDate:dd/MM/yyyy}</h4>");
             body.AppendLine($"<h4>Delivery address: {orderEmailData.AddressData.AddressString}</h4>");
 
             message.Body = body.ToString();
