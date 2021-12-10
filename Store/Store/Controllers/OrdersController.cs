@@ -31,7 +31,7 @@ namespace Store.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> MakeOrder(int addressId)
+        public async Task<IActionResult> MakeOrder(int? addressId, string? addressData)
         {
             User user = await _userManager.FindByEmailAsync(User.Identity.Name);
             OrderResult orderResult = new OrderResult() { Success = true };
@@ -41,9 +41,26 @@ namespace Store.Controllers
             {
                 orderResult.ErrorCodes.Add(OrderResultConstants.ERROR_CART_EMPTY);
             }
+            UserAddress? userAddress = null;
 
-            UserAddress? userAddress = await _context.UserAddresses.FirstOrDefaultAsync(relation => relation.AddressID == addressId &&
+            if (addressId == null)
+            {
+                if (!string.IsNullOrEmpty(addressData))
+                {
+                    Address newAddress = new Address() { AddressString = addressData };
+                    _context.Add(newAddress);
+                    _context.SaveChanges();
+
+                    userAddress = new UserAddress() { UserID = user.Id, AddressID = newAddress.ID };
+                    _context.UserAddresses.Add(userAddress);
+                    _context.SaveChanges();
+                }
+            }
+            else
+            {
+                userAddress = await _context.UserAddresses.FirstOrDefaultAsync(relation => relation.AddressID == addressId &&
                                                                                             relation.UserID == user.Id);
+            }        
 
             if(userAddress == null)
             {
