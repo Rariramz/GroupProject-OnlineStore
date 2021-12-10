@@ -1,6 +1,12 @@
-import { Box, ThemeProvider, Typography } from "@mui/material";
+import {
+  CircularProgress,
+  Box,
+  ThemeProvider,
+  Typography,
+} from "@mui/material";
 import { observer } from "mobx-react-lite";
-import React, { useContext, useEffect, Suspense } from "react";
+import React, { useContext, useEffect, useState, Suspense } from "react";
+import { BrowserRouter } from "react-router-dom";
 import AppRouter from "./components/AppRouter";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
@@ -25,7 +31,6 @@ const App = observer(() => {
       console.log("LOGIN success");
     }
   }
-
   return (
     <ThemeProvider theme={theme}>
       <ErrorBoundary>

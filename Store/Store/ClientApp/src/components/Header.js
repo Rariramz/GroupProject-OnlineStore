@@ -64,7 +64,7 @@ const Header = observer(() => {
         </material.Link>
       </HeaderDiv>
 
-      <HeaderDiv width="7vw">
+      <HeaderDiv width={adminVisible ? "11vw" : "7wh"}>
         {adminVisible && (
           <Link to={ADMIN_ROUTE}>
             <img src={setting} alt="setting" style={{ width: 26 }} />

@@ -168,7 +168,6 @@ namespace Store.Controllers
             User requestUser = await _userManager.FindByEmailAsync(User.Identity.Name);
             User targetUser = await _userManager.FindByIdAsync(cartItemModel.UserID);
             CartItemResult cartItemResult = new CartItemResult { Success = true };
-
             
 
             if (string.IsNullOrEmpty(cartItemModel.UserID))
@@ -240,6 +239,44 @@ namespace Store.Controllers
             }
 
             return Json(price);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ClearCart(string? userID)
+        {
+            User requestUser = await _userManager.FindByEmailAsync(User.Identity.Name);
+            User targetUser = await _userManager.FindByIdAsync(userID);
+            CartItemResult cartItemResult = new CartItemResult { Success = true };
+
+
+            if (string.IsNullOrEmpty(userID))
+            {
+                targetUser = await _userManager.FindByIdAsync(requestUser.Id);
+            }
+
+            if (targetUser == null)
+            {
+                cartItemResult.ErrorCodes.Add(CartItemResultConstants.ERROR_USER_INVALID);
+            }
+            else if (requestUser.Id != targetUser.Id && !await _userManager.IsInRoleAsync(requestUser, "admin"))
+            {
+                cartItemResult.ErrorCodes.Add(CartItemResultConstants.ERROR_ACCESS_DENIED);
+            }
+
+            if (cartItemResult.ErrorCodes.Count > 0)
+            {
+                cartItemResult.Success = false;
+                return Json(cartItemResult);
+            }
+
+            List<UserItem> userItems = _context.UserItems.Where(item => item.UserID == targetUser!.Id).ToList();
+            foreach(UserItem userItem in userItems)
+            {
+                _context.UserItems.Remove(userItem);
+            }
+            await _context.SaveChangesAsync();
+
+            return Json(cartItemResult);
         }
     }
 }
