@@ -8,11 +8,13 @@ export default class ItemsStore {
     makeAutoObservable(this);
   }
 
-  setCategories(categories) {
-    this._categories = categories;
+  setCategories(mainCategories) {
+    this._categories = mainCategories;
   }
-  setSumcategories(subcategories) {
-    this._subcategories = subcategories;
+  setSubcategories(allCategories) {
+    this._subcategories = allCategories.filter(
+      (c) => c.parentID == this._parentId
+    );
   }
   setParentId(parentId) {
     this._parentId = parentId;

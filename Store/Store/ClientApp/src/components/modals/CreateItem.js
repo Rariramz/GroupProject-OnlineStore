@@ -19,6 +19,36 @@ import { fetchWrapper, get, post } from "../../utils/fetchWrapper";
 import { Context } from "../../index";
 import { observer } from "mobx-react-lite";
 
+const StyledInput = styled(TextField)(({ theme }) => ({
+  margin: "dense",
+  variant: "outlined",
+  width: "100%",
+  margin: theme.spacing(2, 0),
+}));
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 300,
+    },
+  },
+};
+
+const errors = new Map();
+errors.set(440, "empty name");
+errors.set(441, "name length is more than 50 characters");
+errors.set(442, "firstname validation failed");
+errors.set(443, "empty description");
+errors.set(444, "description length is more than 500 characters");
+errors.set(445, "description validation failed");
+errors.set(446, "image error");
+errors.set(447, "category does not exist");
+errors.set(448, "category already contains subcategories");
+errors.set(449, "price not valid");
+
 const CreateItem = observer(({ open, onHide }) => {
   const { items } = useContext(Context);
   const [name, setName] = useState("");
@@ -27,22 +57,11 @@ const CreateItem = observer(({ open, onHide }) => {
   const [image, setImage] = useState(null);
   const [subcategoryId, setSubcategoryId] = useState(0);
 
-  const [selectedCategoryId, setSelectedCategoryId] = useState(0);
-
-  const [categories, setCategories] = useState([]);
-  const [subcategories, setSubcategories] = useState([]);
-
-  const func = (res) => {
-    setCategories(res);
-    items.setCategories(res);
-    //items.setSubcategories(res.filter((c) => c.parentID == items.parentId));
-    //console.log(items.subcategories);
-    setSubcategories(res.filter((c) => c.parentID == selectedCategoryId));
-    //alert(selectedCategoryId);
-    console.log(subcategories);
-  };
   useEffect(() => {
-    get("api/Categories/GetCategories", func);
+    get("api/Categories/GetMainCategories", (res) => {
+      items.setCategories(res);
+    });
+    get("api/Categories/GetCategories", (res) => items.setSubcategories(res));
   }, [items.parentId]);
 
   const addItem = () => {
@@ -58,11 +77,6 @@ const CreateItem = observer(({ open, onHide }) => {
     setPrice(0);
     setImage(null);
     setSubcategoryId(0);
-
-    // setCategories([]);
-    // setSelectedCategoryId(0);
-    // setSelectedCategory("");
-    // setSelectedSubcategory("");
     onHide();
   };
   function postItemResult(res) {
@@ -73,39 +87,9 @@ const CreateItem = observer(({ open, onHide }) => {
     }
   }
 
-  const StyledInput = styled(TextField)(({ theme }) => ({
-    margin: "dense",
-    variant: "outlined",
-    width: "100%",
-    margin: theme.spacing(2, 0),
-  }));
-
-  const ITEM_HEIGHT = 48;
-  const ITEM_PADDING_TOP = 8;
-  const MenuProps = {
-    PaperProps: {
-      style: {
-        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-        width: 300,
-      },
-    },
-  };
-
   const selectImage = (e) => {
     setImage(e.target.files[0]);
   };
-
-  const errors = new Map();
-  errors.set(440, "empty name");
-  errors.set(441, "name length is more than 50 characters");
-  errors.set(442, "firstname validation failed");
-  errors.set(443, "empty description");
-  errors.set(444, "description length is more than 500 characters");
-  errors.set(445, "description validation failed");
-  errors.set(446, "image error");
-  errors.set(447, "category does not exist");
-  errors.set(448, "category already contains subcategories");
-  errors.set(449, "price not valid");
 
   return (
     <Dialog open={open} onClose={onHide}>
@@ -145,20 +129,15 @@ const CreateItem = observer(({ open, onHide }) => {
             input={<OutlinedInput label="Choose category" />}
             MenuProps={MenuProps}
           >
-            {categories
-              .filter((c) => c.parentID == 1)
-              .map((category) => (
-                <MenuItem
-                  key={category.id}
-                  value={category}
-                  onClick={() => (
-                    setSelectedCategoryId(category.id),
-                    items.setParentId(category.id)
-                  )}
-                >
-                  {category.name}
-                </MenuItem>
-              ))}
+            {items.categories.map((category) => (
+              <MenuItem
+                key={category.id}
+                value={category}
+                onClick={(e) => items.setParentId(category.id)}
+              >
+                {category.name}
+              </MenuItem>
+            ))}
           </Select>
         </FormControl>
 
@@ -170,7 +149,7 @@ const CreateItem = observer(({ open, onHide }) => {
             input={<OutlinedInput label="Choose subcategory" />}
             MenuProps={MenuProps}
           >
-            {subcategories.map((subcategory) => (
+            {items.subcategories.map((subcategory) => (
               <MenuItem
                 key={subcategory.id}
                 value={subcategory}
