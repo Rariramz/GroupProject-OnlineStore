@@ -20,7 +20,7 @@ import { Context } from "../../index";
 import { observer } from "mobx-react-lite";
 
 const CreateItem = observer(({ open, onHide }) => {
-  const items = useContext(Context);
+  const { items } = useContext(Context);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState(0);
@@ -28,27 +28,21 @@ const CreateItem = observer(({ open, onHide }) => {
   const [subcategoryId, setSubcategoryId] = useState(0);
 
   const [selectedCategoryId, setSelectedCategoryId] = useState(0);
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const [selectedSubcategory, setSelectedSubcategory] = useState("");
 
   const [categories, setCategories] = useState([]);
   const [subcategories, setSubcategories] = useState([]);
 
-  // useEffect(() => {
-  //   get("api/Categories/GetCategories", setCategories);
-  // }, []);
-
-  // useEffect(() => {
-  //   setSubcategories(
-  //     categories.filter((c) => c.parentID == selectedCategoryId)
-  //   );
-  // }, [selectedCategoryId, selectedCategory]);
-
+  const func = (res) => {
+    setCategories(res);
+    items.setCategories(res);
+    //items.setSubcategories(res.filter((c) => c.parentID == items.parentId));
+    //console.log(items.subcategories);
+    setSubcategories(res.filter((c) => c.parentID == selectedCategoryId));
+    //alert(selectedCategoryId);
+    console.log(subcategories);
+  };
   useEffect(() => {
-    get("api/Categories/GetCategories", setCategories).then((res) => {
-      items.setCategories(res);
-      items.setSubcategories(res.filter((c) => c.parentId == items.parentId));
-    });
+    get("api/Categories/GetCategories", func);
   }, [items.parentId]);
 
   const addItem = () => {
@@ -65,10 +59,10 @@ const CreateItem = observer(({ open, onHide }) => {
     setImage(null);
     setSubcategoryId(0);
 
-    setCategories([]);
-    setSelectedCategoryId(0);
-    setSelectedCategory("");
-    setSelectedSubcategory("");
+    // setCategories([]);
+    // setSelectedCategoryId(0);
+    // setSelectedCategory("");
+    // setSelectedSubcategory("");
     onHide();
   };
   function postItemResult(res) {
@@ -158,7 +152,7 @@ const CreateItem = observer(({ open, onHide }) => {
                   key={category.id}
                   value={category}
                   onClick={() => (
-                    setSelectedCategory(category.name),
+                    setSelectedCategoryId(category.id),
                     items.setParentId(category.id)
                   )}
                 >
@@ -176,16 +170,11 @@ const CreateItem = observer(({ open, onHide }) => {
             input={<OutlinedInput label="Choose subcategory" />}
             MenuProps={MenuProps}
           >
-            {/* {categories
-              .filter((c) => c.parentID == selectedCategoryId) */}
             {subcategories.map((subcategory) => (
               <MenuItem
                 key={subcategory.id}
                 value={subcategory}
-                onClick={() => (
-                  setSubcategoryId(subcategory.id),
-                  setSelectedSubcategory(subcategory.name)
-                )}
+                onClick={() => setSubcategoryId(subcategory.id)}
               >
                 {subcategory.name}
               </MenuItem>
