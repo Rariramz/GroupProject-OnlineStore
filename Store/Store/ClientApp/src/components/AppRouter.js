@@ -1,15 +1,20 @@
-import React, { useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import PageNotFound from "../pages/PageNotFound";
 import { authRoutes, publicRoutes } from "../routes";
 import { Context } from "../index";
+import { fetchWrapper, get, post } from "../utils/fetchWrapper";
 
 const AppRouter = () => {
-  const { user } = useContext(Context);
+  const [isAuth, setIsAuth] = useState(false);
+
+  useEffect(() => {
+    get("api/Account/Info", (res) => setIsAuth(res.success));
+  }, []);
 
   return (
     <Routes>
-      {user.isAuth &&
+      {isAuth &&
         authRoutes.map(({ path, component }) => (
           <Route key={path} path={path} element={component} exact />
         ))}

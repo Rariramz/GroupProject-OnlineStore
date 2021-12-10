@@ -6,29 +6,26 @@ import Footer from "./components/Footer";
 import Header from "./components/Header";
 import theme from "./theme";
 import { Context } from "./index";
-import { fetchWrapper, get } from "./utils/fetchWrapper";
+import { fetchWrapper, get, post } from "./utils/fetchWrapper";
 
 const App = observer(() => {
   const { user } = useContext(Context);
   const [loading, setLoading] = useState(false);
 
-  /*
   useEffect(() => {
-    fetchWrapper("GET", "api/Account/Info", func, {});
+    get("api/Account/Info", userInfoResult);
   }, []);
-
-  const func = (res) => {
-        if (res.success) {
-          user.setIsAuth(true);
-          if (res.isAdmin) {
-            user.setIsAdmin(true);
-          }
-          alert("HOORAY")
-        } else {
-            console.log(res.errorCodes);
-            alert("NOT HORAY.")
-        }
-    };*/
+  function userInfoResult(res) {
+    if (res.success) {
+      user.setIsAuth(true);
+      if (res.isAdmin) {
+        user.setIsAdmin(true);
+        console.log("ADMIN success");
+      }
+      console.log("LOGIN success");
+    }
+    setLoading(false);
+  }
 
   if (loading) {
     return (

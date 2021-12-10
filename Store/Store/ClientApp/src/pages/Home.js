@@ -28,13 +28,8 @@ const Home = () => {
     productsRef.current.scrollIntoView({ behavior: "smooth" });
   };
   useEffect(() => {
-<<<<<<< HEAD
-      get("api/Items/GetPopularItems?count=8", setPopularProducts);
-      console.log(popularProducts)
-=======
     get("api/Categories/GetCategories", setCategories);
     get("api/Items/GetPopularItems?count=8", setPopularProducts);
->>>>>>> develop
   }, []);
     
 

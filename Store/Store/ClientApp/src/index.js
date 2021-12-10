@@ -5,20 +5,21 @@ import App from "./App";
 import UserStore from "./store/UserStore";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 import reportWebVitals from "./reportWebVitals";
+import ItemsStore from "./store/ItemsStore";
 
 const baseUrl = document.getElementsByTagName("base")[0].getAttribute("href");
 const rootElement = document.getElementById("root");
 export const Context = createContext(null);
 
 ReactDOM.render(
-    <BrowserRouter basename={baseUrl}>
-        <Context.Provider
-            value={{ user: new UserStore() }}
-        >
-            <App />
-        </Context.Provider>
-    </BrowserRouter>,
-    rootElement
+  <BrowserRouter basename={baseUrl}>
+    <Context.Provider
+      value={{ user: new UserStore(), items: new ItemsStore() }}
+    >
+      <App />
+    </Context.Provider>
+  </BrowserRouter>,
+  rootElement
 );
 
 // If you want your app to work offline and load faster, you can change

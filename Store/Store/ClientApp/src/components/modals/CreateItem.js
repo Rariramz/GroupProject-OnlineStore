@@ -1,20 +1,25 @@
-import React, { useContext, useEffect, useState } from "react";
-
+import React, { useState, useEffect, useContext } from "react";
 import {
+  TextField,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
   Button,
-  Modal,
-  Typography,
+  FormControl,
+  InputLabel,
   MenuItem,
   Select,
-  Box,
   OutlinedInput,
   Input,
-  Grid,
+  Typography,
 } from "@mui/material";
-import { observer } from "mobx-react-lite";
+import { styled } from "@mui/material/styles";
 import { fetchWrapper, get, post } from "../../utils/fetchWrapper";
+import { Context } from "../../index";
 
-const CreateItem = observer(({ open, onHide }) => {
+const CreateItem = ({ open, onHide }) => {
+  const items = useContext(Context);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState(0);
@@ -25,11 +30,25 @@ const CreateItem = observer(({ open, onHide }) => {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedSubcategory, setSelectedSubcategory] = useState("");
 
-    const categories = get("api/Categories/GetCategories", console.log);
-    
-  function getCategoriesResult (res) {
-    if (!res) console.log("GET CATEGORIES ERROR");
-  };
+  const [categories, setCategories] = useState([]);
+  const [subcategories, setSubcategories] = useState([]);
+
+  // useEffect(() => {
+  //   get("api/Categories/GetCategories", setCategories);
+  // }, []);
+
+  // useEffect(() => {
+  //   setSubcategories(
+  //     categories.filter((c) => c.parentID == selectedCategoryId)
+  //   );
+  // }, [selectedCategoryId, selectedCategory]);
+
+  useEffect(() => {
+    get("api/Categories/GetCategories", setCategories).then((res) => {
+      items.setCategories(res);
+      items.setSubcategories(res.filter((c) => c.parentId == items.parentId));
+    });
+  }, [items.parentId]);
 
   const addItem = () => {
     post("api/Items/CreateItem", postItemResult, {
@@ -44,77 +63,124 @@ const CreateItem = observer(({ open, onHide }) => {
     setPrice(0);
     setImage(null);
     setSubcategoryId(0);
+
+    setCategories([]);
+    setSelectedCategoryId(0);
+    setSelectedCategory("");
+    setSelectedSubcategory("");
+    onHide();
   };
-  const postItemResult = (res) => {
-    if (!res.success) {
-      console.log(res.errorCodes + "POST ITEM ERROR");
+  function postItemResult(res) {
+    if (res.success) {
+      console.log("ADD ITEM success");
+    } else {
+      res.errorCodes.foreach((err) => alert(errors.get(err)));
     }
+  }
+
+  const StyledInput = styled(TextField)(({ theme }) => ({
+    margin: "dense",
+    variant: "outlined",
+    width: "100%",
+    margin: theme.spacing(2, 0),
+  }));
+
+  const ITEM_HEIGHT = 48;
+  const ITEM_PADDING_TOP = 8;
+  const MenuProps = {
+    PaperProps: {
+      style: {
+        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+        width: 300,
+      },
+    },
   };
+
+  const selectImage = (e) => {
+    setImage(e.target.files[0]);
+  };
+
+  const errors = new Map();
+  errors.set(440, "empty name");
+  errors.set(441, "name length is more than 50 characters");
+  errors.set(442, "firstname validation failed");
+  errors.set(443, "empty description");
+  errors.set(444, "description length is more than 500 characters");
+  errors.set(445, "description validation failed");
+  errors.set(446, "image error");
+  errors.set(447, "category does not exist");
+  errors.set(448, "category already contains subcategories");
+  errors.set(449, "price not valid");
 
   return (
-    <Modal
-      open={open}
-      onHide={onHide}
-      sx={{
-        position: "absolute",
-        top: "50%",
-        left: "50%",
-        transform: "translate(-50%, -50%)",
-      }}
-    >
-      <Typography variant="h4">Add item</Typography>
-
-      <Box>
-        <Input
-          placeholder="Name"
+    <Dialog open={open} onClose={onHide}>
+      <DialogTitle>Add item</DialogTitle>
+      <DialogContent>
+        <StyledInput
+          label="Name"
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
-        <Input
-          placeholder="Description"
+        <StyledInput
+          label="Description"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
-        <Input
-          placeholder="0 $"
+        <StyledInput
+          label="Price"
           value={price}
           onChange={(e) => setPrice(e.target.value)}
         />
-        <Input
-          value={image}
-          onChange={(e) => setImage(e.target.value)}
-          type="file"
-        />
 
-        <Select
-          multiple
-          input={
-            <OutlinedInput label={selectedCategory || "Choose category"} />
-          }
-        >
-          {categories.map((category) => (
-            <MenuItem
-              key={category.id}
-              onClick={() => setSelectedCategory(category.name)}
-            >
-              {category.name}
-            </MenuItem>
-          ))}
-        </Select>
+        <Button variant="outlined" component="label" sx={{ width: "100%" }}>
+          <Typography variant="body2">Upload Image</Typography>
+          <Input
+            accept="image/*"
+            type="file"
+            onChange={selectImage}
+            sx={{ display: "none" }}
+          />
+        </Button>
 
-        <Select
-          multiple
-          input={
-            <OutlinedInput
-              label={selectedSubcategory || "Choose subcategory"}
-            />
-          }
-        >
-          {categories
-            .filter((c) => c.parentId == selectedCategoryId)
-            .map((subcategory) => (
+        <FormControl sx={{ width: 400, marginTop: 5 }}>
+          <InputLabel id="demo-multiple-name-label">Category</InputLabel>
+          <Select
+            labelId="demo-multiple-name-label"
+            id="demo-multiple-name"
+            input={<OutlinedInput label="Choose category" />}
+            MenuProps={MenuProps}
+          >
+            {categories
+              .filter((c) => c.parentID == 1)
+              .map((category) => (
+                <MenuItem
+                  key={category.id}
+                  value={category}
+                  onClick={() => (
+                    setSelectedCategory(category.name),
+                    items.setParentId(category.id)
+                  )}
+                >
+                  {category.name}
+                </MenuItem>
+              ))}
+          </Select>
+        </FormControl>
+
+        <FormControl sx={{ width: 400, marginTop: 5 }}>
+          <InputLabel id="demo-multiple-name-label">Subcategory</InputLabel>
+          <Select
+            labelId="demo-multiple-name-label"
+            id="demo-multiple-name"
+            input={<OutlinedInput label="Choose subcategory" />}
+            MenuProps={MenuProps}
+          >
+            {/* {categories
+              .filter((c) => c.parentID == selectedCategoryId) */}
+            {subcategories.map((subcategory) => (
               <MenuItem
                 key={subcategory.id}
+                value={subcategory}
                 onClick={() => (
                   setSubcategoryId(subcategory.id),
                   setSelectedSubcategory(subcategory.name)
@@ -123,17 +189,15 @@ const CreateItem = observer(({ open, onHide }) => {
                 {subcategory.name}
               </MenuItem>
             ))}
-        </Select>
-      </Box>
-
-      <Button variant="outlined" onClick={onHide}>
-        Закрыть
-      </Button>
-      <Button variant="outlined" onClick={addItem}>
-        Добавить
-      </Button>
-    </Modal>
+          </Select>
+        </FormControl>
+      </DialogContent>
+      <DialogActions style={{ paddingInline: 25, paddingBottom: 20 }}>
+        <Button onClick={onHide}>Cancel</Button>
+        <Button onClick={addItem}>Add</Button>
+      </DialogActions>
+    </Dialog>
   );
-});
+};
 
 export default CreateItem;

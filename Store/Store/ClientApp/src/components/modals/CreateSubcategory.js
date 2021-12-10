@@ -11,7 +11,6 @@ import {
   MenuItem,
   Select,
   OutlinedInput,
-  Grid,
   Input,
   Typography,
 } from "@mui/material";
@@ -21,31 +20,18 @@ import { fetchWrapper, get, post } from "../../utils/fetchWrapper";
 const CreateSubcategory = ({ open, onHide }) => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [parentID, setParentId] = useState(0);
+  const [parentId, setParentId] = useState(0);
   const [image, setImage] = useState(null);
   const [insideImage, setInsideImage] = useState(null);
 
   const [selectedCategory, setSelectedCategory] = useState("");
 
-  const postCategoryResult = (res) => {
-    console.log(res);
-    if (res.success) {
-      console.log("OKEY");
-    }
-    if (!res.success) {
-      console.log(res.errorCodes + "POST CATEGORY ERROR");
-    }
-  };
   const addSubcategory = () => {
-    console.log(name);
-    console.log(description);
-    console.log(parentId);
-    console.log(image);
-    console.log(insideImage);
-    const res = post("api/Categories/CreateCategory", postCategoryResult, {
+    post("api/Categories/CreateCategory", postCategoryResult, {
       name,
       description,
-      parentID,
+      parentId,
+      image,
       insideImage,
     });
     setName("");
@@ -54,9 +40,17 @@ const CreateSubcategory = ({ open, onHide }) => {
     setImage(null);
     setInsideImage(null);
 
+    setCategories([]);
     setSelectedCategory("");
     onHide();
   };
+  function postCategoryResult(res) {
+    if (res.success) {
+      console.log("ADD SUBCATEGORY success");
+    } else {
+      res.errorCodes.foreach((err) => alert(errors.get(err)));
+    }
+  }
 
   const [categories, setCategories] = useState([]);
   useEffect(() => {
@@ -69,13 +63,6 @@ const CreateSubcategory = ({ open, onHide }) => {
     width: "100%",
     margin: theme.spacing(2, 0),
   }));
-
-  function handleSetImage(e) {
-    setImage(e.target.value);
-  }
-  function handleSetInsideImage(e) {
-    setInsideImage(e.target.value);
-  }
 
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;
@@ -94,6 +81,22 @@ const CreateSubcategory = ({ open, onHide }) => {
   const selectInsideImage = (e) => {
     setInsideImage(e.target.files[0]);
   };
+
+  const errors = new Map();
+  errors.set(440, "parent category does not exist");
+  errors.set(441, "ignore this code");
+  errors.set(
+    442,
+    "parent category can't contain items and subcategories at the same time"
+  );
+  errors.set(443, "name is empty");
+  errors.set(444, "name validation fail");
+  errors.set(445, "name length is more than 50 characters");
+  errors.set(446, "description is empty");
+  errors.set(447, "description validation fail");
+  errors.set(448, "description length is more than 500 characters");
+  errors.set(449, "error in image");
+  errors.set(450, "error in insideImage");
 
   return (
     <Dialog open={open} onClose={onHide}>
@@ -136,7 +139,12 @@ const CreateSubcategory = ({ open, onHide }) => {
 
         <Button variant="outlined" component="label" sx={{ width: "100%" }}>
           <Typography variant="body2">Upload Image</Typography>
-          <Input type="file" onChange={selectImage} sx={{ display: "none" }} />
+          <Input
+            accept="image/*"
+            type="file"
+            onChange={selectImage}
+            sx={{ display: "none" }}
+          />
         </Button>
 
         <Button
@@ -146,6 +154,7 @@ const CreateSubcategory = ({ open, onHide }) => {
         >
           <Typography variant="body2">Upload Inside Image</Typography>
           <Input
+            accept="image/*"
             type="file"
             onChange={selectInsideImage}
             sx={{ display: "none" }}
@@ -154,7 +163,7 @@ const CreateSubcategory = ({ open, onHide }) => {
       </DialogContent>
       <DialogActions style={{ paddingInline: 25, paddingBottom: 20 }}>
         <Button onClick={onHide}>Cancel</Button>
-        <Button onClick={addSubcategory}>Subscribe</Button>
+        <Button onClick={addSubcategory}>Add</Button>
       </DialogActions>
     </Dialog>
   );

@@ -1,0 +1,30 @@
+import { makeAutoObservable } from "mobx";
+
+export default class ItemsStore {
+  constructor() {
+    this._categories = [];
+    this._subcategories = [];
+    this._parentId = 1;
+    makeAutoObservable(this);
+  }
+
+  setCategories(categories) {
+    this._categories = categories;
+  }
+  setSumcategories(subcategories) {
+    this._subcategories = subcategories;
+  }
+  setParentId(parentId) {
+    this._parentId = parentId;
+  }
+
+  get categories() {
+    return this._categories;
+  }
+  get subcategories() {
+    return this._subcategories;
+  }
+  get parentId() {
+    return this._parentId;
+  }
+}

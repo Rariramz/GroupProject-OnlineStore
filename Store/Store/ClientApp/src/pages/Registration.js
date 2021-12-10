@@ -5,8 +5,23 @@ import { useState } from "react";
 import { Box } from "@mui/system";
 import { HOME_ROUTE, LOGIN_ROUTE } from "../utils/consts";
 import { NavLink, useHistory } from "react-router-dom";
-//import { registration } from "../http/userAPI";
 import { Context } from "../index.js";
+import { fetchWrapper, get, post } from "../utils/fetchWrapper";
+
+const errors = new Map();
+errors.set(440, "empty firstname");
+errors.set(441, "firstname length is more than 20 characters");
+errors.set(442, "firstname validation failed");
+errors.set(443, "empty lastname");
+errors.set(444, "lastname length is more than 20 characters");
+errors.set(445, "lastname validation failed");
+errors.set(446, "empty email");
+errors.set(447, "user with this email is already registered");
+errors.set(448, "email validation failed");
+errors.set(449, "password is too weak (length is less than 8 characters)");
+errors.set(450, "password is empty");
+errors.set(451, "passwordConfirm is empty");
+errors.set(452, "password and passwordConfirm do not match");
 
 const Registration = () => {
   const { user } = useContext(Context);
@@ -18,22 +33,25 @@ const Registration = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
 
-  const handleClick = async () => {
-    /*try {
-      let formData = new FormData();
-      formData.append("email", email);
-      formData.append("password", password);
-      formData.append("passwordConfirm", passwordConfirm);
-      formData.append("lastName", lastName);
-      formData.append("firstName", firstName);
-      let userInfo = await registration(formData);
-      user.setUser(userInfo);
+  const handleClick = () => {
+    post("api/Account/Register", registerResult, {
+      firstName,
+      lastName,
+      email,
+      password,
+      passwordConfirm,
+    });
+  };
+  function registerResult(res) {
+    if (res.success) {
+      console.log("REGISTER success");
       user.setIsAuth(true);
       //history.push(HOME_ROUTE);
-    } catch (e) {
-      alert(e.response.data.message);
-    }*/
-  };
+    } else {
+      res.errorCodes.forEach((err) => alert(errors.get(err)));
+      console.log(res.errorCodes + " ERROR REGISTER");
+    }
+  }
 
   const StyledPaper = styled(Paper)(({ theme }) => ({
     width: 700,
@@ -88,24 +106,24 @@ const Registration = () => {
                 <TextField
                   required
                   style={{ width: "100%" }}
-                  label="Last Name"
-                  type="name"
-                  variant="outlined"
-                  margin="dense"
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
-                />
-              </Grid>
-              <Grid item style={{ width: "100%" }}>
-                <TextField
-                  required
-                  style={{ width: "100%" }}
                   label="First Name"
                   type="name"
                   variant="outlined"
                   margin="dense"
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
+                />
+              </Grid>
+              <Grid item style={{ width: "100%" }}>
+                <TextField
+                  required
+                  style={{ width: "100%" }}
+                  label="Last Name"
+                  type="name"
+                  variant="outlined"
+                  margin="dense"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
                 />
               </Grid>
             </Grid>
@@ -144,7 +162,7 @@ const Registration = () => {
                   variant="outlined"
                   margin="dense"
                   value={passwordConfirm}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => setPasswordConfirm(e.target.value)}
                 />
               </Grid>
             </Grid>

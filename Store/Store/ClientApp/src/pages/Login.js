@@ -5,9 +5,18 @@ import { useState } from "react";
 import { Box } from "@mui/system";
 import { HOME_ROUTE, REGISTRATION_ROUTE } from "../utils/consts";
 import { NavLink, useHistory } from "react-router-dom";
-//import { login } from "../http/userAPI";
 import { Context } from "../index.js";
 import { observer } from "mobx-react-lite";
+import { fetchWrapper, get, post } from "../utils/fetchWrapper";
+import ErrorMesage from "../components/ErrorMesage";
+
+const errors = new Map();
+errors.set(440, "empty email");
+errors.set(441, "email validation failed");
+errors.set(442, "no user registered with this email");
+errors.set(443, "email not confirmed");
+errors.set(444, "empty password");
+errors.set(445, "wrong password");
 
 const Login = observer(() => {
   const { user } = useContext(Context);
@@ -22,19 +31,23 @@ const Login = observer(() => {
     emailRef.current.focus();
   };
 
-  const handleClick = async () => {
-    /*try {
-      let formData = new FormData();
-      formData.append("email", email);
-      formData.append("password", password);
-      let userInfo = await login(formData);
-      user.setUser(userInfo);
-      user.setIsAuth(true);
-      //history.push(HOME_ROUTE);
-    } catch (e) {
-      alert(e.response.data.message);
-    }*/
+  const handleClick = () => {
+    post("api/Account/Login", loginResult, { email, password });
+    //history.push(HOME_ROUTE);
   };
+  function loginResult(res) {
+    if (res.success) {
+      console.log("LOGIN success");
+      user.setIsAuth(true);
+
+      get("api/Account/Info", userInfoResult);
+    } else {
+      res.errorCodes.forEach((err) => alert(errors.get(err)));
+    }
+  }
+  function userInfoResult(res) {
+    user.setIsAdmin(res.isAdmin);
+  }
 
   const StyledPaper = styled(Paper)(({ theme }) => ({
     width: 700,
