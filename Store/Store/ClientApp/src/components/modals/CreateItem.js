@@ -13,6 +13,8 @@ import {
   OutlinedInput,
   Input,
   Typography,
+  Stack,
+  Alert,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { fetchWrapper, get, post } from "../../utils/fetchWrapper";
@@ -56,6 +58,7 @@ const CreateItem = observer(({ open, onHide }) => {
   const [price, setPrice] = useState(0);
   const [image, setImage] = useState(null);
   const [subcategoryId, setSubcategoryId] = useState(0);
+  const [errorCodes, setErrorCodes] = useState([]);
 
   useEffect(() => {
     get("api/Categories/GetMainCategories", (res) => {
@@ -83,7 +86,7 @@ const CreateItem = observer(({ open, onHide }) => {
     if (res.success) {
       console.log("ADD ITEM success");
     } else {
-      res.errorCodes.foreach((err) => alert(errors.get(err)));
+      setErrorCodes(res.errorCodes);
     }
   }
 
@@ -92,80 +95,91 @@ const CreateItem = observer(({ open, onHide }) => {
   };
 
   return (
-    <Dialog open={open} onClose={onHide}>
-      <DialogTitle>Add item</DialogTitle>
-      <DialogContent>
-        <StyledInput
-          label="Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-        <StyledInput
-          label="Description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
-        <StyledInput
-          label="Price"
-          value={price}
-          onChange={(e) => setPrice(e.target.value)}
-        />
-
-        <Button variant="outlined" component="label" sx={{ width: "100%" }}>
-          <Typography variant="body2">Upload Image</Typography>
-          <Input
-            accept="image/*"
-            type="file"
-            onChange={selectImage}
-            sx={{ display: "none" }}
+    <>
+      {errorCodes.length > 0 ? (
+        <Stack>
+          {errorCodes.map((err) => (
+            <Alert severity="error">{errors.get(err)}</Alert>
+          ))}
+        </Stack>
+      ) : (
+        <></>
+      )}
+      <Dialog open={open} onClose={onHide}>
+        <DialogTitle>Add item</DialogTitle>
+        <DialogContent>
+          <StyledInput
+            label="Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
           />
-        </Button>
+          <StyledInput
+            label="Description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
+          <StyledInput
+            label="Price"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+          />
 
-        <FormControl sx={{ width: 400, marginTop: 5 }}>
-          <InputLabel id="demo-multiple-name-label">Category</InputLabel>
-          <Select
-            labelId="demo-multiple-name-label"
-            id="demo-multiple-name"
-            input={<OutlinedInput label="Choose category" />}
-            MenuProps={MenuProps}
-          >
-            {items.categories.map((category) => (
-              <MenuItem
-                key={category.id}
-                value={category}
-                onClick={(e) => items.setParentId(category.id)}
-              >
-                {category.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+          <Button variant="outlined" component="label" sx={{ width: "100%" }}>
+            <Typography variant="body2">Upload Image</Typography>
+            <Input
+              accept="image/*"
+              type="file"
+              onChange={selectImage}
+              sx={{ display: "none" }}
+            />
+          </Button>
 
-        <FormControl sx={{ width: 400, marginTop: 5 }}>
-          <InputLabel id="demo-multiple-name-label">Subcategory</InputLabel>
-          <Select
-            labelId="demo-multiple-name-label"
-            id="demo-multiple-name"
-            input={<OutlinedInput label="Choose subcategory" />}
-            MenuProps={MenuProps}
-          >
-            {items.subcategories.map((subcategory) => (
-              <MenuItem
-                key={subcategory.id}
-                value={subcategory}
-                onClick={() => setSubcategoryId(subcategory.id)}
-              >
-                {subcategory.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      </DialogContent>
-      <DialogActions style={{ paddingInline: 25, paddingBottom: 20 }}>
-        <Button onClick={onHide}>Cancel</Button>
-        <Button onClick={addItem}>Add</Button>
-      </DialogActions>
-    </Dialog>
+          <FormControl sx={{ width: 400, marginTop: 5 }}>
+            <InputLabel id="demo-multiple-name-label">Category</InputLabel>
+            <Select
+              labelId="demo-multiple-name-label"
+              id="demo-multiple-name"
+              input={<OutlinedInput label="Choose category" />}
+              MenuProps={MenuProps}
+            >
+              {items.categories.map((category) => (
+                <MenuItem
+                  key={category.id}
+                  value={category}
+                  onClick={(e) => items.setParentId(category.id)}
+                >
+                  {category.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          <FormControl sx={{ width: 400, marginTop: 5 }}>
+            <InputLabel id="demo-multiple-name-label">Subcategory</InputLabel>
+            <Select
+              labelId="demo-multiple-name-label"
+              id="demo-multiple-name"
+              input={<OutlinedInput label="Choose subcategory" />}
+              MenuProps={MenuProps}
+            >
+              {items.subcategories.map((subcategory) => (
+                <MenuItem
+                  key={subcategory.id}
+                  value={subcategory}
+                  onClick={() => setSubcategoryId(subcategory.id)}
+                >
+                  {subcategory.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </DialogContent>
+        <DialogActions style={{ paddingInline: 25, paddingBottom: 20 }}>
+          <Button onClick={onHide}>Cancel</Button>
+          <Button onClick={addItem}>Add</Button>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 });
 
