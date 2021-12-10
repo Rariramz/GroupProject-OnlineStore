@@ -1,59 +1,87 @@
-import React, { useEffect, useState } from "react";
-import { Link, Grid, Typography, ButtonGroup, Button } from "@mui/material";
+import React, { useEffect, useState, useRef } from "react";
+import {
+  Grid,
+  Typography,
+  ButtonGroup,
+  Button,
+  Skeleton,
+  Link,
+} from "@mui/material";
 
-import itemImage from "../images/dummyItemImage.jpg";
-import { Box, typography } from "@mui/system";
+import fetchWrapper, { get, getFile, post } from "../utils/fetchWrapper";
 
 const CartItem = (props) => {
-  const [quantity, setQuantity] = useState(props.quantity || 3);
+  const widthRef = useRef(null);
+  const [height, setHeight] = useState(0);
+  const [image, setImage] = useState(null);
+  const [info, setInfo] = useState(null);
+  const [count, setCount] = useState(props.count);
   const [total, setTotal] = useState();
 
   useEffect(() => {
-    setTotal(quantity * (props.price || 4));
+    setHeight(widthRef.current.clientWidth);
+    get(`api/Items/GetItem?id=${props.id}`, setInfo);
+    getFile(`api/Items/GetImage?id=${props.id}`, setImage);
   }, []);
 
-  const handleQuantityInc = () => {
-    setQuantity((prevState) => prevState + 1);
-    setTotal(quantity * (props.price || 4));
+  useEffect(() => {
+    setTotal((info?.price * count).toFixed(2));
+  });
+
+  const handleCountInc = () => {
+    props.onCountInc({
+      ItemID: props.id,
+      Count: 1,
+    });
+    setCount((prevState) => prevState + 1);
   };
-  const handleQuantityDec = () => {
-    setQuantity((prevState) => (prevState > 1 ? prevState - 1 : prevState));
-    setTotal(quantity * (props.price || 4));
+  const handleCountDec = () => {
+    props.onCountDec({
+      ItemID: props.id,
+      Count: -1,
+    });
+    setCount((prevState) => (prevState > 1 ? prevState - 1 : prevState));
   };
+  const handleRemove = () => {
+    props.onRemove({
+      ItemID: props.id,
+    });
+  };
+
   return (
     <>
       <Grid container spacing={1}>
-        <Grid item xs={6}>
+        <Grid item container xs={6}>
+          <Grid item ref={widthRef} xs={4}>
+            {image ? (
+              <Link href={`../item/${props.id}`}>
+                <img src={image} style={{ width: "80%" }} />
+              </Link>
+            ) : (
+              <Skeleton width="80%" height={height * 0.8} />
+            )}
+          </Grid>
           <Grid
+            item
             container
-            spacing={5}
-            direction="row"
-            justify="flex-start"
-            alignItems="stretch"
-            wrap="nowrap"
+            direction="column"
+            alignItems="flex-start"
+            justifyContent="space-evenly"
+            xs={8}
           >
             <Grid item>
-              <img src={itemImage} style={{ width: "100%" }} />
+              <Typography variant="h2" color="initial" paddingRight={10}>
+                {info ? info.name : ""}
+              </Typography>
             </Grid>
-            <Grid
-              item
-              container
-              direction="column"
-              alignItems="flex-start"
-              justifyContent="space-evenly"
-            >
-              <Grid item>
-                <Typography variant="h2" color="initial">
-                  {props.name || "Spiced mint cheto tam"}
-                </Typography>
-              </Grid>
-              <Grid item>
-                <Link href="">
+            <Grid item>
+              {info && (
+                <Button variant="text" color="primary" onClick={handleRemove}>
                   <Typography variant="h3" color="primary">
                     Remove
                   </Typography>
-                </Link>
-              </Grid>
+                </Button>
+              )}
             </Grid>
           </Grid>
         </Grid>
@@ -66,7 +94,7 @@ const CartItem = (props) => {
         >
           <Grid item xs={4}>
             <Typography variant="h3" color="initial">
-              ${props.price || "9.99"}
+              ${info ? info.price : ""}
             </Typography>
           </Grid>
           <Grid
@@ -80,15 +108,15 @@ const CartItem = (props) => {
           >
             <Grid item>
               <Typography variant="h3" color="initial">
-                {quantity || "3"}
+                {count || "3"}
               </Typography>
             </Grid>
             <Grid item>
               <ButtonGroup>
-                <Button onClick={handleQuantityDec} size="small">
+                <Button onClick={handleCountDec} size="small">
                   -
                 </Button>
-                <Button onClick={handleQuantityInc} size="small">
+                <Button onClick={handleCountInc} size="small">
                   +
                 </Button>
               </ButtonGroup>
