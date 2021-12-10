@@ -25,8 +25,7 @@ const fetchWrapper = async (method, url, callback, obj) => {
       });
     }
     if (res.ok) {
-      let json;
-      json = await res.json();
+      const json = await res.json();
       callback(json);
     }
   } catch (e) {
@@ -55,27 +54,6 @@ export const getFile = async (url, callback) => {
         }
         base64Chunks.push(value);
       }
-    }
-  } catch (e) {
-    console.error(e);
-  }
-};
-
-export const getFileBase64 = async (url, callback) => {
-  try {
-    let res = await fetch(url, {
-      method: "GET",
-    });
-    if (res.ok) {
-      let json;
-      json = await res.body
-        .getReader()
-        .read()
-        .then(({ value }) =>
-          callback(
-            `data:image/png;base64,${Buffer.from(value).toString("base64")}`
-          )
-        );
     }
   } catch (e) {
     console.error(e);

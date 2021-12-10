@@ -15,7 +15,7 @@ const AppRouter = () => {
       {publicRoutes.map(({ path, component }) => (
         <Route key={path} path={path} element={component} exact />
       ))}
-      {/*<Route path="*" element={<PageNotFound />} />*/}
+      <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
 };

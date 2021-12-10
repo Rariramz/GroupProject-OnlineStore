@@ -32,7 +32,7 @@ const Footer = () => {
             <hr width="1200" height="1.5" style={{ marginTop: 60 }} />
           </Grid>
           <Grid item xs={6}>
-            <img class="logo" src={logo} alt="Candleaf" />
+            <img src={logo} alt="Candleaf" />
           </Grid>
           <Grid item xs={6}>
             <Typography variant="body2" color="#FFFFFF" textAlign="right">

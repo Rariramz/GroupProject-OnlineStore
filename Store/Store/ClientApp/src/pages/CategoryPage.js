@@ -1,9 +1,19 @@
-import React, { useState, useRef } from "react";
-import { Box, Typography, Grid, Container, Divider, Chip } from "@mui/material";
+import React, { useState, useRef, useEffect } from "react";
+import {
+  Box,
+  Typography,
+  Grid,
+  Container,
+  Divider,
+  Chip,
+  Skeleton,
+} from "@mui/material";
 import { styled } from "@mui/material/styles";
-import PrettyPreviewImage from "../components/PrettyPreviewImage";
-import ItemCard from "../components/ItemCard";
+import { useParams } from "react-router-dom";
 
+import ItemCard from "../components/ItemCard";
+import { get, getFile } from "../utils/fetchWrapper";
+import CategoryPreviewImage from "../components/CategoryPreviewImage";
 const Content = styled(Box)(({ theme }) => ({
   padding: theme.spacing(0, 32),
   margin: theme.spacing(18, 0),
@@ -15,31 +25,46 @@ const ItemGridContainer = styled(Grid)(({ theme }) => ({
 }));
 
 const CategoryPage = () => {
-  const productsRef = useRef(null);
-  const [subcategories, setSubcategories] = useState(["2", "2", "2", "2"]);
-  const [popularProducts, PopularProducts] = useState(["2", "2", "2", "2"]);
+  const { id } = useParams();
+  const [subcategories, setSubcategories] = useState([]);
 
-  const renderSubcategory = () => (
-    <>
-      <Divider textAlign="left">
-        <Typography variant="h1" color="textSecondary">
-          Second
-        </Typography>
-      </Divider>
-      <ItemGridContainer item container spacing={4}>
-        {popularProducts.map((item) => (
-          <Grid item xs={3}>
-            <ItemCard id={item.id} sx />
-          </Grid>
-        ))}
-      </ItemGridContainer>
-    </>
-  );
+  useEffect(() => {
+    get(`api/Categories/GetCategory?id=${id}`, ({ childCategoriesIDs }) =>
+      getSubcategories(childCategoriesIDs)
+    );
+    get(`api/Categories/GetImage?id=${id}`, console.log);
+  }, []);
+
+  const getSubcategories = (idList) => {
+    idList.forEach((id) =>
+      get(`api/Categories/GetCategory?id=${id}`, (newCategory) =>
+        setSubcategories((prevState) => [...prevState, newCategory])
+      )
+    );
+  };
+
+  const renderSubcategory = (subcategory) => {
+    return (
+      <>
+        <Divider textAlign="left">
+          <Typography variant="h1" color="textSecondary">
+            {subcategory.name}
+          </Typography>
+        </Divider>
+        <ItemGridContainer item container spacing={4}>
+          {subcategory.itemsIDs.map((id) => (
+            <Grid item xs={3}>
+              <ItemCard id={id} key={id} />
+            </Grid>
+          ))}
+        </ItemGridContainer>
+      </>
+    );
+  };
 
   return (
     <>
-      <PrettyPreviewImage />
-      <Content ref={productsRef}>
+      <Content>
         <Grid
           container
           spacing={18}
@@ -48,9 +73,11 @@ const CategoryPage = () => {
           alignItems="center"
           alignContent="center"
           wrap="nowrap"
+          marginTop={10}
         >
-          {subcategories.map((item) => (
-            <Grid item>{renderSubcategory(item)}</Grid>
+          <CategoryPreviewImage id={id} />
+          {subcategories.map((subcategory) => (
+            <Grid item>{renderSubcategory(subcategory)}</Grid>
           ))}
         </Grid>
       </Content>

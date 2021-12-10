@@ -2,6 +2,7 @@ import { Box, Typography, Grid, Container } from "@mui/material";
 import { Link } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import React, { useRef, useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 
 import ItemCard from "../components/ItemCard";
 import PrettyPreviewImage from "../components/PrettyPreviewImage";
@@ -28,17 +29,9 @@ const Home = () => {
     productsRef.current.scrollIntoView({ behavior: "smooth" });
   };
   useEffect(() => {
-    get("api/Categories/GetCategories", setCategories);
+    get("api/Categories/GetMainCategories", setCategories);
     get("api/Items/GetPopularItems?count=8", setPopularProducts);
   }, []);
-
-  const func = (res) => {
-    if (res.success) {
-      console.log("HOORAY");
-    } else {
-      console.log(res.errorCodes);
-    }
-  };
 
   return (
     <>
@@ -76,7 +69,11 @@ const Home = () => {
             <ItemGridContainer item container spacing={4}>
               {categories.map((item) => (
                 <Grid item xs={4}>
-                  <CategoryCard id={item.id} key={item.id} />
+                  <CategoryCard
+                    id={item.id}
+                    key={item.id}
+                    style={{ height: "100%" }}
+                  />
                 </Grid>
               ))}
             </ItemGridContainer>

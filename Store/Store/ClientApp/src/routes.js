@@ -37,7 +37,7 @@ export const publicRoutes = [
     component: <ItemPage />,
   },
   {
-    path: CATEGORY_ROUTE + "/:name",
+    path: CATEGORY_ROUTE + "/:id",
     component: <CategoryPage />,
   },
   {

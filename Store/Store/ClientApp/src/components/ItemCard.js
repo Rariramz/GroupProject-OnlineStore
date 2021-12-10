@@ -34,10 +34,11 @@ const ItemCard = (props) => {
     get(`api/Items/GetItem?id=${props.id}`, setItemInfo);
     getFile(`api/Items/GetImage?id=${props.id}`, setImage);
   }, []);
+
   return (
     <>
       <Link to={`../item/${props.id || 0}`} style={{ textDecoration: "none" }}>
-        <CustomCard elevation={0} ref={widthRef}>
+        <CustomCard elevation={0} ref={widthRef} style={{ height: "100%" }}>
           {image ? (
             <CardMedia component="img" alt="No Image" image={image} />
           ) : (
@@ -45,10 +46,18 @@ const ItemCard = (props) => {
           )}
           <ItemCardContent>
             <Typography variant="body2" color="initial" textAlign="left">
-              {itemInfo ? itemInfo.name : <Skeleton />}
+              {itemInfo ? (
+                itemInfo.name || ""
+              ) : (
+                <Skeleton width="100%" height={10} />
+              )}
             </Typography>
             <Typography variant="body1" color="primary" textAlign="right">
-              {itemInfo ? itemInfo.price : <Skeleton />}
+              {itemInfo ? (
+                `$ ${itemInfo.price || ""}`
+              ) : (
+                <Skeleton width="100%" height={10} />
+              )}
             </Typography>
           </ItemCardContent>
         </CustomCard>
