@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Box, Grid, Link, Stack, Divider, Button } from "@mui/material";
+import { Box, Grid, Link, Stack, Divider, Button, Dialog } from "@mui/material";
 import { Typography } from "@mui/material";
 import { styled } from "@mui/styles";
 import CartItem, { CartItemsHeader } from "../components/CartItem";
@@ -24,12 +24,10 @@ const Cart = () => {
   const onRemove = (cartItemModel) => {
     post("api/Cart/Remove", console.log, cartItemModel);
     console.log(cartItemModel);
-    // setCartItems((prevState) =>
-    //   prevState.filter((item) => {
-    //     return item.itemID != cartItemModel.ItemID;
-    //   })
-    // );
   };
+
+  const handleCheckout = () => {};
+
   useEffect(() => {
     get("api/Cart/GetShoppingDetails", setCartItems);
     get("api/Cart/GetTotal", setTotal);
@@ -107,7 +105,7 @@ const Cart = () => {
                 </Typography>
               </Grid>
               <Grid item>
-                <Button size="medium">
+                <Button size="medium" onClick={handleCheckout}>
                   <Typography variant="h2" color="white">
                     Check-Out
                   </Typography>

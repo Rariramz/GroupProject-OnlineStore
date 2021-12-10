@@ -1,0 +1,17 @@
+/*useEffect(() => {
+    post("api/Account/Register", func, {
+      firstname: "as2d",
+      lastname: "asdww",
+      email: "as1df@mail.ru",
+      password: "12344312",
+      passwordConfirm: "12344312",
+    });
+  }, []);
+
+  const func = (res) => {
+    if (res.success) {
+      console.log("HOORAY");
+    } else {
+      console.log(res.errorCodes);
+    }
+  };*/
