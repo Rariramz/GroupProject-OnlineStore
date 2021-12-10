@@ -230,8 +230,6 @@ namespace Store.Controllers
             await _userManager.AddToRoleAsync(createdUser, "user");
             await _context.SaveChangesAsync();
 
-            await _signInManager.SignInAsync(createdUser, true);
-
             return Json(registrationResult);
         }
 
