@@ -1,8 +1,4 @@
-import Admin from "./pages/Admin";
-import Cart from "./pages/Cart";
-import Home from "./pages/Home";
-import ItemPage from "./pages/ItemPage";
-import CategoryPage from "./pages/CategoryPage";
+import React from "react";
 import {
   ADMIN_ROUTE,
   CART_ROUTE,
@@ -12,6 +8,11 @@ import {
   REGISTRATION_ROUTE,
   CATEGORY_ROUTE,
 } from "./utils/consts";
+const Admin = React.lazy(() => import("./pages/Admin"));
+const Cart = React.lazy(() => import("./pages/Cart"));
+const Home = React.lazy(() => import("./pages/Home"));
+const ItemPage = React.lazy(() => import("./pages/ItemPage"));
+const CategoryPage = React.lazy(() => import("./pages/CategoryPage"));
 
 export const authRoutes = [
   /* к страницам админа и корзины имеет доступ

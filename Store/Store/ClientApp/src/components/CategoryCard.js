@@ -39,7 +39,7 @@ const CategoryCard = (props) => {
 
   return (
     <Link
-      to={`category/${props.id}`}
+      to={categoryInfo ? `../category/${props.id}` : ""}
       style={{
         textDecoration: "none",
       }}
@@ -61,7 +61,7 @@ const CategoryCard = (props) => {
             wrap="nowrap"
           >
             <Grid item>
-              <Typography variant="h1" color="initial" textAlign="center">
+              <Typography variant="h2" color="initial" textAlign="center">
                 {categoryInfo ? (
                   categoryInfo.name
                 ) : (

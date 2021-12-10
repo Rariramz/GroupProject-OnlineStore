@@ -1,5 +1,5 @@
-import { Button, ThemeProvider, Typography } from "@mui/material";
-import React from "react";
+import { Box, ThemeProvider, Typography } from "@mui/material";
+import React, { Suspense } from "react";
 import { BrowserRouter } from "react-router-dom";
 import AppRouter from "./components/AppRouter";
 import Footer from "./components/Footer";
@@ -10,7 +10,17 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <Header />
-      <AppRouter />
+      <Suspense
+        fallback={
+          <Box padding="40vh">
+            <Typography variant="h1" color="primary" textAlign="center">
+              Loading...
+            </Typography>
+          </Box>
+        }
+      >
+        <AppRouter />
+      </Suspense>
       <Footer />
     </ThemeProvider>
   );

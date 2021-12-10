@@ -75,11 +75,13 @@ const CartItem = (props) => {
               </Typography>
             </Grid>
             <Grid item>
-              <Button variant="text" color="primary" onClick={handleRemove}>
-                <Typography variant="h3" color="primary">
-                  Remove
-                </Typography>
-              </Button>
+              {info && (
+                <Button variant="text" color="primary" onClick={handleRemove}>
+                  <Typography variant="h3" color="primary">
+                    Remove
+                  </Typography>
+                </Button>
+              )}
             </Grid>
           </Grid>
         </Grid>

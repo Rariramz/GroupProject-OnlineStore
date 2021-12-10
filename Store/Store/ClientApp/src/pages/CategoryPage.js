@@ -26,17 +26,18 @@ const ItemGridContainer = styled(Grid)(({ theme }) => ({
 
 const CategoryPage = () => {
   const { id } = useParams();
+  const [info, setInfo] = useState();
   const [subcategories, setSubcategories] = useState([]);
 
   useEffect(() => {
-    get(`api/Categories/GetCategory?id=${id}`, ({ childCategoriesIDs }) =>
-      getSubcategories(childCategoriesIDs)
-    );
+    get(`api/Categories/GetCategory?id=${id}`, getSubcategories);
     get(`api/Categories/GetImage?id=${id}`, console.log);
   }, []);
 
-  const getSubcategories = (idList) => {
-    idList.forEach((id) =>
+  const getSubcategories = (info) => {
+    setInfo(info);
+    console.log(info);
+    info.childCategoriesIDs.forEach((id) =>
       get(`api/Categories/GetCategory?id=${id}`, (newCategory) =>
         setSubcategories((prevState) => [...prevState, newCategory])
       )
@@ -72,10 +73,13 @@ const CategoryPage = () => {
           justify="center"
           alignItems="center"
           alignContent="center"
-          wrap="nowrap"
           marginTop={10}
         >
-          <CategoryPreviewImage id={id} />
+          {info ? (
+            <CategoryPreviewImage id={id} name={info?.name} />
+          ) : (
+            <Box height="100vh"></Box>
+          )}
           {subcategories.map((subcategory) => (
             <Grid item>{renderSubcategory(subcategory)}</Grid>
           ))}

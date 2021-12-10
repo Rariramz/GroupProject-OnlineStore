@@ -37,7 +37,10 @@ const ItemCard = (props) => {
 
   return (
     <>
-      <Link to={`../item/${props.id || 0}`} style={{ textDecoration: "none" }}>
+      <Link
+        to={itemInfo ? `../item/${props.id}` : ""}
+        style={{ textDecoration: "none" }}
+      >
         <CustomCard elevation={0} ref={widthRef} style={{ height: "100%" }}>
           {image ? (
             <CardMedia component="img" alt="No Image" image={image} />

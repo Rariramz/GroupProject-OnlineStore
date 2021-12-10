@@ -17,35 +17,21 @@ const Cart = () => {
 
   const onCountInc = (cartItemModel) => {
     post("api/Cart/ChangeItemCount", console.log, cartItemModel);
-    getTotal();
-    getTotal();
   };
   const onCountDec = (cartItemModel) => {
     post("api/Cart/ChangeItemCount", console.log, cartItemModel);
-    getTotal();
-    getTotal();
   };
   const onRemove = (cartItemModel) => {
     post("api/Cart/Remove", console.log, cartItemModel);
     console.log(cartItemModel);
-    setCartItems((prevState) =>
-      prevState.filter((item) => {
-        return item.itemID != cartItemModel.ItemID;
-      })
-    );
-    get("api/Cart/GetTotal", setTotal);
+    // setCartItems((prevState) =>
+    //   prevState.filter((item) => {
+    //     return item.itemID != cartItemModel.ItemID;
+    //   })
+    // );
   };
-
-  const getTotal = () => {
-    get("api/Cart/GetTotal", setTotal);
-  };
-
   useEffect(() => {
-    get("api/Cart/GetTotal", setTotal);
     get("api/Cart/GetShoppingDetails", setCartItems);
-  }, []);
-
-  useEffect(() => {
     get("api/Cart/GetTotal", setTotal);
   });
 
@@ -103,13 +89,13 @@ const Cart = () => {
               alignItems="center"
               spacing={10}
             >
-              <Grid item>
+              {/* <Grid item>
                 <Button variant="outlined" size="medium" onClick={getTotal}>
                   <Typography variant="h2" color="primary">
                     Apply available discounts
                   </Typography>
                 </Button>
-              </Grid>
+              </Grid> */}
               <Grid item>
                 <Typography variant="h2" color="initial" textAlign="right">
                   Subtotal:

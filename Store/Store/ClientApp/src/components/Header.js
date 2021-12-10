@@ -1,4 +1,5 @@
 import { Box, Grid, Paper, Typography, Button } from "@mui/material";
+import * as material from "@mui/material";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import { styled } from "@mui/styles";
 import React from "react";
@@ -23,15 +24,27 @@ const Header = () => {
         <img src={logo} alt="Candleaf" />
       </Link>
       <HeaderDiv width="40vw">
-        <Typography variant="body1" color="initial">
-          Home
-        </Typography>
-        <Typography variant="body1" color="initial">
-          About
-        </Typography>
-        <Typography variant="body1" color="initial">
-          Contact us
-        </Typography>
+        <Link
+          to=""
+          style={{
+            textDecoration: "none",
+          }}
+        >
+          <Typography variant="body1" color="initial">
+            Home
+          </Typography>
+        </Link>
+        <material.Link
+          href="mailto:group953501@gmail.com"
+          style={{
+            textDecoration: "none",
+          }}
+          target="_blank"
+        >
+          <Typography variant="body1" color="initial">
+            Contact us
+          </Typography>
+        </material.Link>
       </HeaderDiv>
 
       <HeaderDiv width="7vw">
