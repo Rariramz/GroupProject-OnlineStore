@@ -101,8 +101,8 @@ namespace Store.Data
 
                 Category ordinary = new Category
                 {
-                    Name = "Обычные свечи",
-                    Description = "Свечи применяются как источник освещения начиная с III тысячелетия до н. э. До появления и начала распространения электрических ламп накаливания с 1880-х годов, наряду с лампадами это был основной источник освещения. Свечи используются в этом качестве и на начало XXI века при отсутствии электричества.",
+                    Name = "Simple candles",
+                    Description = "Candles have been used as a source of illumination since the 3rd millennium BC. e. Before the advent and spread of electric incandescent lamps in the 1880s, it was the main source of illumination along with lamps. Candles are used in this and at the beginning of the XXI century in the absence of electricity.",
                     ImageID = image.ID,
                     InsideImageID = insideImage.ID,
                     ParentID = rootCategory.ID
@@ -139,7 +139,7 @@ namespace Store.Data
 
                 Category decorative = new Category
                 {
-                    Name = "Decorative candles",
+                    Name = "Candle sets",
                     Description = "We often see candles in the interiors of private or residential real estate, but we do not always think about which ones are better to use not only in order to look at a live fire from time to time, but also to decorate the space in the best possible way.",
                     ImageID = image.ID,
                     InsideImageID = insideImage.ID,
