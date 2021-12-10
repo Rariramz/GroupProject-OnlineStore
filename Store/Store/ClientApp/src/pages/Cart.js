@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Box, Grid, Link, Stack, Divider, Button } from "@mui/material";
+import { Box, Grid, Link, Stack, Divider, Button, Dialog } from "@mui/material";
 import { Typography } from "@mui/material";
 import { styled } from "@mui/styles";
 import CartItem, { CartItemsHeader } from "../components/CartItem";
@@ -27,6 +27,7 @@ const Cart = () => {
   };
 
   const handleCheckout = () => {};
+
   useEffect(() => {
     get("api/Cart/GetShoppingDetails", setCartItems);
     get("api/Cart/GetTotal", setTotal);

@@ -44,7 +44,7 @@ const ItemPage = (props) => {
 
   useEffect(() => {
     setHeight(widthRef.current.clientWidth);
-    get(`api/Account/Info`);
+    get(`api/Account/Info`, ({ success }) => setIsLoggedIn(success));
     get(`api/Items/GetItem/?id=${id}`, (info) => {
       if (!info.invalid) setInfo(info);
       else {
