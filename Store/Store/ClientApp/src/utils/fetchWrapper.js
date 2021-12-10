@@ -17,6 +17,7 @@ const fetchWrapper = async (method, url, callback, obj) => {
       res = await fetch(url, {
         method,
         body: formData,
+        contentType: "multipart/form-data",
       });
     } else {
       console.log(method, url);
@@ -25,6 +26,10 @@ const fetchWrapper = async (method, url, callback, obj) => {
       });
     }
     if (res.ok) {
+      console.log(res);
+      if ([204, 400].includes(res.status)) {
+        callback({ invalid: true });
+      }
       const json = await res.json();
       callback(json);
     }

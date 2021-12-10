@@ -1,16 +1,23 @@
-import React from "react";
+import React, { createContext } from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App";
+import UserStore from "./store/UserStore";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 import reportWebVitals from "./reportWebVitals";
+import ItemsStore from "./store/ItemsStore";
 
 const baseUrl = document.getElementsByTagName("base")[0].getAttribute("href");
 const rootElement = document.getElementById("root");
+export const Context = createContext(null);
 
 ReactDOM.render(
   <BrowserRouter basename={baseUrl}>
-    <App />
+    <Context.Provider
+      value={{ user: new UserStore(), items: new ItemsStore() }}
+    >
+      <App />
+    </Context.Provider>
   </BrowserRouter>,
   rootElement
 );

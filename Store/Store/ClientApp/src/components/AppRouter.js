@@ -1,14 +1,20 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import PageNotFound from "../pages/PageNotFound";
 import { authRoutes, publicRoutes } from "../routes";
+import { Context } from "../index";
+import { fetchWrapper, get, post } from "../utils/fetchWrapper";
 
 const AppRouter = () => {
-  const isAuthorized = true;
+  const [isAuth, setIsAuth] = useState(false);
+
+  useEffect(() => {
+    get("api/Account/Info", (res) => setIsAuth(res.success));
+  }, []);
 
   return (
     <Routes>
-      {isAuthorized &&
+      {isAuth &&
         authRoutes.map(({ path, component }) => (
           <Route key={path} path={path} element={component} exact />
         ))}
