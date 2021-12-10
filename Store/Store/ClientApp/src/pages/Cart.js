@@ -22,19 +22,24 @@ const Cart = () => {
 
   const onCountInc = (cartItemModel) => {
     post("api/Cart/ChangeItemCount", console.log, cartItemModel);
+    updateInfo();
   };
   const onCountDec = (cartItemModel) => {
     post("api/Cart/ChangeItemCount", console.log, cartItemModel);
+    updateInfo();
   };
   const onRemove = (cartItemModel) => {
     post("api/Cart/Remove", console.log, cartItemModel);
     console.log(cartItemModel);
+    updateInfo();
   };
 
   const handleCheckoutConfirm = (address) => {
     get(`api/Orders/MakeOrder?addressData=${address}`, (item) => {
       console.log(item);
       setOkOpen(true);
+      get("api/Cart/ClearCart", console.log);
+      updateInfo();
     });
     setModalOpen(false);
   };
@@ -42,7 +47,12 @@ const Cart = () => {
   useEffect(() => {
     get("api/Cart/GetShoppingDetails", setCartItems);
     get("api/Cart/GetTotal", setTotal);
-  }, []);
+  });
+
+  const updateInfo = () => {
+    get("api/Cart/GetShoppingDetails", setCartItems);
+    get("api/Cart/GetTotal", setTotal);
+  };
 
   return (
     <>
