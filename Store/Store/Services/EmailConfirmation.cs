@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using Store.Models;
+using System.Net;
 using System.Net.Mail;
 using System.Text;
 
@@ -25,11 +26,12 @@ namespace Store.Services
             MailAddress from = new MailAddress(CredentialEmail);
             MailAddress to = new MailAddress(email);
             MailMessage message = new MailMessage(from, to);
-            message.Subject = "Подтверждение email";
+
+            message.Subject = "Email confirmation";
             StringBuilder body = new StringBuilder();
-            body.Append("<h2>Подтверждение email для Online Store.");
+            body.Append("<h2>Confirm your email for Candleaf.<h2/>");
             body.Append("<br/>");
-            body.AppendLine($"<a href=\"{Url}/api/Account/Confirm?email={email}&code={code}\">Нажмите, чтобы подтвердить email</a>"); ; ;
+            body.AppendLine($"<a href=\"{Url}/api/Account/Confirm?email={email}&code={code}\">Press here</a>");
             message.Body = body.ToString();
             message.IsBodyHtml = true;
 
@@ -37,8 +39,41 @@ namespace Store.Services
             smtpClient.EnableSsl = true;
             smtpClient.Credentials = networkCredential;
             smtpClient.Send(message);
+            
 
             return code;
+        }
+
+        public void ConfirmOrder(string email, OrderData orderEmailData)
+        {
+            MailAddress from = new MailAddress(CredentialEmail);
+            MailAddress to = new MailAddress(email);
+            MailMessage message = new MailMessage(from, to);
+
+            message.Subject = "Thank you for your order!";
+            StringBuilder body = new StringBuilder();
+            body.AppendLine("<h2>You just ordered the following items: </h2>");
+            body.AppendLine("<ul>");
+            foreach(OrderItemData orderItemData in orderEmailData.ItemDatas)
+            {
+                body.Append("<li>");
+                body.Append($"{orderItemData.Count}x {orderItemData.ItemData.Name}");
+                body.AppendLine("</li>");
+            }
+            body.AppendLine("</ul>");
+            body.AppendLine($"<h3>Total price: {orderEmailData.TotalPrice}</h3>");
+
+            body.AppendLine("<br/>");
+            body.AppendLine($"<h4>Date of order: {orderEmailData.InitialDate}</h4>");
+            body.AppendLine($"<h4>Delivery address: {orderEmailData.AddressData.AddressString}</h4>");
+
+            message.Body = body.ToString();
+            message.IsBodyHtml = true;
+
+            SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587);
+            smtpClient.EnableSsl = true;
+            smtpClient.Credentials = networkCredential;
+            smtpClient.Send(message);
         }
 
         private string GenerateCode(int length)

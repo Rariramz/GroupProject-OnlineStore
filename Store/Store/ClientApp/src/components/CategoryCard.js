@@ -21,6 +21,7 @@ const CategoryCardContent = styled(CardContent)(({ theme }) => ({
 }));
 
 const CustomCard = styled(Card)(({ theme }) => ({
+  height: "100%",
   filter: "drop-shadow(0px 4px 24px rgba(10, 10, 10, 0.22))",
 }));
 
@@ -32,25 +33,43 @@ const CategoryCard = (props) => {
 
   useEffect(() => {
     setHeight(widthRef.current.clientWidth * 1.5);
-    get(
-      `https://localhost:44498/api/Categories/GetCategory?id=${props.id}`,
-      setCategoryInfo
-    );
-    getFile(`api/Categories/GetInsideImage?id=${props.id}`, setImage);
+    get(`api/Categories/GetCategory?id=${props.id}`, setCategoryInfo);
+    getFile(`api/Categories/GetImage?id=${props.id}`, setImage);
   }, []);
 
   return (
-    <Link to={`category/${props.id}`} style={{ textDecoration: "none" }}>
+    <Link
+      to={categoryInfo ? `../category/${props.id}` : ""}
+      style={{
+        textDecoration: "none",
+      }}
+    >
       <CustomCard elevation={0} ref={widthRef}>
         {image ? (
           <CardMedia component="img" image={image} />
         ) : (
           <Skeleton variant="rectangular" width="100%" height={height} />
         )}
-        <CategoryCardContent>
-          <Typography variant="h1" color="initial" textAlign="center">
-            {categoryInfo ? categoryInfo.name : <Skeleton />}
-          </Typography>
+        <CategoryCardContent style={{ height: "100%" }}>
+          <Grid
+            container
+            spacing={1}
+            direction="column"
+            justify="center"
+            alignItems="center"
+            alignContent="center"
+            wrap="nowrap"
+          >
+            <Grid item>
+              <Typography variant="h2" color="initial" textAlign="center">
+                {categoryInfo ? (
+                  categoryInfo.name
+                ) : (
+                  <Skeleton variant="rectangular" width={"100%"} height={10} />
+                )}
+              </Typography>
+            </Grid>
+          </Grid>
         </CategoryCardContent>
       </CustomCard>
     </Link>

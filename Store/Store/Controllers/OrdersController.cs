@@ -2,107 +2,102 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Store.Data;
 using Store.Entities;
+using Store.Models;
+using Store.Services;
 
 namespace Store.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
-    public class OrdersController : ControllerBase
+    [Authorize]
+    public class OrdersController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private UserManager<User> _userManager;
+        private readonly EmailConfirmation _emailConfirmation;
 
-        public OrdersController(ApplicationDbContext context)
+        public OrdersController(ApplicationDbContext context, UserManager<User> userManager, EmailConfirmation emailConfirmation)
         {
             _context = context;
+            _userManager = userManager;
+            _emailConfirmation = emailConfirmation;
         }
 
-        // GET: api/Orders
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Order>>> GetOrders()
+        public async Task<IActionResult> MakeOrder(int addressId)
         {
-            return await _context.Orders.ToListAsync();
-        }
+            User user = await _userManager.FindByEmailAsync(User.Identity.Name);
+            OrderResult orderResult = new OrderResult() { Success = true };
 
-        // GET: api/Orders/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Order>> GetOrder(int id)
-        {
-            var order = await _context.Orders.FindAsync(id);
-
-            if (order == null)
+            List<UserItem> userItems = _context.UserItems.Where(item => item.UserID == user.Id).ToList();
+            if(userItems.Count == 0)
             {
-                return NotFound();
+                orderResult.ErrorCodes.Add(OrderResultConstants.ERROR_CART_EMPTY);
             }
 
-            return order;
-        }
+            UserAddress? userAddress = await _context.UserAddresses.FirstOrDefaultAsync(relation => relation.AddressID == addressId &&
+                                                                                            relation.UserID == user.Id);
 
-        // PUT: api/Orders/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutOrder(int id, Order order)
-        {
-            if (id != order.ID)
+            if(userAddress == null)
             {
-                return BadRequest();
+                orderResult.ErrorCodes.Add(OrderResultConstants.ERROR_USER_NO_SUCH_ADDRESS);
             }
 
-            _context.Entry(order).State = EntityState.Modified;
-
-            try
+            if(orderResult.ErrorCodes.Count > 0)
             {
-                await _context.SaveChangesAsync();
+                orderResult.Success = false;
+                return Json(orderResult);
             }
-            catch (DbUpdateConcurrencyException)
+
+            Address? address = await _context.Addresses.FirstOrDefaultAsync(add => add.ID == userAddress!.AddressID);
+
+            List<OrderItemData> itemDatas = new List<OrderItemData>();
+            decimal totalPrice = 0;
+            foreach(UserItem relation in userItems)
             {
-                if (!OrderExists(id))
+                Item? item = await _context.Items.FirstOrDefaultAsync(item => item.ID == relation.ItemID);
+                ItemData itemData = new ItemData()
                 {
-                    return NotFound();
-                }
-                else
+                    ID = item.ID,
+                    CategoryID = item.CategoryID,
+                    Name = item.Name,
+                    Price = (float)item.Price,
+                    Description = item.Description
+                };
+                OrderItemData orderItemData = new OrderItemData()
                 {
-                    throw;
-                }
+                    ItemData = itemData,
+                    Count = relation.Count
+                };
+
+                totalPrice += (decimal)(itemData.Price * orderItemData.Count);
+                itemDatas.Add(orderItemData);
             }
 
-            return NoContent();
-        }
-
-        // POST: api/Orders
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Order>> PostOrder(Order order)
-        {
-            _context.Orders.Add(order);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetOrder", new { id = order.ID }, order);
-        }
-
-        // DELETE: api/Orders/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteOrder(int id)
-        {
-            var order = await _context.Orders.FindAsync(id);
-            if (order == null)
+            OrderData orderData = new OrderData()
             {
-                return NotFound();
-            }
+                AddressData = new AddressData()
+                {
+                    ID = address.ID,
+                    AddressString = address.AddressString
+                },
+                InitialDate = DateTime.Now,
+                ItemDatas = itemDatas,
+                TotalPrice = totalPrice,
+            };
 
-            _context.Orders.Remove(order);
-            await _context.SaveChangesAsync();
+            _emailConfirmation.ConfirmOrder(user.Email, orderData);
+            orderResult.Success = true;
+            orderResult.OrderData = orderData;
 
-            return NoContent();
-        }
-
-        private bool OrderExists(int id)
-        {
-            return _context.Orders.Any(e => e.ID == id);
+            return Json(orderResult);
         }
     }
 }

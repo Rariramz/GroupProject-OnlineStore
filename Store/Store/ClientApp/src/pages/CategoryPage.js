@@ -1,9 +1,20 @@
-import React, { useState, useRef } from "react";
-import { Box, Typography, Grid, Container, Divider, Chip } from "@mui/material";
+import React, { useState, useRef, useEffect } from "react";
+import {
+  Box,
+  Typography,
+  Grid,
+  Container,
+  Divider,
+  Chip,
+  Skeleton,
+} from "@mui/material";
 import { styled } from "@mui/material/styles";
-import PrettyPreviewImage from "../components/PrettyPreviewImage";
-import ItemCard from "../components/ItemCard";
+import { useParams } from "react-router-dom";
 
+import ItemCard from "../components/ItemCard";
+import { get, getFile } from "../utils/fetchWrapper";
+import CategoryPreviewImage from "../components/CategoryPreviewImage";
+import PageNotFound from "./PageNotFound";
 const Content = styled(Box)(({ theme }) => ({
   padding: theme.spacing(0, 32),
   margin: theme.spacing(18, 0),
@@ -15,45 +26,78 @@ const ItemGridContainer = styled(Grid)(({ theme }) => ({
 }));
 
 const CategoryPage = () => {
-  const productsRef = useRef(null);
-  const [subcategories, setSubcategories] = useState(["2", "2", "2", "2"]);
-  const [popularProducts, PopularProducts] = useState(["2", "2", "2", "2"]);
+  const { id } = useParams();
+  const [info, setInfo] = useState();
+  const [subcategories, setSubcategories] = useState([]);
+  const [invalid, setInvalid] = useState(false);
 
-  const renderSubcategory = () => (
-    <>
-      <Divider textAlign="left">
-        <Typography variant="h1" color="textSecondary">
-          Second
-        </Typography>
-      </Divider>
-      <ItemGridContainer item container spacing={4}>
-        {popularProducts.map((item) => (
-          <Grid item xs={3}>
-            <ItemCard id={item.id} sx />
-          </Grid>
-        ))}
-      </ItemGridContainer>
-    </>
-  );
+  useEffect(() => {
+    get(`api/Categories/GetCategory?id=${id}`, (info) => {
+      console.log(info);
+      if (!info.invalid) {
+        getSubcategories(info);
+      } else {
+        setInvalid(true);
+      }
+    });
+    get(`api/Categories/GetImage?id=${id}`, console.log);
+  }, []);
+
+  const getSubcategories = (info) => {
+    setInfo(info);
+    console.log(info);
+    info.childCategoriesIDs.forEach((id) =>
+      get(`api/Categories/GetCategory?id=${id}`, (newCategory) =>
+        setSubcategories((prevState) => [...prevState, newCategory])
+      )
+    );
+  };
+
+  const renderSubcategory = (subcategory) => {
+    return (
+      <>
+        <Divider textAlign="left">
+          <Typography variant="h1" color="textSecondary">
+            {subcategory.name}
+          </Typography>
+        </Divider>
+        <ItemGridContainer item container spacing={4}>
+          {subcategory.itemsIDs.map((id) => (
+            <Grid item xs={3}>
+              <ItemCard id={id} key={id} />
+            </Grid>
+          ))}
+        </ItemGridContainer>
+      </>
+    );
+  };
 
   return (
     <>
-      <PrettyPreviewImage />
-      <Content ref={productsRef}>
-        <Grid
-          container
-          spacing={18}
-          direction="column"
-          justify="center"
-          alignItems="center"
-          alignContent="center"
-          wrap="nowrap"
-        >
-          {subcategories.map((item) => (
-            <Grid item>{renderSubcategory(item)}</Grid>
-          ))}
-        </Grid>
-      </Content>
+      {!invalid ? (
+        <Content>
+          <Grid
+            container
+            spacing={18}
+            direction="column"
+            justify="center"
+            alignItems="center"
+            alignContent="center"
+            marginTop={10}
+          >
+            {info ? (
+              <CategoryPreviewImage id={id} name={info?.name} />
+            ) : (
+              <Box height="100vh"></Box>
+            )}
+            {subcategories.map((subcategory) => (
+              <Grid item>{renderSubcategory(subcategory)}</Grid>
+            ))}
+          </Grid>
+        </Content>
+      ) : (
+        <PageNotFound />
+      )}
     </>
   );
 };

@@ -6,11 +6,15 @@ import {
   Link,
   Box,
   Paper,
+  Skeleton,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import React, { useRef, useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import ErrorBoundary from "../utils/ErrorBoundary";
 
-import itemImage from "../images/dummyItemImage.jpg";
+import { get, getFile, post } from "../utils/fetchWrapper";
+import PageNotFound from "./PageNotFound";
 
 const Content = styled(Box)(({ theme }) => ({
   padding: theme.spacing(0, 32),
@@ -18,158 +22,198 @@ const Content = styled(Box)(({ theme }) => ({
 }));
 
 const ItemPage = (props) => {
-  const [quantity, setQuantity] = useState(props.quantity || 3);
-  const [total, setTotal] = useState();
+  const widthRef = useRef(null);
+  const { id } = useParams();
+  const [height, setHeight] = useState(0);
+  const [info, setInfo] = useState(null);
+  const [image, setImage] = useState(null);
+  const [categoryName, setCategoryName] = useState(null);
+  const [count, setCount] = useState(1);
+
+  const [invalid, setInvalid] = useState(false);
+
+  const handleCountInc = () => {
+    setCount((prevState) => prevState + 1);
+  };
+  const handleCountDec = () => {
+    setCount((prevState) => (prevState > 1 ? prevState - 1 : prevState));
+  };
+  const handleAddToCart = () => {
+    post("api/Cart/AddItemForUser", console.log, { ItemID: id, Count: count });
+  };
 
   useEffect(() => {
-    setTotal(quantity * (props.price || 4));
+    setHeight(widthRef.current.clientWidth);
+    get(`api/Items/GetItem/?id=${id}`, (info) => {
+      if (!info.invalid) setInfo(info);
+      else {
+        setInvalid(true);
+      }
+    });
+    getFile(`api/Items/GetImage/?id=${id}`, setImage);
   }, []);
 
-  const handleQuantityInc = () => {
-    setQuantity((prevState) => prevState + 1);
-    setTotal(quantity * (props.price || 4));
+  const getCategoryName = () => {
+    get(`api/Categories/GetCategory?id=${info.categoryID}`, ({ name }) =>
+      setCategoryName(name)
+    );
   };
-  const handleQuantityDec = () => {
-    setQuantity((prevState) => (prevState > 1 ? prevState - 1 : prevState));
-    setTotal(quantity * (props.price || 4));
-  };
+
   return (
     <>
-      <Content>
-        <Grid
-          container
-          spacing={5}
-          direction="row"
-          justify="flex-start"
-          alignItems="stretch"
-          wrap="nowrap"
-        >
-          <Grid item xs={6}>
-            <img src={itemImage} style={{ width: "100%" }} />
-            <Typography
-              variant="h2"
-              color="initial"
-              textAlign="center"
-              style={{
-                paddingInline: 35,
-                paddingBlock: 20,
-              }}
-            >
-              All hand-made with natural soy wax, Candleaf is made for your
-              pleasure moments.
-            </Typography>
-            <Typography
-              variant="h2"
-              color="primary"
-              textAlign="center"
-              style={{
-                paddingInline: 35,
-              }}
-            >
-              FREE SHIPPING.
-            </Typography>
-          </Grid>
+      {!invalid ? (
+        <Content>
           <Grid
             container
-            spacing={3}
-            direction="column"
-            justify="center"
-            alignItems="flex-start"
+            spacing={5}
+            direction="row"
+            justify="flex-start"
+            alignItems="stretch"
             wrap="nowrap"
-            xs={7}
-            style={{ backgroundColor: "white", padding: 40 }}
           >
-            <Grid item>
+            <Grid item xs={6} ref={widthRef}>
+              {image ? (
+                <img src={image} width="100%" />
+              ) : (
+                <Skeleton variant="rectangular" width="100%" height={height} />
+              )}
               <Typography
-                variant="h1"
+                variant="h2"
                 color="initial"
-                style={{ fontWeight: "bold" }}
+                textAlign="center"
+                style={{
+                  paddingInline: 35,
+                  paddingBlock: 20,
+                }}
               >
-                Candle Name
+                All hand-made with natural soy wax, Candleaf is made for your
+                pleasure moments.
+              </Typography>
+              <Typography
+                variant="h2"
+                color="primary"
+                textAlign="center"
+                style={{
+                  paddingInline: 35,
+                }}
+              >
+                FREE SHIPPING.
               </Typography>
             </Grid>
-            <Grid item container spacing={10}>
-              <Grid item xs={4}>
-                <Typography
-                  variant="h1"
-                  color="primary"
-                  style={{ fontWeight: "bold" }}
-                >
-                  $ 9.99
-                </Typography>
-              </Grid>
-              <Grid item xs={8}>
-                <Typography
-                  variant="h1"
-                  color="initial"
-                  style={{ fontWeight: "bold" }}
-                >
-                  Category
-                </Typography>
-              </Grid>
+            {info && (
               <Grid
                 item
-                xs={4}
                 container
-                justifyContent="flex-start"
-                alignItems="center"
-                spacing={2}
+                spacing={10}
+                direction="column"
+                justify="center"
+                alignItems="flex-start"
+                wrap="nowrap"
+                xs={7}
+                style={{ backgroundColor: "white", padding: 40 }}
               >
-                <Grid item xs={12} textAlign="left">
-                  <Typography variant="h2" color="initial">
-                    Quantity:
-                  </Typography>
-                </Grid>
                 <Grid item>
-                  <Typography variant="h2" color="initial">
-                    12
-                  </Typography>
-                </Grid>
-                <Grid item>
-                  <ButtonGroup>
-                    <Button onClick={handleQuantityDec} size="small">
-                      -
-                    </Button>
-                    <Button onClick={handleQuantityInc} size="small">
-                      +
-                    </Button>
-                  </ButtonGroup>
-                </Grid>
-              </Grid>
-              <Grid item xs={8}>
-                <Button size="large">
-                  <Typography variant="h2" style={{ fontWeight: "bold" }}>
-                    Add to cart
-                  </Typography>
-                </Button>
-              </Grid>
-              <Grid item xs={12}>
-                <Paper elevation={5} style={{ padding: 30 }}>
                   <Typography
-                    variant="h3"
+                    variant="h1"
                     color="initial"
                     style={{ fontWeight: "bold" }}
                   >
-                    Description:
+                    {info ? info.name : ""}
                   </Typography>
-                  <Typography variant="body1" color="textSecondary">
-                    Lorem Ipsum is simply dummy text of the printing and
-                    typesetting industry. Lorem Ipsum has been the industry's
-                    standard dummy text ever since the 1500s, when an unknown
-                    printer took a galley of type and scrambled it to make a
-                    type specimen book. It has survived not only five centuries,
-                    but also the leap into electronic typesetting, remaining
-                    essentially unchanged. It was popularised in the 1960s with
-                    the release of Letraset sheets containing Lorem Ipsum
-                    passages, and more recently with desktop publishing software
-                    like Aldus PageMaker including versions of Lorem Ipsum.
-                  </Typography>
-                </Paper>
+                </Grid>
+                <Grid item container spacing={20}>
+                  <Grid item xs={6}>
+                    <Typography
+                      variant="h2"
+                      color="primary"
+                      style={{ fontWeight: "bold" }}
+                    >
+                      $ {info ? info.price : ""}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Typography
+                      variant="h2"
+                      color="initial"
+                      style={{ fontWeight: "bold" }}
+                    >
+                      {categoryName
+                        ? categoryName
+                        : info
+                        ? getCategoryName()
+                        : ""}
+                    </Typography>
+                  </Grid>
+                  <Grid
+                    item
+                    xs={12}
+                    container
+                    justifyContent="center"
+                    alignItems="center"
+                    spacing={5}
+                  >
+                    <Grid item xs={4}>
+                      <Typography variant="h2" color="initial">
+                        Count:
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={4}>
+                      <Typography
+                        variant="h2"
+                        color="initial"
+                        textAlign="right"
+                      >
+                        {count}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={4}>
+                      <ButtonGroup>
+                        <Button onClick={handleCountDec} size="small">
+                          -
+                        </Button>
+                        <Button onClick={handleCountInc} size="small">
+                          +
+                        </Button>
+                      </ButtonGroup>
+                    </Grid>
+                  </Grid>
+                  <Grid item xs={12}>
+                    {info && (
+                      <Paper elevation={5} style={{ padding: 30 }}>
+                        <Typography
+                          variant="h3"
+                          color="initial"
+                          style={{ fontWeight: "bold" }}
+                          lineHeight={3}
+                        >
+                          Description:
+                        </Typography>
+                        <Typography
+                          variant="body1"
+                          color="textSecondary"
+                          lineHeight={1.8}
+                        >
+                          {info ? info.description : ""}
+                        </Typography>
+                      </Paper>
+                    )}
+                  </Grid>
+                  <Grid item xs={6}></Grid>
+                  <Grid item xs={6}>
+                    <Button size="large" onClick={handleAddToCart}>
+                      <Typography variant="h2" style={{ fontWeight: "bold" }}>
+                        Add to cart
+                      </Typography>
+                    </Button>
+                  </Grid>
+                </Grid>
               </Grid>
-            </Grid>
+            )}
           </Grid>
-        </Grid>
-      </Content>
+        </Content>
+      ) : (
+        <PageNotFound />
+      )}
     </>
   );
 };
