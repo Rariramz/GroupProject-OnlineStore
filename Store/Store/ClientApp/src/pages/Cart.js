@@ -75,50 +75,60 @@ const Cart = () => {
           <Grid item style={{ width: "100%" }}>
             <Stack divider={<Divider flexItem />} spacing={2}>
               <CartItemsHeader />
-              {cartItems.map((item) => (
-                <CartItem
-                  id={item.itemID}
-                  count={item.count}
-                  onCountInc={onCountInc}
-                  onCountDec={onCountDec}
-                  onRemove={onRemove}
-                  key={item.itemID}
-                />
-              ))}
+              {cartItems.length ? (
+                cartItems.map((item) => (
+                  <CartItem
+                    id={item.itemID}
+                    count={item.count}
+                    onCountInc={onCountInc}
+                    onCountDec={onCountDec}
+                    onRemove={onRemove}
+                    key={item.itemID}
+                  />
+                ))
+              ) : (
+                <Box padding="20vh">
+                  <Typography variant="h1" color="primary" textAlign="center">
+                    Cart is empty
+                  </Typography>
+                </Box>
+              )}
             </Stack>
           </Grid>
-          <Grid
-            item
-            container
-            justifyContent="flex-end"
-            alignItems="center"
-            spacing={10}
-          >
-            <Grid item>
-              <Button variant="outlined" size="medium" onClick={getTotal}>
-                <Typography variant="h2" color="primary">
-                  Apply available discounts
+          {cartItems.length > 0 && (
+            <Grid
+              item
+              container
+              justifyContent="flex-end"
+              alignItems="center"
+              spacing={10}
+            >
+              <Grid item>
+                <Button variant="outlined" size="medium" onClick={getTotal}>
+                  <Typography variant="h2" color="primary">
+                    Apply available discounts
+                  </Typography>
+                </Button>
+              </Grid>
+              <Grid item>
+                <Typography variant="h2" color="initial" textAlign="right">
+                  Subtotal:
                 </Typography>
-              </Button>
-            </Grid>
-            <Grid item>
-              <Typography variant="h2" color="initial" textAlign="right">
-                Subtotal:
-              </Typography>
-            </Grid>
-            <Grid item>
-              <Typography variant="h1" color="initial" textAlign="right">
-                $ {total ? total : ""}
-              </Typography>
-            </Grid>
-            <Grid item>
-              <Button size="medium">
-                <Typography variant="h2" color="white">
-                  Check-Out
+              </Grid>
+              <Grid item>
+                <Typography variant="h1" color="initial" textAlign="right">
+                  {total ? `$ ${total}` : ""}
                 </Typography>
-              </Button>
+              </Grid>
+              <Grid item>
+                <Button size="medium">
+                  <Typography variant="h2" color="white">
+                    Check-Out
+                  </Typography>
+                </Button>
+              </Grid>
             </Grid>
-          </Grid>
+          )}
         </Grid>
       </Content>
     </>

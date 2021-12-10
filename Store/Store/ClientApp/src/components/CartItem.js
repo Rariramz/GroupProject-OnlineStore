@@ -24,6 +24,10 @@ const CartItem = (props) => {
     getFile(`api/Items/GetImage?id=${props.id}`, setImage);
   }, []);
 
+  useEffect(() => {
+    setTotal((info?.price * count).toFixed(2));
+  });
+
   const handleCountInc = () => {
     props.onCountInc({
       ItemID: props.id,
