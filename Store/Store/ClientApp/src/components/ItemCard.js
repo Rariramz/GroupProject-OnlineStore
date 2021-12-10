@@ -57,7 +57,11 @@ const ItemCard = (props) => {
             </Typography>
             <Typography variant="body1" color="primary" textAlign="right">
               {itemInfo ? (
-                `$ ${itemInfo.price || ""}`
+                itemInfo.price ? (
+                  `$ ${itemInfo.price}`
+                ) : (
+                  ""
+                )
               ) : (
                 <Skeleton width="100%" height={10} />
               )}
