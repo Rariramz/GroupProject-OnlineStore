@@ -194,8 +194,10 @@ const Registration = () => {
                 justifyContent="space-between"
               >
                 <Grid item>
-                  <Button color="primary" onClick={handleClick} size="large">
-                    Register
+                  <Button color="primary" onClick={handleClick}>
+                    <Typography variant="h3" sx={{ padding: 1 }}>
+                      Register
+                    </Typography>
                   </Button>
                 </Grid>
                 <Grid item>

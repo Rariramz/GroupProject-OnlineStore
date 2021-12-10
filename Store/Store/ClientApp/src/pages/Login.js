@@ -138,8 +138,10 @@ const Login = observer(() => {
                 justifyContent="space-between"
               >
                 <Grid item>
-                  <Button color="primary" onClick={handleClick} size="large">
-                    Log in
+                  <Button color="primary" onClick={handleClick}>
+                    <Typography variant="h3" sx={{ padding: 1 }}>
+                      Log In
+                    </Typography>
                   </Button>
                 </Grid>
                 <Grid item>
