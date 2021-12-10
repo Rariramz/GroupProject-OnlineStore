@@ -17,7 +17,6 @@ import ErrorBoundary from "./utils/ErrorBoundary";
 
 const App = observer(() => {
   const { user } = useContext(Context);
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     get("api/Account/Info", userInfoResult);
@@ -31,22 +30,7 @@ const App = observer(() => {
       }
       console.log("LOGIN success");
     }
-    setLoading(false);
   }
-
-  // if (loading) {
-  //   return (
-  //     <Box
-  //       height="100vh"
-  //       alignItems="center"
-  //       justifyContent="center"
-  //       sx={{ display: "flex" }}
-  //     >
-  //       <CircularProgress />
-  //     </Box>
-  //   );
-  // }
-
   return (
     <ThemeProvider theme={theme}>
       <ErrorBoundary>

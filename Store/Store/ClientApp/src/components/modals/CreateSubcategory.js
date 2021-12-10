@@ -13,6 +13,8 @@ import {
   OutlinedInput,
   Input,
   Typography,
+  Stack,
+  Alert,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { Context } from "../../index";
@@ -58,6 +60,7 @@ const CreateSubcategory = ({ open, onHide }) => {
   const [parentId, setParentId] = useState(0);
   const [image, setImage] = useState(null);
   const [insideImage, setInsideImage] = useState(null);
+  const [errorCodes, setErrorCodes] = useState([]);
 
   useEffect(() => {
     get("api/Categories/GetMainCategories", (res) => {
@@ -84,7 +87,7 @@ const CreateSubcategory = ({ open, onHide }) => {
     if (res.success) {
       console.log("ADD SUBCATEGORY success");
     } else {
-      res.errorCodes.foreach((err) => alert(errors.get(err)));
+      setErrorCodes(res.errorCodes);
     }
   }
 
@@ -96,69 +99,80 @@ const CreateSubcategory = ({ open, onHide }) => {
   };
 
   return (
-    <Dialog open={open} onClose={onHide}>
-      <DialogTitle>Add subcategory</DialogTitle>
-      <DialogContent>
-        <StyledInput
-          label="Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-        <StyledInput
-          label="Description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
+    <>
+      {errorCodes.length > 0 ? (
+        <Stack>
+          {errorCodes.map((err) => (
+            <Alert severity="error">{errors.get(err)}</Alert>
+          ))}
+        </Stack>
+      ) : (
+        <></>
+      )}
+      <Dialog open={open} onClose={onHide}>
+        <DialogTitle>Add subcategory</DialogTitle>
+        <DialogContent>
+          <StyledInput
+            label="Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <StyledInput
+            label="Description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
 
-        <FormControl sx={{ width: 400, marginBlock: 5 }}>
-          <InputLabel id="demo-multiple-name-label">Category</InputLabel>
-          <Select
-            labelId="demo-multiple-name-label"
-            id="demo-multiple-name"
-            input={<OutlinedInput label="Choose category" />}
-            MenuProps={MenuProps}
+          <FormControl sx={{ width: 400, marginBlock: 5 }}>
+            <InputLabel id="demo-multiple-name-label">Category</InputLabel>
+            <Select
+              labelId="demo-multiple-name-label"
+              id="demo-multiple-name"
+              input={<OutlinedInput label="Choose category" />}
+              MenuProps={MenuProps}
+            >
+              {items.categories.map((category) => (
+                <MenuItem
+                  key={category.id}
+                  value={category}
+                  onClick={() => setParentId(category.id)}
+                >
+                  {category.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          <Button variant="outlined" component="label" sx={{ width: "100%" }}>
+            <Typography variant="body2">Upload Image</Typography>
+            <Input
+              accept="image/*"
+              type="file"
+              onChange={selectImage}
+              sx={{ display: "none" }}
+            />
+          </Button>
+
+          <Button
+            variant="outlined"
+            component="label"
+            sx={{ width: "100%", marginTop: 2 }}
           >
-            {items.categories.map((category) => (
-              <MenuItem
-                key={category.id}
-                value={category}
-                onClick={() => setParentId(category.id)}
-              >
-                {category.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-
-        <Button variant="outlined" component="label" sx={{ width: "100%" }}>
-          <Typography variant="body2">Upload Image</Typography>
-          <Input
-            accept="image/*"
-            type="file"
-            onChange={selectImage}
-            sx={{ display: "none" }}
-          />
-        </Button>
-
-        <Button
-          variant="outlined"
-          component="label"
-          sx={{ width: "100%", marginTop: 2 }}
-        >
-          <Typography variant="body2">Upload Inside Image</Typography>
-          <Input
-            accept="image/*"
-            type="file"
-            onChange={selectInsideImage}
-            sx={{ display: "none" }}
-          />
-        </Button>
-      </DialogContent>
-      <DialogActions style={{ paddingInline: 25, paddingBottom: 20 }}>
-        <Button onClick={onHide}>Cancel</Button>
-        <Button onClick={addSubcategory}>Add</Button>
-      </DialogActions>
-    </Dialog>
+            <Typography variant="body2">Upload Inside Image</Typography>
+            <Input
+              accept="image/*"
+              type="file"
+              onChange={selectInsideImage}
+              sx={{ display: "none" }}
+            />
+          </Button>
+        </DialogContent>
+        <DialogActions style={{ paddingInline: 25, paddingBottom: 20 }}>
+          <Button onClick={onHide}>Cancel</Button>
+          <Button onClick={addSubcategory}>Add</Button>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 };
 

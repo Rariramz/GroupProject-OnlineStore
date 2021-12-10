@@ -15,6 +15,7 @@ import { HOME_ROUTE, LOGIN_ROUTE } from "../utils/consts";
 import { NavLink, useHistory } from "react-router-dom";
 import { Context } from "../index.js";
 import { fetchWrapper, get, post } from "../utils/fetchWrapper";
+import AlertConfirmEmail from "../components/modals/AlertConfirmEmail";
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   width: 700,
@@ -56,6 +57,7 @@ const Registration = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [errorCodes, setErrorCodes] = useState([]);
+  const [alertVisible, setAlertVisible] = useState(false);
 
   const handleClick = () => {
     post("api/Account/Register", registerResult, {
@@ -71,6 +73,7 @@ const Registration = () => {
       console.log("REGISTER success");
       user.setIsAuth(true);
       //history.push(HOME_ROUTE);
+      setAlertVisible(true);
     } else {
       setErrorCodes(res.errorCodes);
     }
@@ -191,8 +194,10 @@ const Registration = () => {
                 justifyContent="space-between"
               >
                 <Grid item>
-                  <Button color="primary" onClick={handleClick} size="large">
-                    Register
+                  <Button color="primary" onClick={handleClick}>
+                    <Typography variant="h3" sx={{ padding: 1 }}>
+                      Register
+                    </Typography>
                   </Button>
                 </Grid>
                 <Grid item>
@@ -207,6 +212,10 @@ const Registration = () => {
                   </Typography>
                 </Grid>
               </Grid>
+              <AlertConfirmEmail
+                open={alertVisible}
+                onHide={() => setAlertVisible(false)}
+              />
             </Grid>
           </StyledPaper>
         </Grid>
