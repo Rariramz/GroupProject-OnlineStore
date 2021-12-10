@@ -12,5 +12,6 @@
         public const int ERROR_ADDRESSSTRING_EMPTY = 441;
         public const int ERROR_ADDRESSSTRING_VALIDATION_FAIL = 442;
         public const int ERROR_ACCESS_DENIED = 443;
+        public const int ERROR_ADDRESS_NOT_FOUND = 444;
     }
 }
