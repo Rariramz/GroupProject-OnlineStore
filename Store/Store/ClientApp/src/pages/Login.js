@@ -8,7 +8,7 @@ import { NavLink, useHistory } from "react-router-dom";
 import { Context } from "../index.js";
 import { observer } from "mobx-react-lite";
 import { fetchWrapper, get, post } from "../utils/fetchWrapper";
-import ErrorMesage from "../components/ErrorMesage";
+//import ErrorMessage from "../components/ErrorMessage";
 
 const errors = new Map();
 errors.set(440, "empty email");

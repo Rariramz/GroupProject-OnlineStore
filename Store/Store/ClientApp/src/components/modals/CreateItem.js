@@ -17,8 +17,9 @@ import {
 import { styled } from "@mui/material/styles";
 import { fetchWrapper, get, post } from "../../utils/fetchWrapper";
 import { Context } from "../../index";
+import { observer } from "mobx-react-lite";
 
-const CreateItem = ({ open, onHide }) => {
+const CreateItem = observer(({ open, onHide }) => {
   const items = useContext(Context);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -198,6 +199,6 @@ const CreateItem = ({ open, onHide }) => {
       </DialogActions>
     </Dialog>
   );
-};
+});
 
 export default CreateItem;
