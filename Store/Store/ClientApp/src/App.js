@@ -1,8 +1,6 @@
-
-import { CircularProgress, Box, ThemeProvider, Typography } from "@mui/material";";
+import { Box, ThemeProvider, Typography } from "@mui/material";
 import { observer } from "mobx-react-lite";
-import React, { useContext, useEffect, useState,Suspense } from "react";
-import { BrowserRouter } from "react-router-dom";
+import React, { useContext, useEffect, Suspense } from "react";
 import AppRouter from "./components/AppRouter";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
@@ -13,7 +11,6 @@ import ErrorBoundary from "./utils/ErrorBoundary";
 
 const App = observer(() => {
   const { user } = useContext(Context);
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     get("api/Account/Info", userInfoResult);
@@ -27,20 +24,6 @@ const App = observer(() => {
       }
       console.log("LOGIN success");
     }
-    setLoading(false);
-  }
-
-  if (loading) {
-    return (
-      <Box
-        height="100vh"
-        alignItems="center"
-        justifyContent="center"
-        sx={{ display: "flex" }}
-      >
-        <CircularProgress />
-      </Box>
-    );
   }
 
   return (
