@@ -5,6 +5,8 @@ import { styled } from "@mui/styles";
 import CartItem, { CartItemsHeader } from "../components/CartItem";
 import { get, post } from "../utils/fetchWrapper";
 import AddressDialog from "../components/AddressDialog";
+import { Api } from "@mui/icons-material";
+import OkDialog from "../components/OkDialog";
 
 const Content = styled(Box)(({ theme }) => ({
   alignSelf: "center",
@@ -16,26 +18,41 @@ const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
   const [total, setTotal] = useState(0);
   const [modalOpen, setModalOpen] = useState(false);
+  const [okOpen, setOkOpen] = useState(false);
 
   const onCountInc = (cartItemModel) => {
     post("api/Cart/ChangeItemCount", console.log, cartItemModel);
+    updateInfo();
   };
   const onCountDec = (cartItemModel) => {
     post("api/Cart/ChangeItemCount", console.log, cartItemModel);
+    updateInfo();
   };
   const onRemove = (cartItemModel) => {
     post("api/Cart/Remove", console.log, cartItemModel);
     console.log(cartItemModel);
+    updateInfo();
   };
 
   const handleCheckoutConfirm = (address) => {
-    console.log(address);
+    get(`api/Orders/MakeOrder?addressData=${address}`, (item) => {
+      console.log(item);
+      setOkOpen(true);
+      get("api/Cart/ClearCart", console.log);
+      updateInfo();
+    });
+    setModalOpen(false);
   };
 
   useEffect(() => {
     get("api/Cart/GetShoppingDetails", setCartItems);
     get("api/Cart/GetTotal", setTotal);
-  }, []);
+  });
+
+  const updateInfo = () => {
+    get("api/Cart/GetShoppingDetails", setCartItems);
+    get("api/Cart/GetTotal", setTotal);
+  };
 
   return (
     <>
@@ -44,6 +61,7 @@ const Cart = () => {
         handleClose={() => setModalOpen(false)}
         onCheckoutConfirm={handleCheckoutConfirm}
       />
+      <OkDialog open={okOpen} handleClose={() => setOkOpen(false)} />
       <Content>
         <Grid
           container
@@ -107,11 +125,24 @@ const Cart = () => {
                 </Typography>
               </Grid>
               <Grid item>
-                <Button size="medium" onClick={() => setModalOpen(true)}>
-                  <Typography variant="h2" color="white">
-                    Check-Out
-                  </Typography>
-                </Button>
+                {cartItems.length > 0 ? (
+                  <Button
+                    size="medium"
+                    onClick={() => {
+                      setModalOpen(true);
+                    }}
+                  >
+                    <Typography variant="h2" color="white">
+                      Check-Out
+                    </Typography>
+                  </Button>
+                ) : (
+                  <Button size="medium" disabled>
+                    <Typography variant="h2" color="white">
+                      Check-Out
+                    </Typography>
+                  </Button>
+                )}
               </Grid>
             </Grid>
           )}
