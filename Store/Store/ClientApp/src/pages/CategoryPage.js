@@ -14,6 +14,7 @@ import { useParams } from "react-router-dom";
 import ItemCard from "../components/ItemCard";
 import { get, getFile } from "../utils/fetchWrapper";
 import CategoryPreviewImage from "../components/CategoryPreviewImage";
+import PageNotFound from "./PageNotFound";
 const Content = styled(Box)(({ theme }) => ({
   padding: theme.spacing(0, 32),
   margin: theme.spacing(18, 0),
@@ -28,9 +29,17 @@ const CategoryPage = () => {
   const { id } = useParams();
   const [info, setInfo] = useState();
   const [subcategories, setSubcategories] = useState([]);
+  const [invalid, setInvalid] = useState(false);
 
   useEffect(() => {
-    get(`api/Categories/GetCategory?id=${id}`, getSubcategories);
+    get(`api/Categories/GetCategory?id=${id}`, (info) => {
+      console.log(info);
+      if (!info.invalid) {
+        getSubcategories(info);
+      } else {
+        setInvalid(true);
+      }
+    });
     get(`api/Categories/GetImage?id=${id}`, console.log);
   }, []);
 
@@ -65,26 +74,30 @@ const CategoryPage = () => {
 
   return (
     <>
-      <Content>
-        <Grid
-          container
-          spacing={18}
-          direction="column"
-          justify="center"
-          alignItems="center"
-          alignContent="center"
-          marginTop={10}
-        >
-          {info ? (
-            <CategoryPreviewImage id={id} name={info?.name} />
-          ) : (
-            <Box height="100vh"></Box>
-          )}
-          {subcategories.map((subcategory) => (
-            <Grid item>{renderSubcategory(subcategory)}</Grid>
-          ))}
-        </Grid>
-      </Content>
+      {!invalid ? (
+        <Content>
+          <Grid
+            container
+            spacing={18}
+            direction="column"
+            justify="center"
+            alignItems="center"
+            alignContent="center"
+            marginTop={10}
+          >
+            {info ? (
+              <CategoryPreviewImage id={id} name={info?.name} />
+            ) : (
+              <Box height="100vh"></Box>
+            )}
+            {subcategories.map((subcategory) => (
+              <Grid item>{renderSubcategory(subcategory)}</Grid>
+            ))}
+          </Grid>
+        </Content>
+      ) : (
+        <PageNotFound />
+      )}
     </>
   );
 };
