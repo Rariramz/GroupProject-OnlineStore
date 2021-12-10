@@ -17,6 +17,7 @@ const fetchWrapper = async (method, url, callback, obj) => {
       res = await fetch(url, {
         method,
         body: formData,
+        contentType: "multipart/form-data",
       });
     } else {
       console.log(method, url);

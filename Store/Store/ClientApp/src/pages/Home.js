@@ -32,6 +32,7 @@ const Home = () => {
     get("api/Categories/GetMainCategories", setCategories);
     get("api/Items/GetPopularItems?count=8", setPopularProducts);
   }, []);
+    
 
   return (
     <>

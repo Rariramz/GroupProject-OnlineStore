@@ -2,12 +2,15 @@ import { Box, Grid, Paper, Typography, Button } from "@mui/material";
 import * as material from "@mui/material";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import { styled } from "@mui/styles";
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { fetchWrapper, get, post } from "../utils/fetchWrapper";
 
 import logo from "../images/svg/logo.svg";
 import cart from "../images/svg/Cart.svg";
 import profile from "../images/svg/Profile.svg";
+import setting from "../images/svg/setting.png";
 import { Link } from "react-router-dom";
+import { LOGIN_ROUTE, ADMIN_ROUTE } from "../utils/consts";
 
 const HeaderDiv = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -18,6 +21,11 @@ const HeaderDiv = styled(Box)(({ theme }) => ({
 }));
 
 const Header = () => {
+  const [adminVisible, setAdminVisible] = useState(false);
+  useEffect(() => {
+    get("api/Account/Info", (res) => setAdminVisible(res.isAdmin));
+  }, []);
+
   return (
     <HeaderDiv>
       <Link to="">
@@ -48,7 +56,12 @@ const Header = () => {
       </HeaderDiv>
 
       <HeaderDiv width="7vw">
-        <Link to="/login">
+        {adminVisible && (
+          <Link to={ADMIN_ROUTE}>
+            <img src={setting} alt="setting" style={{ width: 26 }} />
+          </Link>
+        )}
+        <Link to={LOGIN_ROUTE}>
           <img src={profile} alt="profile" />
         </Link>
         <Link to="cart">
