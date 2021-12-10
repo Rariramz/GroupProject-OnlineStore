@@ -3,14 +3,13 @@ import {
   Typography,
   Button,
   ButtonGroup,
-  Link,
   Box,
   Paper,
   Skeleton,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import React, { useRef, useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import ErrorBoundary from "../utils/ErrorBoundary";
 
 import { get, getFile, post } from "../utils/fetchWrapper";
@@ -29,6 +28,7 @@ const ItemPage = (props) => {
   const [image, setImage] = useState(null);
   const [categoryName, setCategoryName] = useState(null);
   const [count, setCount] = useState(1);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const [invalid, setInvalid] = useState(false);
 
@@ -44,6 +44,7 @@ const ItemPage = (props) => {
 
   useEffect(() => {
     setHeight(widthRef.current.clientWidth);
+    get(`api/Account/Info`);
     get(`api/Items/GetItem/?id=${id}`, (info) => {
       if (!info.invalid) setInfo(info);
       else {
@@ -200,11 +201,24 @@ const ItemPage = (props) => {
                   </Grid>
                   <Grid item xs={6}></Grid>
                   <Grid item xs={6}>
-                    <Button size="large" onClick={handleAddToCart}>
-                      <Typography variant="h2" style={{ fontWeight: "bold" }}>
-                        Add to cart
-                      </Typography>
-                    </Button>
+                    {isLoggedIn ? (
+                      <Button size="large" onClick={handleAddToCart}>
+                        <Typography variant="h2" style={{ fontWeight: "bold" }}>
+                          Add to cart
+                        </Typography>
+                      </Button>
+                    ) : (
+                      <Link to="../login">
+                        <Button size="large">
+                          <Typography
+                            variant="h2"
+                            style={{ fontWeight: "bold" }}
+                          >
+                            Add to cart
+                          </Typography>
+                        </Button>
+                      </Link>
+                    )}
                   </Grid>
                 </Grid>
               </Grid>
