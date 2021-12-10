@@ -76,7 +76,13 @@ namespace Store.Controllers
             UserItem? userItem = await _context.UserItems.FirstOrDefaultAsync(item => item.ItemID == cartItemModel.ItemID && item.UserID == targetUser.Id);
             if(userItem != null)
             {
-                userItem.Count++;
+                userItem.Count += cartItemModel.Count!.Value;
+                if(userItem.Count < 1)
+                {
+                    cartItemResult.ErrorCodes.Add(CartItemResultConstants.ERROR_COUNT_LESS_ONE);
+                    cartItemResult.Success = false;
+                    return Json(cartItemResult);
+                }
                 _context.Entry(userItem).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
             }

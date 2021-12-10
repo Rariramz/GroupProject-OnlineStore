@@ -3,43 +3,61 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Store.Data;
 using Store.Entities;
+using Store.Models;
 
 namespace Store.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class OrdersController : ControllerBase
+    public class OrdersController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private UserManager<User> _userManager;
 
-        public OrdersController(ApplicationDbContext context)
+        public OrdersController(ApplicationDbContext context, UserManager<User> userManager)
         {
             _context = context;
-        }
-
-        // GET: api/Orders
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Order>>> GetOrders()
-        {
-            return await _context.Orders.ToListAsync();
+            _userManager = userManager;
         }
 
         // GET: api/Orders/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Order>> GetOrder(int id)
+        [HttpGet]
+        public async Task<ActionResult<Order>> GetOrders()
         {
-            var order = await _context.Orders.FindAsync(id);
+            User user = await _userManager.GetUserAsync(User);
 
-            if (order == null)
+            List<Order> orders = _context.Orders.Where(ord => ord.UserID.Equals(user.Id)).ToList();
+            List<OrderData> orderDatas = new List<OrderData>();
+
+            foreach (Order order in orders)
             {
-                return NotFound();
+                OrderData orderData = new OrderData()
+                {
+                    Description = order.Description,
+                    TotalPrice = order.TotalPrice,
+                    InitialDate = order.InitialDate,
+                    DeliveryDate = order.DeliveryDate,
+                    IsDelivery = order.IsDelivery
+                };
+                string? address = (from add in _context.Addresses
+                                 where add.ID == order.AddressID
+                                 select add.AddressString).ToList().FirstOrDefault();
+                if (address == null)
+                {
+                    return NoContent();
+                }
+
+                orderData.Address = address;
+                orderDatas.Add(orderData);
             }
 
-            return order;
+            return Json(orderDatas);
+
         }
 
         // PUT: api/Orders/5
