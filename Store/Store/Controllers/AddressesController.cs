@@ -28,8 +28,6 @@ namespace Store.Controllers
             _userManager = userManager;
         }
 
-
-        // GET: api/Addresses/GetAddresses
         [HttpGet]
         public async Task<ActionResult> GetAddresses()
         {
@@ -76,19 +74,52 @@ namespace Store.Controllers
         }
 
         // DELETE: api/Addresses/DeleteAddress
-        [HttpDelete]
-        public async Task<IActionResult> DeleteAddress(int id)
+        [HttpPost]
+        public async Task<IActionResult> DeleteAddress([FromForm] AddressModel addressModel)
         {
-            var address = await _context.Addresses.FindAsync(id);
-            if (address == null)
+            User requestUser = await _userManager.FindByEmailAsync(User.Identity.Name);
+            User targetUser = await _userManager.FindByIdAsync(addressModel.UserID);
+            AddressResult addressResult = new AddressResult() { Success = true };
+
+            if (string.IsNullOrEmpty(addressModel.UserID))
             {
-                return NotFound();
+                targetUser = await _userManager.FindByIdAsync(requestUser.Id);
             }
 
-            _context.Addresses.Remove(address);
-            await _context.SaveChangesAsync();
+            if (targetUser == null)
+            {
+                addressResult.ErrorCodes.Add(AddressResultConstants.ERROR_USER_INVALID);
+            }
+            else if (requestUser.Id != targetUser.Id && !await _userManager.IsInRoleAsync(requestUser, "admin"))
+            {
+                addressResult.ErrorCodes.Add(AddressResultConstants.ERROR_ACCESS_DENIED);
+            }
 
-            return NoContent();
+            if (addressResult.ErrorCodes.Count > 0)
+            {
+                addressResult.Success = false;
+                return Json(addressResult);
+            }
+
+            List<UserAddress> userAddresses = _context.UserAddresses.Where(address => address.UserID.Equals(addressModel.UserID)).ToList();
+
+            foreach (UserAddress relation in userAddresses)
+            {
+                Address? address = _context.Addresses.FirstOrDefault(address => address.ID == relation.AddressID);
+                if (address.AddressString.Equals(addressModel.AddressString))
+                {
+                    _context.Addresses.Remove(address);
+                    _context.UserAddresses.Remove(relation);
+                    await _context.SaveChangesAsync();
+                    addressResult.Success = true;
+                    return Json(addressResult);
+                }
+            }
+
+            addressResult.ErrorCodes.Add(AddressResultConstants.ERROR_ADDRESS_NOT_FOUND);
+            addressResult.Success = false;
+            return Json(addressResult);
+            
         }
 
 
