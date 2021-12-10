@@ -51,9 +51,33 @@ namespace Store.Controllers
         }
 
         [HttpGet]
-        public ActionResult GetAddress([FromForm] AddressModel addressModel)
+        public async Task<ActionResult> GetAddress([FromForm] AddressModel addressModel)
         {
-            List<UserAddress> userAddresses = _context.UserAddresses.Where(address => address.UserID.Equals(addressModel.UserID)).ToList();
+            User requestUser = await _userManager.FindByEmailAsync(User.Identity.Name);
+            User targetUser = await _userManager.FindByIdAsync(addressModel.UserID);
+            AddressResult addressResult = new AddressResult() { Success = true };
+
+            if (string.IsNullOrEmpty(addressModel.UserID))
+            {
+                targetUser = await _userManager.FindByIdAsync(requestUser.Id);
+            }
+
+            if (targetUser == null)
+            {
+                addressResult.ErrorCodes.Add(AddressResultConstants.ERROR_USER_INVALID);
+            }
+            else if (requestUser.Id != targetUser.Id && !await _userManager.IsInRoleAsync(requestUser, "admin"))
+            {
+                addressResult.ErrorCodes.Add(AddressResultConstants.ERROR_ACCESS_DENIED);
+            }
+
+            if (addressResult.ErrorCodes.Count > 0)
+            {
+                addressResult.Success = false;
+                return Json(addressResult);
+            }
+
+            List<UserAddress> userAddresses = _context.UserAddresses.Where(address => address.UserID.Equals(targetUser.Id)).ToList();
 
             foreach (UserAddress relation in userAddresses)
             {
@@ -70,7 +94,9 @@ namespace Store.Controllers
                 }
             }
 
-            return NoContent();
+            addressResult.ErrorCodes.Add(AddressResultConstants.ERROR_ADDRESS_NOT_FOUND);
+            addressResult.Success = false;
+            return Json(addressResult);
         }
 
         // DELETE: api/Addresses/DeleteAddress
@@ -101,7 +127,7 @@ namespace Store.Controllers
                 return Json(addressResult);
             }
 
-            List<UserAddress> userAddresses = _context.UserAddresses.Where(address => address.UserID.Equals(addressModel.UserID)).ToList();
+            List<UserAddress> userAddresses = _context.UserAddresses.Where(address => address.UserID.Equals(targetUser.Id)).ToList();
 
             foreach (UserAddress relation in userAddresses)
             {
