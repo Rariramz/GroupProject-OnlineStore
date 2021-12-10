@@ -4,6 +4,7 @@ import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import { styled } from "@mui/styles";
 import React, { useContext, useEffect, useState } from "react";
 import { fetchWrapper, get, post } from "../utils/fetchWrapper";
+import { Context } from "../index";
 
 import logo from "../images/svg/logo.svg";
 import cart from "../images/svg/Cart.svg";
@@ -11,6 +12,8 @@ import profile from "../images/svg/Profile.svg";
 import setting from "../images/svg/setting.png";
 import { Link } from "react-router-dom";
 import { LOGIN_ROUTE, ADMIN_ROUTE } from "../utils/consts";
+import { observer } from "mobx-react-lite";
+import AlertLogout from "./modals/AlertLogout";
 
 const HeaderDiv = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -20,11 +23,17 @@ const HeaderDiv = styled(Box)(({ theme }) => ({
   padding: 10,
 }));
 
-const Header = () => {
+const Header = observer(() => {
+  const { user } = useContext(Context);
   const [adminVisible, setAdminVisible] = useState(false);
+  const [alertLogoutVisible, setAlertLogoutVisible] = useState(false);
   useEffect(() => {
     get("api/Account/Info", (res) => setAdminVisible(res.isAdmin));
   }, []);
+
+  const handleLogout = () => {
+    setAlertLogoutVisible(true);
+  };
 
   return (
     <HeaderDiv>
@@ -61,15 +70,31 @@ const Header = () => {
             <img src={setting} alt="setting" style={{ width: 26 }} />
           </Link>
         )}
-        <Link to={LOGIN_ROUTE}>
-          <img src={profile} alt="profile" />
-        </Link>
-        <Link to="cart">
-          <img src={cart} alt="cart" paddingRight="20" />
-        </Link>
+        {user.isAuth ? (
+          <>
+            <Button
+              variant="outlined"
+              onClick={handleLogout}
+              sx={{ marginInline: 2 }}
+            >
+              <Typography variant="body1">Logout</Typography>
+            </Button>
+            <Link to="cart">
+              <img src={cart} alt="cart" paddingRight="20" />
+            </Link>
+          </>
+        ) : (
+          <Link to={LOGIN_ROUTE}>
+            <img src={profile} alt="profile" />
+          </Link>
+        )}
       </HeaderDiv>
+      <AlertLogout
+        open={alertLogoutVisible}
+        onHide={() => setAlertLogoutVisible(false)}
+      />
     </HeaderDiv>
   );
-};
+});
 
 export default Header;

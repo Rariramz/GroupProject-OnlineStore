@@ -16,6 +16,7 @@ import { NavLink, useHistory } from "react-router-dom";
 import { Context } from "../index.js";
 import { observer } from "mobx-react-lite";
 import { fetchWrapper, get, post } from "../utils/fetchWrapper";
+import { useNavigate } from "react-router-dom";
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   width: 700,
@@ -46,6 +47,7 @@ const Login = observer(() => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorCodes, setErrorCodes] = useState([]);
+  const navigate = useNavigate();
 
   const handleClick = () => {
     post("api/Account/Login", loginResult, { email, password });
@@ -56,6 +58,7 @@ const Login = observer(() => {
       console.log("LOGIN success");
       user.setIsAuth(true);
       get("api/Account/Info", userInfoResult);
+      navigate("/");
     } else {
       setErrorCodes(res.errorCodes);
     }
